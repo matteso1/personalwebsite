@@ -1,28 +1,58 @@
 // src/components/Footer.jsx
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { FaSpotify, FaInstagram, FaTwitter } from 'react-icons/fa';
 
 const socials = [
-  { name: 'Spotify', url: 'https://open.spotify.com/artist/…' },
-  { name: 'Instagram', url: 'https://instagram.com/…' },
-  { name: 'Twitter', url: 'https://twitter.com/…' },
+  { 
+    name: 'Spotify', 
+    url: 'https://open.spotify.com/artist/2qpBZGqFiVcsYEaJkBahMo', 
+    icon: <FaSpotify className="w-5 h-5" />
+  },
+  { 
+    name: 'Instagram', 
+    url: 'https://instagram.com/yoitsnils', 
+    icon: <FaInstagram className="w-5 h-5" />
+  },
+  { 
+    name: 'Twitter', 
+    url: 'https://twitter.com/', 
+    icon: <FaTwitter className="w-5 h-5" />
+  },
 ];
 
 const Footer = () => (
-  <footer className="bg-gray-100">
-    <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between px-4 py-6">
-      <p className="text-sm text-gray-600">&copy; {new Date().getFullYear()} Nils Matteson.</p>
-      <div className="flex space-x-4 mt-2 md:mt-0">
-        {socials.map((s) => (
-          <a
-            key={s.name}
-            href={s.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray-600 hover:text-indigo-600 text-sm"
-          >
-            {s.name}
-          </a>
-        ))}
+  <footer className="bg-dark border-t border-light/5">
+    <div className="container mx-auto px-4 py-8">
+      <div className="flex flex-col md:flex-row items-center justify-between">
+        <div className="mb-6 md:mb-0">
+          <Link to="/" className="text-xl font-heading font-bold text-light">
+            Nils Matteson
+          </Link>
+          <p className="text-sm text-light/60 mt-1">
+            &copy; {new Date().getFullYear()} All rights reserved.
+          </p>
+        </div>
+        
+        <div className="flex flex-col items-center md:items-end">
+          <div className="flex space-x-4 mb-3">
+            {socials.map((social) => (
+              <a
+                key={social.name}
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-light/70 hover:text-accent transition-colors"
+                aria-label={social.name}
+              >
+                {social.icon}
+              </a>
+            ))}
+          </div>
+          <p className="text-sm text-light/60">
+            Contact: <a href="mailto:sendbeats2nils@gmail.com" className="hover:text-accent transition-colors">sendbeats2nils@gmail.com</a>
+          </p>
+        </div>
       </div>
     </div>
   </footer>
