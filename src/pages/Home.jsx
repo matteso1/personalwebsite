@@ -1,209 +1,259 @@
-import React, { useState, useEffect, useRef } from 'react';
+// src/pages/Home.jsx
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import QuantumFluxBackground from '../components/QuantumFluxBackground';
-import { FaArrowRight, FaSpotify, FaInstagram, FaTwitter } from 'react-icons/fa';
+import { FaSpotify, FaInstagram, FaTwitter, FaArrowDown, FaPlay } from 'react-icons/fa';
 
-const HomeScrollSection = ({ id, children }) => (
-  <section id={id} className="min-h-screen flex items-center justify-center w-full py-16">
-    <div className="container mx-auto px-4">
-      {children}
-    </div>
-  </section>
+// Enhanced Background Component
+const AnimatedBackground = () => (
+  <div className="absolute inset-0 z-0 overflow-hidden">
+    <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-purple-900 to-black animate-gradient-x opacity-80"></div>
+    <div className="absolute inset-0 bg-[url('/noise.png')] opacity-10 mix-blend-overlay"></div>
+  </div>
 );
 
+// Featured Track Component
+const FeaturedTrack = () => (
+  <div className="relative bg-dark/40 backdrop-blur-md border border-white/10 rounded-xl overflow-hidden hover:border-accent/50 transition duration-500 group">
+    <div className="absolute inset-0 bg-gradient-to-b from-accent/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+    <div className="p-6">
+      <div className="flex items-center mb-4">
+        <div className="h-12 w-12 rounded-full bg-accent/20 flex items-center justify-center mr-4 group-hover:bg-accent/30 transition-colors duration-500">
+          <FaPlay className="text-white ml-1" />
+        </div>
+        <div>
+          <h3 className="text-lg font-heading font-bold text-white">What Do You Dream About?</h3>
+          <p className="text-sm text-white/70">Latest Release</p>
+        </div>
+      </div>
+      
+      <div className="relative h-1 bg-white/20 rounded-full overflow-hidden mt-3">
+        <div className="absolute h-full w-2/3 bg-accent/80 rounded-full"></div>
+      </div>
+      
+      <div className="flex justify-between mt-3 text-xs text-white/60">
+        <span>2:14</span>
+        <span>3:45</span>
+      </div>
+    </div>
+  </div>
+);
+
+// Section Title Component
+const SectionTitle = ({ children, accent, align = "left" }) => (
+  <h2 className={`text-3xl md:text-4xl lg:text-5xl font-heading font-bold mb-8 ${align === "center" ? "text-center" : ""}`}>
+    {accent ? <span className="text-accent">{accent}</span> : null}{" "}
+    {children}
+  </h2>
+);
+
+// Main Home Component
 const Home = () => {
-  const [show, setShow] = useState(false);
-  const heroRef = useRef(null);
+  const [visible, setVisible] = useState(false);
   
   useEffect(() => {
-    setShow(true);
-    
-    // Optional: smooth scroll to sections when ids are changed in URL
-    const hash = window.location.hash;
-    if (hash) {
-      const id = hash.replace('#', '');
-      const element = document.getElementById(id);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
+    setVisible(true);
   }, []);
 
+  const fadeIn = "transition-all duration-1000 ease-out";
+  const initialState = "opacity-0 translate-y-10";
+  const visibleState = "opacity-100 translate-y-0";
+  
   return (
-    <div className="relative">
-      {/* Hero section with animated background */}
-      <section 
-        ref={heroRef}
-        className="relative min-h-screen flex items-center justify-center overflow-hidden"
-      >
-        <QuantumFluxBackground intensity="high" />
+    <div className="relative min-h-screen overflow-hidden">
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex flex-col justify-center items-center">
+        <AnimatedBackground />
         
-        <div className="relative z-10 container mx-auto px-4 text-center">
-          <div 
-            className={`transition-all duration-1000 ${
-              show ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-            }`}
-          >
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-heading font-bold mb-4 leading-tight">
-              <span className="inline-block">Nils</span>{' '}
-              <span className="inline-block text-accent">Matteson</span>
+        <div className="container mx-auto px-6 relative z-10 text-center">
+          <div className={`${fadeIn} ${visible ? visibleState : initialState} delay-100`}>
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-heading font-bold text-white leading-tight">
+              NILS <span className="text-accent">MATTESON</span>
             </h1>
             
-            <p className="mx-auto max-w-2xl text-xl md:text-2xl mb-8 text-light/90">
-              Grammy winner. Producer. Storyteller.
-              <span className="block mt-2">Blending dance-rock with confessional songwriting.</span>
+            <p className="mt-6 text-xl md:text-2xl text-white/80 max-w-2xl mx-auto">
+              Producer • Artist • Storyteller
             </p>
             
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-12">
+            <div className="mt-10 flex flex-wrap gap-4 justify-center">
               <Link 
                 to="/music" 
-                className="group bg-accent hover:bg-accent/90 text-white font-heading font-bold py-3 px-8 rounded-full transition-all flex items-center justify-center"
+                className="px-8 py-3 bg-accent hover:bg-accent/90 text-white rounded-full font-medium transition-all duration-300 transform hover:scale-105"
               >
                 Listen Now
-                <FaArrowRight className="ml-2 transition-transform group-hover:translate-x-1" />
               </Link>
               
-              <div className="flex items-center gap-3 mt-4 sm:mt-0">
-                <a 
-                  href="https://open.spotify.com/artist/2qpBZGqFiVcsYEaJkBahMo" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="bg-secondary/50 hover:bg-secondary p-3 rounded-full text-light hover:text-accent transition-all"
-                  aria-label="Spotify"
-                >
-                  <FaSpotify className="w-5 h-5" />
-                </a>
-                <a 
-                  href="https://instagram.com/yoitsnils" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="bg-secondary/50 hover:bg-secondary p-3 rounded-full text-light hover:text-accent transition-all"
-                  aria-label="Instagram"
-                >
-                  <FaInstagram className="w-5 h-5" />
-                </a>
-                <a 
-                  href="https://twitter.com/" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="bg-secondary/50 hover:bg-secondary p-3 rounded-full text-light hover:text-accent transition-all"
-                  aria-label="Twitter"
-                >
-                  <FaTwitter className="w-5 h-5" />
-                </a>
+              <div className="flex items-center gap-4">
+                {[
+                  { icon: <FaSpotify />, url: "https://open.spotify.com/artist/2qpBZGqFiVcsYEaJkBahMo" },
+                  { icon: <FaInstagram />, url: "https://instagram.com/yoitsnils" },
+                  { icon: <FaTwitter />, url: "https://twitter.com/" }
+                ].map((social, idx) => (
+                  <a 
+                    key={idx}
+                    href={social.url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-accent/80 transition-colors duration-300"
+                    aria-label={`Visit ${social.url.split('/')[2]}`}
+                  >
+                    {social.icon}
+                  </a>
+                ))}
               </div>
             </div>
           </div>
           
-          {/* Scroll indicator */}
-          <div 
-            className={`absolute bottom-8 left-1/2 transform -translate-x-1/2 transition-opacity duration-1000 ${
-              show ? 'opacity-60' : 'opacity-0'
-            }`}
-          >
-            <div className="animate-bounce">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 5V19M12 19L5 12M12 19L19 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </div>
+          {/* Scroll Indicator */}
+          <div className={`absolute bottom-10 left-1/2 transform -translate-x-1/2 ${fadeIn} ${visible ? "opacity-60" : "opacity-0"} delay-500`}>
+            <button 
+              onClick={() => document.getElementById('featured').scrollIntoView({ behavior: 'smooth' })}
+              className="animate-bounce p-2"
+              aria-label="Scroll down"
+            >
+              <FaArrowDown className="text-white/80 hover:text-accent transition-colors" />
+            </button>
           </div>
         </div>
       </section>
       
-      {/* Featured music section */}
-      <HomeScrollSection id="featured">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <div>
-            <h2 className="text-4xl md:text-5xl font-heading font-bold mb-6">
-              <span className="text-accent">Latest</span> Releases
-            </h2>
-            <p className="text-lg mb-6 text-light/90">
-              Experience my most recent musical explorations — a blend of electronic beats with raw, 
-              heartfelt lyrics that tell stories from my journey.
-            </p>
-            <div className="bg-dark/50 backdrop-blur-sm rounded-lg p-6 border border-light/10 hover:border-accent/30 transition-all">
-              <h3 className="text-xl font-heading font-bold mb-2">Featured Track</h3>
-              <p className="text-light/80 mb-4">Listen to my latest single that's been gaining traction across streaming platforms.</p>
-              <Link 
-                to="/music" 
-                className="inline-flex items-center text-accent hover:text-light transition-colors"
-              >
-                Explore all tracks <FaArrowRight className="ml-2" />
-              </Link>
+      {/* Featured Music Section */}
+      <section id="featured" className="py-24 bg-dark relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-dark/90 to-dark"></div>
+        <div className="container mx-auto px-6 relative z-10">
+          <SectionTitle accent="Featured">Music</SectionTitle>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+            <div>
+              <p className="text-white/80 mb-6">
+                Experience the intersection of electronic beats and raw, introspective lyrics.
+                My sound creates a unique sonic landscape that invites listeners into my world.
+              </p>
+              
+              <FeaturedTrack />
+            </div>
+            
+            <div>
+              <div className="rounded-xl overflow-hidden shadow-xl border border-white/10">
+                <iframe
+                  src="https://open.spotify.com/embed/track/25FM9yX68IPzFi7FDea91n"
+                  width="100%"
+                  height="352"
+                  frameBorder="0"
+                  allow="autoplay; clipboard-write; encrypted-media; fullscreen"
+                  loading="lazy"
+                  title="Spotify Player"
+                  className="w-full"
+                ></iframe>
+              </div>
             </div>
           </div>
           
-          <div className="rounded-lg overflow-hidden shadow-xl ring-1 ring-light/10 transform hover:scale-[1.01] transition-all">
-            <iframe
-              src="https://open.spotify.com/embed/track/25FM9yX68IPzFi7FDea91n"
-              width="100%"
-              height="380"
-              frameBorder="0"
-              allow="autoplay; clipboard-write; encrypted-media; fullscreen"
-              loading="lazy"
-              title="Spotify Player"
-              className="w-full"
-            ></iframe>
+          <div className="mt-12 text-center">
+            <Link 
+              to="/music" 
+              className="inline-flex items-center text-accent hover:text-white transition-colors"
+            >
+              Explore All Tracks
+              <svg className="ml-2 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </Link>
           </div>
         </div>
-      </HomeScrollSection>
+      </section>
       
-      {/* Quick links section */}
-      <HomeScrollSection id="explore">
-        <h2 className="text-4xl md:text-5xl font-heading font-bold mb-12 text-center">
-          <span className="text-accent">Explore</span> My World
-        </h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            {
-              title: 'About',
-              description: 'Learn about my musical journey, influences, and creative process.',
-              icon: (
-                <svg className="w-12 h-12 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
-              ),
-              link: '/about'
-            },
-            {
-              title: 'Music',
-              description: 'Dive into my catalog of songs, albums, and collaborations.',
-              icon: (
-                <svg className="w-12 h-12 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
-                </svg>
-              ),
-              link: '/music'
-            },
-            {
-              title: 'Journal',
-              description: 'Read about my thoughts, experiences, and behind-the-scenes stories.',
-              icon: (
-                <svg className="w-12 h-12 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                </svg>
-              ),
-              link: '/journal'
-            }
-          ].map((item, i) => (
-            <div 
-              key={i} 
-              className="bg-dark/50 backdrop-blur-sm rounded-lg p-8 border border-light/10 hover:border-accent/30 transition-all hover:transform hover:scale-[1.02] group"
-            >
-              <div className="mb-6">{item.icon}</div>
-              <h3 className="text-2xl font-heading font-bold mb-3 group-hover:text-accent transition-colors">{item.title}</h3>
-              <p className="text-light/80 mb-4">{item.description}</p>
-              <Link 
-                to={item.link} 
-                className="inline-flex items-center text-accent group-hover:text-light transition-colors"
+      {/* Latest Updates Section */}
+      <section className="py-24 bg-gradient-to-b from-dark to-black relative">
+        <div className="container mx-auto px-6 relative z-10">
+          <SectionTitle accent="Latest">Updates</SectionTitle>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              {
+                date: "May 5, 2025",
+                title: "Working on New Tracks",
+                description: "Currently in the studio finalizing the tracks for my upcoming album. Can't wait to share these sounds with you all soon!"
+              },
+              {
+                date: "April 20, 2025",
+                title: "Featured on Spotify Playlist",
+                description: "Excited to share that I've been featured on a new track! Check out my collaboration on Spotify now."
+              },
+              {
+                date: "April 15, 2025",
+                title: "Website Launch",
+                description: "Welcome to my new official website! This will be the home for all updates, music releases, and more."
+              }
+            ].map((update, idx) => (
+              <div 
+                key={idx} 
+                className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 hover:border-accent/30 transition-all hover:transform hover:scale-[1.02] group"
               >
-                Learn more <FaArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
+                <div className="text-accent/80 text-sm mb-2">{update.date}</div>
+                <h3 className="text-xl font-heading font-bold mb-3 group-hover:text-accent transition-colors">{update.title}</h3>
+                <p className="text-white/70 mb-4">{update.description}</p>
+              </div>
+            ))}
+          </div>
+          
+          <div className="mt-12 text-center">
+            <Link 
+              to="/journal" 
+              className="inline-flex items-center text-accent hover:text-white transition-colors"
+            >
+              View All Updates
+              <svg className="ml-2 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </Link>
+          </div>
+        </div>
+      </section>
+      
+      {/* About Preview Section */}
+      <section className="py-24 bg-black relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-black to-dark/50 z-0"></div>
+        <div className="container mx-auto px-6 relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+            <div>
+              <SectionTitle accent="About">Me</SectionTitle>
+              <p className="text-white/80 mb-6">
+                I'm Nils Matteson, a music artist based in Madison. My sound blends electronic elements 
+                with atmospheric textures and introspective lyrics, creating a unique sonic landscape 
+                that invites listeners into my world.
+              </p>
+              <Link 
+                to="/about" 
+                className="inline-flex items-center text-accent hover:text-white transition-colors"
+              >
+                Learn More About Me
+                <svg className="ml-2 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
               </Link>
             </div>
-          ))}
+            
+            <div className="relative">
+              <div className="aspect-square rounded-xl bg-gradient-to-br from-accent/20 to-primary/20 p-1">
+                <div className="w-full h-full rounded-lg bg-dark/50 backdrop-blur-sm flex items-center justify-center">
+                  <div className="text-center p-6">
+                    <div className="w-24 h-24 mx-auto rounded-full bg-accent/20 flex items-center justify-center mb-4">
+                      <svg className="w-12 h-12 text-accent/90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                    </div>
+                    <p className="text-white/80 italic">
+                      "My journey in music began with my background, and I've been crafting my sound ever since."
+                    </p>
+                    <div className="mt-4 font-heading font-bold text-white">Nils Matteson</div>
+                    <div className="text-sm text-white/60">Producer • Artist • Visionary</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </HomeScrollSection>
+      </section>
     </div>
   );
 };

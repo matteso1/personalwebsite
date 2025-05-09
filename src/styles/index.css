@@ -1,14 +1,10 @@
-/* src/index.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* smooth scrolling */
+/* Custom styles */
 html {
   scroll-behavior: smooth;
 }
 
-/* custom utility you might use: */
-.btn-primary {
-  @apply bg-indigo-600 text-white font-medium px-6 py-2 rounded-full hover:bg-indigo-700 transition;
-}
+/* Use standard Tailwind utility classes directly in your components instead of custom colors for now */
