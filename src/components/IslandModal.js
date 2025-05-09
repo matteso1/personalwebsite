@@ -1,3 +1,4 @@
+// src/components/IslandModal.js
 import React from 'react';
 import styles from './IslandModal.module.css';
 
@@ -7,8 +8,13 @@ const IslandModal = ({ onClose }) => (
       <button className={styles.closeButton} onClick={onClose}>&times;</button>
       <div className={styles.section}>
         <h2>Under Construction</h2>
-        <p>Our content is currently under construction. Thank you for your patience!</p>
-        <p>Inquiries? <a href="mailto:sendbeats2nils@gmail.com">sendbeats2nils@gmail.com</a></p>
+        <p>Our site is currently under construction. Thanks for your patience!</p>
+        <p>
+          Inquiries?{' '}
+          <a href="mailto:sendbeats2nils@gmail.com">
+            sendbeats2nils@gmail.com
+          </a>
+        </p>
       </div>
     </div>
   </div>
