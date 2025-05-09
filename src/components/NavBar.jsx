@@ -1,28 +1,20 @@
-import React from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom';
 
-export default function NavBar() {
-  const { pathname } = useLocation()
-  const links = [
-    { to: '/',       label: 'Home'    },
-    { to: '/music',  label: 'Music'   },
-    { to: '/journal',label: 'Journal' },
-    { to: '/about',  label: 'About'   },
-    { to: '/contact',label: 'Contact' }
-  ]
+export default function Navbar() {
+  const { pathname } = useLocation();
+  const linkClass = (path) =>
+    `px-3 py-2 rounded ${pathname === path ? 'bg-gray-200 dark:bg-gray-800' : 'hover:bg-gray-100 dark:hover:bg-gray-700'}`;
+
   return (
-    <nav className="fixed top-0 w-full bg-deepBlack/80 backdrop-blur p-2 flex justify-center space-x-6 z-20">
-      {links.map(link => (
-        <Link
-          key={link.to}
-          to={link.to}
-          className={`text-sm hover:text-neon transition ${
-            pathname === link.to ? 'text-neon' : ''
-          }`}
-        >
-          {link.label}
-        </Link>
-      ))}
+    <nav className="bg-white dark:bg-gray-800 shadow">
+      <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
+        <Link to="/" className="text-xl font-bold">Nils Matteson</Link>
+        <div className="flex space-x-2">
+          <Link to="/" className={linkClass('/')}>Home</Link>
+          <Link to="/music" className={linkClass('/music')}>Music</Link>
+          <Link to="/contact" className={linkClass('/contact')}>Contact</Link>
+        </div>
+      </div>
     </nav>
-  )
+  );
 }
