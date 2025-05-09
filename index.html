@@ -3,107 +3,203 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PORNHUB</title>
-  <!-- Minimal old-web meets sleek modern -->
+  <title>Nils Matteson</title>
+  <!-- Manrope font -->
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap" rel="stylesheet">
   <style>
+    /* full-screen particles canvas */
+    #tsparticles {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -1;
+    }
+
     body {
       margin: 0;
       padding: 2rem;
-      background: #0d0d0d;
+      background: linear-gradient(45deg, #1a1a1a, #0d0d0d, #1a1a1a);
+      background-size: 400% 400%;
+      animation: bgAnim 20s ease infinite;
       color: #e5e5e5;
-      font-family: 'IBM Plex Mono', monospace;
-      line-height: 1.5;
+      font-family: 'Manrope', sans-serif;
+      line-height: 1.6;
+      text-align: left;
+    }
+
+    @keyframes bgAnim {
+      0%   { background-position:   0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position:   0% 50%; }
+    }
+
+    .container {
+      max-width: 720px;
+      margin: auto;
     }
     h1 {
-      margin: 0 0 1rem;
-      font-size: 2.5rem;
-      font-weight: bold;
-      color: #e5e5e5;
-      font-family: 'IBM Plex Mono', monospace;
-      letter-spacing: 1px;
+      margin-bottom: 1rem;
+      font-size: 2.8rem;
+      font-weight: 700;
       text-transform: uppercase;
     }
     h2 {
+      margin-top: 2rem;
+      margin-bottom: 0.5rem;
       font-size: 1.2rem;
-      margin: 1.5rem 0 0.5rem;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: #ccc;
+      color: #aaa;
+      padding-bottom: 0.25rem;
+    }
+    p {
+      margin: 1rem 0;
     }
     a {
       color: #e5e5e5;
       text-decoration: none;
-      transition: color 0.2s ease;
+      border-bottom: 1px dashed #555;
+      transition: color 0.2s;
     }
     a:hover {
       color: #fff;
       text-decoration: underline;
     }
-    section {
-      max-width: 640px;
-      margin: 2rem auto;
-    }
-    .divider {
-      border: none;
-      border-top: 1px solid #333;
-      margin: 2rem 0;
-    }
-    input,
-    button {
+    input, button {
       background: #111;
       border: 1px solid #333;
       color: #e5e5e5;
       padding: 0.5rem;
       font-family: inherit;
+      font-size: 1rem;
     }
     button {
-      margin-left: 0.5rem;
       cursor: pointer;
+      margin-left: 0.5rem;
+    }
+    input:focus, button:focus {
+      outline: none;
     }
     #vault-content {
       display: none;
       margin-top: 1rem;
+      padding: 1rem;
       background: #111;
       border: 1px solid #333;
-      padding: 1rem;
+      text-align: left;
     }
-    input:focus,
-    button:focus {
-      outline: none;
+    ul.vault-list {
+      list-style: none;
+      padding: 0;
+      margin: 1rem 0;
+    }
+    ul.vault-list li {
+      margin: 0.5rem 0;
+    }
+    /* Cat container */
+    #cat-container img {
+      max-width: 100%;
+      margin-top: 1rem;
+      border: 1px solid #333;
     }
   </style>
 </head>
 <body>
-  <section>
-    <h1>Hello, Stranger</h1>
-    <p>you’ve wandered into my digital lair— lucky you. i’m nils, i like making songs. im releasing an album soon. i hope you like it.</p>
-    <p>latest collab: <a href="https://open.spotify.com/track/25FM9yX68IPzFi7FDea91n" target="_blank">"what do you dream about" with @skeen</a></p>
-    <p>tap in: <a href="https://open.spotify.com/artist/2qpBZGqFiVcsYEaJkBahMo" target="_blank">spotify</a> | <a href="https://www.instagram.com/nilsmatteson" target="_blank">instagram</a></p>
-  </section>
-  <hr class="divider" />
-  <section>
-    <h2>teaser</h2>
-    <p>the album’s a ghost in the machine—half-formed, half-forgotten. ready when you are.</p>
-  </section>
-  <hr class="divider" />
-  <section>
-    <h2>vault</h2>
-    <p>enter the secret password for unreleased demos and raw file dumps.</p>
-    <input type="password" id="vault-password" placeholder="password" />
-    <button id="vault-button">unlock</button>
+  <!-- 1) Particle animation background -->
+  <div id="tsparticles"></div>
+
+  <div class="container">
+    <h1>NILS MATTESON</h1>
+    <p>you’re on the ground floor—i’m nils. you've stumbled on my digital lair, lucky you.</p>
+    <p>site is still under construction, please be patient :D</p>
+    <p>latest: <a href="https://open.spotify.com/track/25FM9yX68IPzFi7FDea91n" target="_blank">‘what do you dream about?’</a> with @skeen and TSG: AP!</p>
+    <p>stay connected: <a href="https://open.spotify.com/artist/2qpBZGqFiVcsYEaJkBahMo" target="_blank">spotify</a> | <a href="https://www.instagram.com/nilsmatteson" target="_blank">instagram</a></p>
+    <p>hit me: <a href="mailto:sendbeats2nils@gmail.com">sendbeats2nils@gmail.com</a></p>
+
+    <h2>about me</h2>
+    <p>born and raised in boise; 22 years deep, studying data science & computer science at UW–Madison. 
+       would much rather be making music.</p>
+    <p>i play guitar, piano, do my own vocals, mix, master, this shit is all me.</p>
+    <p>consider this your invitation: welcome to the inner circle.</p>
+
+    <h2>updates</h2>
+    <p>album dropping soon... in the meantime:</p>
+    <button id="cat-button">show me a cat</button>
+    <div id="cat-container"></div>
+
+    <h2>the vault</h2>
+    <p>enter the super secret password:</p>
+    <input type="password" id="vault-password" placeholder="password"><button id="vault-button">unlock</button>
     <div id="vault-content">
-      <p><em>demo stash unlocked!</em></p>
-      <!-- embed unreleased tracks here -->
+      <p><em>access granted—here’s what’s cooking:</em></p>
+      <ul class="vault-list">
+        <li><a href="/demos/demo1.mp3" download>demo1.mp3</a></li>
+        <!-- add more links here -->
+      </ul>
     </div>
-  </section>
+  </div>
+
+  <!-- tsParticles library -->
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
   <script>
+    tsParticles.load("tsparticles", {
+      fpsLimit: 60,
+      particles: {
+        number: { value: 50, density: { enable: true, area: 800 } },
+        color: { value: "#888" },
+        shape: { type: "circle" },
+        opacity: { value: 0.3, random: true },
+        size: { value: 3, random: { enable: true, minimumValue: 1 } },
+        links: {
+          enable: true,
+          distance: 150,
+          color: "#444",
+          opacity: 0.2,
+          width: 1
+        },
+        move: {
+          enable: true,
+          speed: 1.5,
+          direction: "none",
+          outModes: "out"
+        }
+      },
+      interactivity: {
+        events: {
+          onHover: { enable: true, mode: "grab" },
+          onClick: { enable: true, mode: "push" }
+        },
+        modes: {
+          grab: { distance: 100, links: { opacity: 0.4 } },
+          push: { quantity: 4 }
+        }
+      },
+      detectRetina: true
+    });
+  </script>
+
+  <!-- your existing Vault + Cat scripts -->
+  <script>
+    // Vault unlock
     document.getElementById('vault-button').onclick = () => {
-      const pw = document.getElementById('vault-password').value.trim();
-      if (pw === 'nilssux1121') {
+      const pw = document.getElementById('vault-password').value;
+      if (pw === 'unlockme123') {
         document.getElementById('vault-content').style.display = 'block';
       } else {
-        alert('nope, not today.');
+        alert('access denied.');
       }
+    };
+    // Cat API
+    document.getElementById('cat-button').onclick = () => {
+      fetch('https://api.thecatapi.com/v1/images/search')
+        .then(res => res.json())
+        .then(data => {
+          const url = data[0].url;
+          const img = document.createElement('img');
+          img.src = url;
+          const container = document.getElementById('cat-container');
+          container.innerHTML = '';
+          container.appendChild(img);
+        });
     };
   </script>
 </body>
