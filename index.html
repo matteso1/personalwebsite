@@ -1,1 +1,48 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"/><link rel="icon" href="/favicon.ico"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="theme-color" content="#000000"/><meta name="description" content="Web site created using create-react-app"/><link rel="apple-touch-icon" href="/logo192.png"/><link rel="manifest" href="/manifest.json"/><title>React App</title><script defer="defer" src="/static/js/main.c6db7721.js"></script><link href="/static/css/main.9c060d11.css" rel="stylesheet"></head><body><noscript>You need to enable JavaScript to run this app.</noscript><div id="root"></div></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nils Matteson — Coming Soon</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #111, #333);
+      background-size: 200% 200%;
+      animation: gradient 8s ease infinite;
+      color: #fff;
+      font-family: sans-serif;
+      text-align: center;
+      flex-direction: column;
+    }
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    h1 { font-size: 4rem; margin: 0; }
+    p { font-size: 1.25rem; margin: .5em 0; }
+    a.btn {
+      display: inline-block;
+      padding: .75em 1.5em;
+      border: 2px solid #fff;
+      border-radius: 4px;
+      color: #fff;
+      text-decoration: none;
+      transition: .2s;
+    }
+    a.btn:hover { background: #fff; color: #000; }
+  </style>
+</head>
+<body>
+  <h1>Nils Matteson</h1>
+  <p>Music Coming Soon</p>
+  <a class="btn"
+     href="https://open.spotify.com/artist/YOUR_SPOTIFY_ID"
+     target="_blank">Listen on Spotify</a>
+</body>
+</html>
