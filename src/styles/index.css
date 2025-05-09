@@ -1,7 +1,14 @@
+/* src/index.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-body {
-  @apply bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100;
+/* smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* custom utility you might use: */
+.btn-primary {
+  @apply bg-indigo-600 text-white font-medium px-6 py-2 rounded-full hover:bg-indigo-700 transition;
 }

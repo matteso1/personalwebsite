@@ -1,23 +1,23 @@
 export default function Contact() {
   return (
-    <section className="max-w-2xl mx-auto px-4 py-16 text-center">
-      <h2 className="text-3xl font-bold mb-6">Get in Touch</h2>
-      <p className="mb-4">
-        Follow on Instagram: {' '}
+    <section className="max-w-2xl mx-auto py-20 px-6 text-center">
+      <h2 className="text-4xl font-heading font-bold mb-6">Get in Touch</h2>
+      <p className="text-lg mb-4">
+        Follow on Instagram:{' '}
         <a
           href="https://instagram.com/yoitsnils"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-pink-500 hover:underline"
+          className="text-primary hover:underline font-semibold"
         >
           @yoitsnils
         </a>
       </p>
-      <p>
+      <p className="text-lg">
         Or shoot me an email:{' '}
         <a
           href="mailto:sendbeats2nils@gmail.com"
-          className="text-blue-500 hover:underline"
+          className="text-primary hover:underline font-semibold"
         >
           sendbeats2nils@gmail.com
         </a>
