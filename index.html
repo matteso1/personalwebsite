@@ -5,44 +5,98 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Nils Matteson — Coming Soon</title>
   <style>
+    /* Base styles */
     body {
       margin: 0;
       height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, #111, #333);
-      background-size: 200% 200%;
-      animation: gradient 8s ease infinite;
-      color: #fff;
-      font-family: sans-serif;
+      background: radial-gradient(circle at center, #0a0a0a, #111);
+      color: #e0e0e0;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
       text-align: center;
+      overflow: hidden;
       flex-direction: column;
     }
-    @keyframes gradient {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+
+    /* Subtle starfield animation */
+    body::before {
+      content: '';
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      top: -50%;
+      left: -50%;
+      background: transparent url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/stars.png') repeat;
+      animation: drift 60s linear infinite;
+      opacity: 0.2;
     }
-    h1 { font-size: 4rem; margin: 0; }
-    p { font-size: 1.25rem; margin: .5em 0; }
-    a.btn {
+
+    @keyframes drift {
+      from { transform: translate(0, 0); }
+      to { transform: translate(100px, 100px); }
+    }
+
+    h1 {
+      font-size: 4rem;
+      letter-spacing: 0.2em;
+      margin: 0;
+      position: relative;
+    }
+
+    p {
+      margin: 1rem 0 0.5rem;
+      font-size: 1.25rem;
+      letter-spacing: 0.1em;
+    }
+
+    .btn {
       display: inline-block;
-      padding: .75em 1.5em;
-      border: 2px solid #fff;
+      margin: 0.75rem;
+      padding: 0.75em 1.5em;
+      border: 2px solid #e0e0e0;
       border-radius: 4px;
-      color: #fff;
+      color: #e0e0e0;
       text-decoration: none;
-      transition: .2s;
+      font-size: 1rem;
+      transition: background 0.3s, color 0.3s;
+      position: relative;
+      z-index: 1;
     }
-    a.btn:hover { background: #fff; color: #000; }
+
+    .btn:hover {
+      background: #e0e0e0;
+      color: #0a0a0a;
+    }
+
+    /* Mysterious glitch effect on title */
+    @keyframes glitch {
+      0% { transform: translate(0); }
+      20% { transform: translate(-2px, 2px); }
+      40% { transform: translate(2px, -2px); }
+      60% { transform: translate(-1px, -1px); }
+      80% { transform: translate(1px, 1px); }
+      100% { transform: translate(0); }
+    }
+
+    h1 {
+      animation: glitch 3s infinite;
+    }
   </style>
 </head>
 <body>
-  <h1>Nils Matteson</h1>
-  <p>Music Coming Soon</p>
-  <a class="btn"
-     href="https://open.spotify.com/artist/YOUR_SPOTIFY_ID"
-     target="_blank">Listen on Spotify</a>
+  <h1>NILS MATTESON</h1>
+  <p>Album Coming Soon</p>
+
+  <p>Featured On:</p>
+  <a class="btn" href="https://open.spotify.com/track/25FM9yX68IPzFi7FDea91n" target="_blank">
+    Listen on Spotify
+  </a>
+
+  <p>Keep Up:</p>
+  <a class="btn" href="https://instagram.com/yoitsnils" target="_blank">
+    @yoitsnils
+  </a>
 </body>
 </html>
