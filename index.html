@@ -1,14 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Nils Matteson</title>
-    <link rel="icon" href="/favicon.ico" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@700;900&display=swap" rel="stylesheet" />
-  </head>
-  <body class="bg-secondary text-white font-sans leading-relaxed">
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PORNHUB</title>
+  <!-- Minimal old-web meets sleek modern -->
+  <style>
+    body {
+      margin: 0;
+      padding: 2rem;
+      background: #0d0d0d;
+      color: #e5e5e5;
+      font-family: 'IBM Plex Mono', monospace;
+      line-height: 1.5;
+    }
+    h1 {
+      margin: 0 0 1rem;
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #e5e5e5;
+      font-family: 'IBM Plex Mono', monospace;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    h2 {
+      font-size: 1.2rem;
+      margin: 1.5rem 0 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #ccc;
+    }
+    a {
+      color: #e5e5e5;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    a:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+    section {
+      max-width: 640px;
+      margin: 2rem auto;
+    }
+    .divider {
+      border: none;
+      border-top: 1px solid #333;
+      margin: 2rem 0;
+    }
+    input,
+    button {
+      background: #111;
+      border: 1px solid #333;
+      color: #e5e5e5;
+      padding: 0.5rem;
+      font-family: inherit;
+    }
+    button {
+      margin-left: 0.5rem;
+      cursor: pointer;
+    }
+    #vault-content {
+      display: none;
+      margin-top: 1rem;
+      background: #111;
+      border: 1px solid #333;
+      padding: 1rem;
+    }
+    input:focus,
+    button:focus {
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+  <section>
+    <h1>Hello, Stranger</h1>
+    <p>you’ve wandered into my digital lair— lucky you. i’m nils, i like making songs. im releasing an album soon. i hope you like it.</p>
+    <p>latest collab: <a href="https://open.spotify.com/track/25FM9yX68IPzFi7FDea91n" target="_blank">"what do you dream about" with @skeen</a></p>
+    <p>tap in: <a href="https://open.spotify.com/artist/2qpBZGqFiVcsYEaJkBahMo" target="_blank">spotify</a> | <a href="https://www.instagram.com/nilsmatteson" target="_blank">instagram</a></p>
+  </section>
+  <hr class="divider" />
+  <section>
+    <h2>teaser</h2>
+    <p>the album’s a ghost in the machine—half-formed, half-forgotten. ready when you are.</p>
+  </section>
+  <hr class="divider" />
+  <section>
+    <h2>vault</h2>
+    <p>enter the secret password for unreleased demos and raw file dumps.</p>
+    <input type="password" id="vault-password" placeholder="password" />
+    <button id="vault-button">unlock</button>
+    <div id="vault-content">
+      <p><em>demo stash unlocked!</em></p>
+      <!-- embed unreleased tracks here -->
+    </div>
+  </section>
+  <script>
+    document.getElementById('vault-button').onclick = () => {
+      const pw = document.getElementById('vault-password').value.trim();
+      if (pw === 'nilssux1121') {
+        document.getElementById('vault-content').style.display = 'block';
+      } else {
+        alert('nope, not today.');
+      }
+    };
+  </script>
+</body>
 </html>

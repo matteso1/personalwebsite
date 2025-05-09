@@ -23,27 +23,6 @@ const AnimatedBackground = ({ intensity = 'medium', color = 'accent' }) => {
       initParticles(); // Reinitialize when resized
     };
     
-    initParticles();
-    animate();
-    
-    // Cleanup
-    return () => {
-      window.cancelAnimationFrame(animationFrameId);
-      window.removeEventListener('resize', handleResize);
-    };
-  }, [intensity, color]);
-  
-  return (
-    <canvas
-      ref={canvasRef}
-      className="absolute inset-0 w-full h-full bg-gradient-to-br from-dark via-dark/95 to-dark z-0"
-      style={{ pointerEvents: 'none' }}
-    />
-  );
-};
-
-export default AnimatedBackground;
-    
     window.addEventListener('resize', handleResize);
     handleResize();
     
@@ -142,3 +121,24 @@ export default AnimatedBackground;
       
       animationFrameId = window.requestAnimationFrame(animate);
     };
+    
+    initParticles();
+    animate();
+    
+    // Cleanup
+    return () => {
+      window.cancelAnimationFrame(animationFrameId);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [intensity, color]);
+  
+  return (
+    <canvas
+      ref={canvasRef}
+      className="absolute inset-0 w-full h-full bg-gradient-to-br from-dark via-dark/95 to-dark z-0"
+      style={{ pointerEvents: 'none' }}
+    />
+  );
+};
+
+export default AnimatedBackground;

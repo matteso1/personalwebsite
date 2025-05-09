@@ -1,7 +1,7 @@
 // src/components/Layout.jsx
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import NavBar from './NavBar';
+import NavBar from './Navbar';
 import Footer from './Footer';
 
 const Layout = ({ children }) => {

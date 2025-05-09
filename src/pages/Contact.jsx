@@ -28,7 +28,7 @@ const SocialLink = ({ icon, platform, username, href }) => (
 );
 
 // Form Input Component
-const FormInput = ({ label, type, placeholder, value, onChange, required = false }) => (
+const FormInput = ({ label, type, placeholder, value, onChange, required = false, name }) => (
   <div className="mb-6">
     <label className="block text-white/80 mb-2 text-sm">{label}</label>
     <input
@@ -36,6 +36,7 @@ const FormInput = ({ label, type, placeholder, value, onChange, required = false
       placeholder={placeholder}
       value={value}
       onChange={onChange}
+      name={name}
       required={required}
       className="w-full px-4 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg focus:border-accent/50 focus:outline-none transition-colors text-white"
     />
@@ -43,13 +44,14 @@ const FormInput = ({ label, type, placeholder, value, onChange, required = false
 );
 
 // Form Textarea Component
-const FormTextarea = ({ label, placeholder, value, onChange, required = false }) => (
+const FormTextarea = ({ label, placeholder, value, onChange, required = false, name }) => (
   <div className="mb-6">
     <label className="block text-white/80 mb-2 text-sm">{label}</label>
     <textarea
       placeholder={placeholder}
       value={value}
       onChange={onChange}
+      name={name}
       required={required}
       rows={5}
       className="w-full px-4 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg focus:border-accent/50 focus:outline-none transition-colors text-white resize-none"

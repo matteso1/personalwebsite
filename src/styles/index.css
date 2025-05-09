@@ -2,9 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom styles */
+/* Basic styles */
 html {
   scroll-behavior: smooth;
 }
 
-/* Use standard Tailwind utility classes directly in your components instead of custom colors for now */
+body {
+  background-color: #0f172a;
+  color: white;
+  font-family: 'Inter', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+}
