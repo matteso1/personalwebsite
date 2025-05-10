@@ -122,7 +122,9 @@
     <p>consider this your invitation: welcome to the inner circle.</p>
 
     <h2>updates</h2>
-    <p>album dropping soon... in the meantime:</p>
+    <p>album dropping soon... lots of aura and hype moments </p>
+    <p>updates and other goodies will appear here</p>
+    <p>... in the meantime</p>
     <button id="cat-button">show me a cat</button>
     <div id="cat-container"></div>
 
@@ -138,21 +140,23 @@
     </div>
   </div>
 
-  <!-- tsParticles library -->
-  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
-  <script>
-    tsParticles.load("tsparticles", {
+<!-- tsParticles library -->
+<script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+
+<script>
+  tsParticles
+    .load("tsparticles", {
       fpsLimit: 60,
       particles: {
-        number: { value: 50, density: { enable: true, area: 800 } },
-        color: { value: "#888" },
+        number: { value: 70, density: { enable: true, area: 700 } },
+        color: { value: "#fff" },           // particle fill color (static white)
         shape: { type: "circle" },
         opacity: { value: 0.3, random: true },
         size: { value: 3, random: { enable: true, minimumValue: 1 } },
         links: {
           enable: true,
-          distance: 150,
-          color: "#444",
+          distance: 200,
+          color: "hsl(260, 100%, 50%)",         // initial HSL color
           opacity: 0.2,
           width: 1
         },
@@ -174,8 +178,19 @@
         }
       },
       detectRetina: true
+    })
+    .then(container => {
+      let hue = 0;
+      const speed = 0.5; // degrees per frame (tweak this for faster/slower)
+      
+      (function animateHue() {
+        hue = (hue + speed) % 360;
+        // update link color directly on the live instance
+        container.options.particles.links.color = `hsl(${hue},100%,50%)`;
+        requestAnimationFrame(animateHue);
+      })();
     });
-  </script>
+</script>
 
   <!-- your existing Vault + Cat scripts -->
   <script>
