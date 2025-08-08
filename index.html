@@ -19,6 +19,24 @@
   <!-- Manrope font -->
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg-gradient: linear-gradient(45deg, #1a1a1a, #0d0d0d, #1a1a1a);
+      --text-color: #e5e5e5;
+      --link-color: #e5e5e5;
+      --link-hover-color: #fff;
+      --border-color: #333;
+      --card-bg: #111;
+    }
+
+    body.light {
+      --bg-gradient: linear-gradient(45deg, #f0f0f0, #e0e0e0, #f0f0f0);
+      --text-color: #222;
+      --link-color: #222;
+      --link-hover-color: #000;
+      --border-color: #bbb;
+      --card-bg: #fff;
+    }
+
     /* full-screen particles canvas */
     #tsparticles {
       position: fixed;
@@ -30,10 +48,10 @@
     body {
       margin: 0;
       padding: 2rem;
-      background: linear-gradient(45deg, #1a1a1a, #0d0d0d, #1a1a1a);
+      background: var(--bg-gradient);
       background-size: 400% 400%;
       animation: bgAnim 20s ease infinite;
-      color: #e5e5e5;
+      color: var(--text-color);
       font-family: 'Manrope', sans-serif;
       line-height: 1.6;
       text-align: left;
@@ -67,19 +85,19 @@
       margin: 1rem 0;
     }
     a {
-      color: #e5e5e5;
+      color: var(--link-color);
       text-decoration: none;
-      border-bottom: 1px dashed #555;
+      border-bottom: 1px dashed var(--border-color);
       transition: color 0.2s;
     }
     a:hover {
-      color: #fff;
+      color: var(--link-hover-color);
       text-decoration: underline;
     }
     input, button {
-      background: #111;
-      border: 1px solid #333;
-      color: #e5e5e5;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
       padding: 0.5rem;
       font-family: inherit;
       font-size: 1rem;
@@ -95,8 +113,8 @@
       display: none;
       margin-top: 1rem;
       padding: 1rem;
-      background: #111;
-      border: 1px solid #333;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
       text-align: left;
     }
     ul.vault-list {
@@ -111,13 +129,44 @@
     #cat-container img {
       max-width: 100%;
       margin-top: 1rem;
-      border: 1px solid #333;
+      border: 1px solid var(--border-color);
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .project-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      padding: 1rem;
+      border-radius: 8px;
+      transition: transform 0.2s;
+    }
+
+    .project-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .theme-toggle {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.25rem;
     }
   </style>
 </head>
 <body>
   <!-- 1) Particle animation background -->
   <div id="tsparticles"></div>
+  <button id="theme-toggle" class="theme-toggle">toggle theme</button>
 
   <div class="container">
     <h1>NILS MATTESON</h1>
@@ -149,6 +198,22 @@
         <li><a href="/demos/demo1.mp3" download>demo1.mp3</a></li>
         <!-- add more links here -->
       </ul>
+    </div>
+
+    <h2>projects</h2>
+    <div class="projects-grid">
+      <div class="project-card">
+        <h3>Machine Learning</h3>
+        <p>Exploring predictive models and data viz.</p>
+      </div>
+      <div class="project-card">
+        <h3>Web Apps</h3>
+        <p>Building interactive experiences with React.</p>
+      </div>
+      <div class="project-card">
+        <h3>Music Tools</h3>
+        <p>Tools that blend code and sound.</p>
+      </div>
     </div>
   </div>
 
@@ -206,6 +271,17 @@
 
   <!-- your existing Vault + Cat scripts -->
   <script>
+    // Theme toggle
+    const themeBtn = document.getElementById('theme-toggle');
+    const storedTheme = localStorage.getItem('theme');
+    if (storedTheme === 'light') {
+      document.body.classList.add('light');
+    }
+    themeBtn.onclick = () => {
+      document.body.classList.toggle('light');
+      localStorage.setItem('theme', document.body.classList.contains('light') ? 'light' : 'dark');
+    };
+
     // Vault unlock
     document.getElementById('vault-button').onclick = () => {
       const pw = document.getElementById('vault-password').value;
