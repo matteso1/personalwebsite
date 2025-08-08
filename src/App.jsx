@@ -1,20 +1,8 @@
 import React from "react";
 import { motion } from "framer-motion";
-import {
-  Github,
-  Instagram,
-  Music2,
-  Mail,
-  PlayCircle,
-  ArrowUpRight,
-  Code2,
-  Mic2,
-  PenTool,
-  Smartphone,
-  ExternalLink,
-  Download,
-} from "lucide-react";
+import { Github, Instagram, Music2, Mail, ArrowUpRight, ExternalLink, Download } from "lucide-react";
 import AnimatedBackground from "./components/AnimatedBackground";
+import DemoGallery from "./components/DemoGallery";
 
 // --- QUICK NOTES -------------------------------------------------------------
 // • Drop this file in as src/App.jsx (or src/App.tsx with minor typing tweaks).
@@ -53,27 +41,6 @@ const LinkBtn = ({ href, children }) => (
   </a>
 );
 
-const ProjectCard = ({ title, blurb, tags = [], href, year, icon: Icon }) => (
-  <a href={href} target="_blank" rel="noreferrer" className="group block rounded-2xl border p-5 hover:-translate-y-1 transition-all">
-    <div className="flex items-center justify-between">
-      <div className="flex items-center gap-3">
-        {Icon ? <Icon className="h-5 w-5 opacity-80" /> : <Code2 className="h-5 w-5 opacity-80" />}
-        <h3 className="text-lg font-semibold">{title}</h3>
-      </div>
-      <span className="text-xs opacity-60">{year}</span>
-    </div>
-    <p className="mt-3 text-sm opacity-80 leading-relaxed">{blurb}</p>
-    <div className="mt-4 flex flex-wrap gap-2">
-      {tags.map((t) => (
-        <Chip key={t}>{t}</Chip>
-      ))}
-    </div>
-    <div className="mt-4 inline-flex items-center gap-2 text-sm opacity-70 group-hover:opacity-100">
-      <ExternalLink className="h-4 w-4" /> View project
-    </div>
-  </a>
-);
-
 export default function App() {
   return (
     <div className="relative min-h-screen bg-dark text-white">
@@ -83,9 +50,10 @@ export default function App() {
         <div className="max-w-6xl mx-auto flex items-center justify-between px-5 sm:px-8 h-14">
           <a href="#top" className="font-semibold tracking-wide">NILS MATTESON</a>
           <nav className="hidden sm:flex items-center gap-6 text-sm opacity-80">
-            <a href="#work" className="hover:opacity-100">Work</a>
             <a href="#music" className="hover:opacity-100">Music</a>
-            <a href="#now" className="hover:opacity-100">Now</a>
+            <a href="#demos" className="hover:opacity-100">Demos</a>
+            <a href="#notebook" className="hover:opacity-100">Notebook</a>
+            <a href="#support" className="hover:opacity-100">Support</a>
             <a href="#contact" className="hover:opacity-100">Contact</a>
           </nav>
           <div className="flex items-center gap-2">
@@ -107,122 +75,75 @@ export default function App() {
                 transition={{ duration: 0.6 }}
                 className="text-4xl sm:text-6xl font-semibold tracking-tight leading-[1.05]"
               >
-                Data science student, full-stack tinkerer, <span className="underline decoration-dashed underline-offset-8">artist</span>.
+                An artist’s notebook.
               </motion.h1>
-              <p className="mt-6 text-base sm:text-lg opacity-80 max-w-2xl">
-                I build playful, useful things on the web and make music that actually slaps. Currently at UW–Madison (DS + CS). Dual citizen (US/SE). Based in Madison for now.
-              </p>
+              <p className="mt-6 text-base sm:text-lg opacity-80 max-w-2xl">Music first. Occasional code. This page is a living sketchbook.</p>
               <div className="mt-8 flex flex-wrap gap-3">
-                <LinkBtn href="#work">See work</LinkBtn>
+                <LinkBtn href="#demos">Demos</LinkBtn>
                 <LinkBtn href="#music">Hear music</LinkBtn>
                 <a href="/Nils_Matteson_Resume.pdf" className="group inline-flex items-center gap-2 rounded-xl border border-white/10 px-4 py-2 text-sm font-medium hover:-translate-y-0.5 transition-all">
                   <Download className="h-4 w-4" /> Resume
                 </a>
               </div>
               <div className="mt-6 flex items-center gap-3 text-sm">
-                <Chip>React / Vite</Chip>
-                <Chip>Python / ML</Chip>
                 <Chip>Ableton</Chip>
-                <Chip>Tailwind</Chip>
+                <Chip>React</Chip>
+                <Chip>UW–Madison</Chip>
               </div>
             </div>
             <div className="md:col-span-2">
               <div className="rounded-3xl border border-white/10 p-6 bg-white/5 backdrop-blur">
-                <p className="text-sm uppercase tracking-widest opacity-60">Latest</p>
-                <a href="https://open.spotify.com/track/25FM9yX68IPzFi7FDea91n" target="_blank" rel="noreferrer" className="mt-2 flex items-center gap-3 group">
-                  <PlayCircle className="h-10 w-10" />
-                  <div>
-                    <p className="font-medium leading-tight group-hover:underline">what do you dream about? (feat. skeen)</p>
-                    <p className="text-xs opacity-70">Single · 2025</p>
-                  </div>
-                </a>
-                <audio controls className="mt-4 w-full">
-                  <source src="/demos/demo1.mp3" type="audio/mpeg" />
-                </audio>
+                <p className="text-sm uppercase tracking-widest opacity-60">Quick links</p>
+                <div className="mt-3 grid grid-cols-1 gap-2 text-sm">
+                  <LinkBtn href="https://open.spotify.com/artist/2qpBZGqFiVcsYEaJkBahMo">Spotify artist</LinkBtn>
+                  <LinkBtn href="https://www.linkedin.com/in/nils-matteson-198326249/">LinkedIn</LinkBtn>
+                  <LinkBtn href="#support">Support the music</LinkBtn>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* WORK */}
-        <Section id="work" kicker="Selected" title="Projects that feel like me.">
-          <div className="grid sm:grid-cols-2 gap-5">
-            <ProjectCard
-              title="Tempo Trends: Pop vs. Hip-Hop"
-              blurb="Statistical analysis of BPM trends 1990–2024 with tidyverse/ggplot2, R Markdown report, and an interactive D3 chart."
-              tags={["R", "ggplot2", "D3", "DataViz"]}
-              year="2025"
-              href="https://example.com/tempo"
-              icon={PenTool}
-            />
-            <ProjectCard
-              title="Studio Drummer Router"
-              blurb="Kontakt multi-out Ableton template + JS utility for auto-routing drum mics."
-              tags={["Ableton", "Kontakt", "JavaScript"]}
-              year="2025"
-              href="https://example.com/studio"
-              icon={Mic2}
-            />
-            <ProjectCard
-              title="SwipeLess Dating"
-              blurb="A small social experiment: $5 flat-fee dating app prototype that hides photos until both opt in to chat."
-              tags={["React", "Node", "Auth", "Product"]}
-              year="2025"
-              href="https://example.com/swipeless"
-              icon={Smartphone}
-            />
-            <ProjectCard
-              title="UW DS Notes — Open"
-              blurb="Clean, searchable study notes for STAT/CS courses; notebook → site pipeline with mdx."
-              tags={["Python", "MDX", "Education"]}
-              year="2024–26"
-              href="https://example.com/notes"
-              icon={Code2}
-            />
-          </div>
+        {/* DEMOS */}
+        <Section id="demos" kicker="WIP" title="Demos — sketches, ideas, works-in-progress.">
+          <DemoGallery />
         </Section>
 
         {/* MUSIC */}
-        <Section id="music" kicker="Artist" title="Songs with teeth—danceable, emotional, honest.">
-          <div className="grid sm:grid-cols-2 gap-6">
-            <div className="rounded-2xl border p-6">
-              <p className="text-sm opacity-70">Featured</p>
-              <h3 className="text-xl font-semibold mt-1">“waiting room” — live edit</h3>
-              <p className="mt-2 text-sm opacity-80">Vocoder as the voice of Death. Bon Iver-adjacent but still me.</p>
-              <div className="mt-3">
-                <audio controls className="w-full">
-                  <source src="/demos/demo1.mp3" type="audio/mpeg" />
-                </audio>
-              </div>
+        <Section id="music" kicker="Artist" title="Music on Spotify">
+          <div className="rounded-2xl border p-6">
+            <div className="aspect-video rounded-xl overflow-hidden border">
+              <iframe
+                title="spotify-artist"
+                className="w-full h-full"
+                src="https://open.spotify.com/embed/artist/2qpBZGqFiVcsYEaJkBahMo"
+                loading="lazy"
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              />
             </div>
-            <div className="rounded-2xl border p-6">
-              <p className="text-sm opacity-70">Playlist</p>
-              <h3 className="text-xl font-semibold mt-1">Inspiration — album mode</h3>
-              <p className="mt-2 text-sm opacity-80">The 1975, The Hellp, Porter Robinson, Dominic Fike, Jane Remover.</p>
-              <div className="mt-3 aspect-video rounded-xl overflow-hidden border">
-                <iframe
-                  title="spotify"
-                  className="w-full h-full"
-                  src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M"
-                  loading="lazy"
-                  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                />
-              </div>
+            <div className="mt-3">
+              <LinkBtn href="https://open.spotify.com/artist/2qpBZGqFiVcsYEaJkBahMo"><ExternalLink className="h-4 w-4" /> Open artist page</LinkBtn>
             </div>
           </div>
         </Section>
 
-        {/* NOW / UPDATES */}
-        <Section id="now" kicker="Now" title="Current focus & tiny updates.">
-          <ul className="space-y-3 text-sm">
-            <li>• Rebuilding personal site (this!) with React + Tailwind. Shipping v2 soon.</li>
-            <li>• Finalizing EP tracklist; mixing vocals w/ Waves EV2 and new Ableton template.</li>
-            <li>• Running 5x/week; finishing DS degree; interviewing for fall internships.</li>
-          </ul>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <Chip>Open to collabs</Chip>
-            <Chip>Madison, WI</Chip>
-            <Chip>US/SE dual citizen</Chip>
+        {/* NOTEBOOK */}
+        <Section id="notebook" kicker="Notes" title="Notebook — scraps, ideas, phrases.">
+          <div className="grid sm:grid-cols-2 gap-4">
+            {["album log: cut 2 choruses; leave space.", "lyric: ‘keep my lights on while I chase dreams’", "sound: pitched noise → sidechain; tape wow.", "todo: release stems / racks as pay-what-you-want"].map((t) => (
+              <div key={t} className="rounded-xl border border-white/10 p-4 bg-white/5">
+                <p className="text-sm opacity-90">{t}</p>
+              </div>
+            ))}
+          </div>
+        </Section>
+
+        {/* SUPPORT */}
+        <Section id="support" kicker="Support" title="Streaming pays pennies. If you like it, tip a buck.">
+          <div className="flex flex-wrap gap-3">
+            <LinkBtn href="https://venmo.com/u/yoitsnils">Venmo</LinkBtn>
+            <LinkBtn href="https://paypal.me/yoitsnils">PayPal</LinkBtn>
+            <LinkBtn href="#">Store (soon)</LinkBtn>
           </div>
         </Section>
 
@@ -233,6 +154,7 @@ export default function App() {
             <div className="flex flex-wrap gap-3">
               <LinkBtn href="mailto:sendbeats2nils@gmail.com"><Mail className="h-4 w-4" /> sendbeats2nils@gmail.com</LinkBtn>
               <LinkBtn href="https://instagram.com/yoitsnils"><Instagram className="h-4 w-4" /> Instagram</LinkBtn>
+              <LinkBtn href="https://www.linkedin.com/in/nils-matteson-198326249/"><ExternalLink className="h-4 w-4" /> LinkedIn</LinkBtn>
               <LinkBtn href="https://github.com/matteso1"><Github className="h-4 w-4" /> GitHub</LinkBtn>
             </div>
           </div>
