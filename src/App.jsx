@@ -43,7 +43,7 @@ const LinkBtn = ({ href, children }) => (
 
 export default function App() {
   return (
-    <div className="relative min-h-screen bg-[url('/noise.png')] bg-dark text-white [background-blend-mode:multiply]">
+    <div className="relative min-h-screen bg-[url('/noise.png')] bg-dark text-white [background-blend-mode:multiply] aurora">
       {/* NAV */}
       <header className="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-black/50 border-b border-white/10">
         <div className="max-w-6xl mx-auto flex items-center justify-between px-5 sm:px-8 h-14">
@@ -76,18 +76,10 @@ export default function App() {
               >
                 An artist’s notebook.
               </motion.h1>
-              <p className="mt-6 text-base sm:text-lg opacity-80 max-w-2xl">Music first. Occasional code. This page is a living sketchbook.</p>
+              <p className="mt-6 text-base sm:text-lg opacity-80 max-w-2xl">I’m Nils — songwriter/producer from Madison, WI. Guitar, piano, voice. I build small web things sometimes, but the music is the point.</p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <LinkBtn href="#demos">Demos</LinkBtn>
                 <LinkBtn href="#music">Hear music</LinkBtn>
-                <a href="/Nils_Matteson_Resume.pdf" className="group inline-flex items-center gap-2 rounded-xl border border-white/10 px-4 py-2 text-sm font-medium hover:-translate-y-0.5 transition-all">
-                  <Download className="h-4 w-4" /> Resume
-                </a>
-              </div>
-              <div className="mt-6 flex items-center gap-3 text-sm">
-                <Chip>Ableton</Chip>
-                <Chip>React</Chip>
-                <Chip>UW–Madison</Chip>
               </div>
             </div>
             <div className="md:col-span-2">
@@ -133,22 +125,21 @@ export default function App() {
         </Section>
 
         {/* NOTEBOOK */}
-        <Section id="notebook" kicker="Notes" title="Notebook — scraps, ideas, phrases.">
-          <div className="grid sm:grid-cols-2 gap-4">
-            {["album log: cut 2 choruses; leave space.", "lyric: ‘keep my lights on while I chase dreams’", "sound: pitched noise → sidechain; tape wow.", "todo: release stems / racks as pay-what-you-want"].map((t) => (
-              <div key={t} className="rounded-xl border border-white/10 p-4 bg-white/5">
-                <p className="text-sm opacity-90">{t}</p>
-              </div>
-            ))}
+        <Section id="notebook" kicker="Bio" title="Who I am">
+          <div className="rounded-2xl border p-6 bg-white/5">
+            <p className="opacity-90 leading-relaxed">
+              Born in Boise, based in Madison. I write, produce, and mix my own records. I like songs that feel human but still move a crowd.
+              If you want to talk music, send stems, or book a show, reach out below. If you’re here for school/work stuff, my LinkedIn has the CS/DS bits.
+            </p>
           </div>
         </Section>
 
         {/* SUPPORT */}
-        <Section id="support" kicker="Support" title="Streaming pays pennies. If you like it, tip a buck.">
+        <Section id="support" kicker="Support" title="If the music hits, keep the lights on:">
           <div className="flex flex-wrap gap-3">
             <LinkBtn href="https://venmo.com/u/friggoffmrlahey">Venmo (@friggoffmrlahey)</LinkBtn>
             <LinkBtn href="https://www.paypal.com/donate?business=nilsmatteson%40icloud.com&currency_code=USD">PayPal</LinkBtn>
-            <LinkBtn href="#">Store (soon)</LinkBtn>
+            <LinkBtn href="#store">Store</LinkBtn>
           </div>
         </Section>
 

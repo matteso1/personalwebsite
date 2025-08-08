@@ -17,3 +17,29 @@ h1, h2, h3, h4, h5, h6 {
   font-family: 'Poppins', sans-serif;
   font-weight: 700;
 }
+
+/* Aurora gradient animation */
+.aurora::before,
+.aurora::after {
+  content: "";
+  position: absolute;
+  inset: -20% -10% auto -10%;
+  height: 60vh;
+  filter: blur(60px);
+  background: radial-gradient(60% 60% at 30% 40%, rgba(139,92,246,.35) 0%, rgba(139,92,246,0) 60%),
+              radial-gradient(50% 50% at 70% 60%, rgba(59,130,246,.35) 0%, rgba(59,130,246,0) 60%),
+              radial-gradient(40% 40% at 50% 80%, rgba(16,185,129,.25) 0%, rgba(16,185,129,0) 60%);
+  animation: float 18s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+.aurora::after {
+  inset: auto -10% -20% -10%;
+  height: 50vh;
+  animation-duration: 22s;
+}
+
+@keyframes float {
+  0% { transform: translateY(0) translateX(0) scale(1); }
+  50% { transform: translateY(-10px) translateX(6px) scale(1.02); }
+  100% { transform: translateY(6px) translateX(-8px) scale(0.98); }
+}
