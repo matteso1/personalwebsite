@@ -1,6 +1,20 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Github, Instagram, Music2, Mail, PlayCircle, ArrowUpRight, Code2, Mic2, Sparkles, PenTool, Smartphone, ExternalLink, Download } from "lucide-react";
+import {
+  Github,
+  Instagram,
+  Music2,
+  Mail,
+  PlayCircle,
+  ArrowUpRight,
+  Code2,
+  Mic2,
+  PenTool,
+  Smartphone,
+  ExternalLink,
+  Download,
+} from "lucide-react";
+import AnimatedBackground from "./components/AnimatedBackground";
 
 // --- QUICK NOTES -------------------------------------------------------------
 // • Drop this file in as src/App.jsx (or src/App.tsx with minor typing tweaks).
@@ -62,9 +76,10 @@ const ProjectCard = ({ title, blurb, tags = [], href, year, icon: Icon }) => (
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/30 text-foreground">
+    <div className="relative min-h-screen bg-dark text-white">
+      <AnimatedBackground intensity="medium" color="accent" />
       {/* NAV */}
-      <header className="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-background/65 border-b">
+      <header className="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-black/50 border-b border-white/10">
         <div className="max-w-6xl mx-auto flex items-center justify-between px-5 sm:px-8 h-14">
           <a href="#top" className="font-semibold tracking-wide">NILS MATTESON</a>
           <nav className="hidden sm:flex items-center gap-6 text-sm opacity-80">
@@ -74,9 +89,9 @@ export default function App() {
             <a href="#contact" className="hover:opacity-100">Contact</a>
           </nav>
           <div className="flex items-center gap-2">
-            <a href="https://open.spotify.com/artist/" target="_blank" rel="noreferrer" className="p-2 rounded-xl border hover:-translate-y-0.5 transition"><Music2 className="h-4 w-4" /></a>
-            <a href="https://instagram.com/" target="_blank" rel="noreferrer" className="p-2 rounded-xl border hover:-translate-y-0.5 transition"><Instagram className="h-4 w-4" /></a>
-            <a href="https://github.com/matteso1" target="_blank" rel="noreferrer" className="p-2 rounded-xl border hover:-translate-y-0.5 transition"><Github className="h-4 w-4" /></a>
+            <a href="https://open.spotify.com/artist/2qpBZGqFiVcsYEaJkBahMo" target="_blank" rel="noreferrer" className="p-2 rounded-xl border border-white/10 hover:-translate-y-0.5 transition"><Music2 className="h-4 w-4" /></a>
+            <a href="https://instagram.com/yoitsnils" target="_blank" rel="noreferrer" className="p-2 rounded-xl border border-white/10 hover:-translate-y-0.5 transition"><Instagram className="h-4 w-4" /></a>
+            <a href="https://github.com/matteso1" target="_blank" rel="noreferrer" className="p-2 rounded-xl border border-white/10 hover:-translate-y-0.5 transition"><Github className="h-4 w-4" /></a>
           </div>
         </div>
       </header>
@@ -100,7 +115,7 @@ export default function App() {
               <div className="mt-8 flex flex-wrap gap-3">
                 <LinkBtn href="#work">See work</LinkBtn>
                 <LinkBtn href="#music">Hear music</LinkBtn>
-                <a href="/Nils_Matteson_Resume.pdf" className="group inline-flex items-center gap-2 rounded-xl border px-4 py-2 text-sm font-medium hover:-translate-y-0.5 transition-all">
+                <a href="/Nils_Matteson_Resume.pdf" className="group inline-flex items-center gap-2 rounded-xl border border-white/10 px-4 py-2 text-sm font-medium hover:-translate-y-0.5 transition-all">
                   <Download className="h-4 w-4" /> Resume
                 </a>
               </div>
@@ -112,9 +127,9 @@ export default function App() {
               </div>
             </div>
             <div className="md:col-span-2">
-              <div className="rounded-3xl border p-6">
+              <div className="rounded-3xl border border-white/10 p-6 bg-white/5 backdrop-blur">
                 <p className="text-sm uppercase tracking-widest opacity-60">Latest</p>
-                <a href="https://open.spotify.com/track/" target="_blank" rel="noreferrer" className="mt-2 flex items-center gap-3 group">
+                <a href="https://open.spotify.com/track/25FM9yX68IPzFi7FDea91n" target="_blank" rel="noreferrer" className="mt-2 flex items-center gap-3 group">
                   <PlayCircle className="h-10 w-10" />
                   <div>
                     <p className="font-medium leading-tight group-hover:underline">what do you dream about? (feat. skeen)</p>
@@ -122,7 +137,7 @@ export default function App() {
                   </div>
                 </a>
                 <audio controls className="mt-4 w-full">
-                  <source src="/audio/demo1.mp3" type="audio/mpeg" />
+                  <source src="/demos/demo1.mp3" type="audio/mpeg" />
                 </audio>
               </div>
             </div>
@@ -176,7 +191,7 @@ export default function App() {
               <p className="mt-2 text-sm opacity-80">Vocoder as the voice of Death. Bon Iver-adjacent but still me.</p>
               <div className="mt-3">
                 <audio controls className="w-full">
-                  <source src="/audio/waiting-room-live.mp3" type="audio/mpeg" />
+                  <source src="/demos/demo1.mp3" type="audio/mpeg" />
                 </audio>
               </div>
             </div>
@@ -188,7 +203,7 @@ export default function App() {
                 <iframe
                   title="spotify"
                   className="w-full h-full"
-                  src="https://open.spotify.com/embed/playlist/"
+                  src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M"
                   loading="lazy"
                   allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                 />
@@ -217,7 +232,7 @@ export default function App() {
             <p className="opacity-80">Email works best. DMs are fine too.</p>
             <div className="flex flex-wrap gap-3">
               <LinkBtn href="mailto:sendbeats2nils@gmail.com"><Mail className="h-4 w-4" /> sendbeats2nils@gmail.com</LinkBtn>
-              <LinkBtn href="https://instagram.com/"><Instagram className="h-4 w-4" /> Instagram</LinkBtn>
+              <LinkBtn href="https://instagram.com/yoitsnils"><Instagram className="h-4 w-4" /> Instagram</LinkBtn>
               <LinkBtn href="https://github.com/matteso1"><Github className="h-4 w-4" /> GitHub</LinkBtn>
             </div>
           </div>
@@ -225,7 +240,7 @@ export default function App() {
       </main>
 
       {/* FOOTER */}
-      <footer className="border-t">
+      <footer className="border-t border-white/10">
         <div className="max-w-6xl mx-auto px-5 sm:px-8 py-8 text-sm flex flex-wrap items-center justify-between gap-3">
           <p className="opacity-70">© {new Date().getFullYear()} Nils Matteson. Built with React + Vite + Tailwind.</p>
           <div className="flex items-center gap-4">
