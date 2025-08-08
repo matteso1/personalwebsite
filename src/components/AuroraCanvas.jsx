@@ -91,13 +91,13 @@ function AuroraPlane() {
 }
 
 export default function AuroraCanvas() {
+  // Skip rendering on coarse pointers (mobile) for performance/visual simplicity
+  if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(pointer: coarse)').matches) {
+    return null;
+  }
   return (
     <div className="pointer-events-none fixed inset-0 -z-10">
-      <Canvas
-        gl={{ antialias: true }}
-        dpr={[1, 2]}
-        camera={{ position: [0, 0, 1] }}
-      >
+      <Canvas gl={{ antialias: true }} dpr={[1, 2]} camera={{ position: [0, 0, 1] }}>
         <AuroraPlane />
       </Canvas>
     </div>

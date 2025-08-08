@@ -2,6 +2,8 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Github, Instagram, Music2, Mail, ArrowUpRight, ExternalLink } from "lucide-react";
 import AuroraCanvas from "./components/AuroraCanvas";
+import Spotlight from "./components/Spotlight";
+import InkBorder from "./components/InkBorder";
 // Removed techy particle background to lean into a calmer notebook feel
 import DemoGallery from "./components/DemoGallery";
 
@@ -46,6 +48,7 @@ export default function App() {
   return (
     <div className="relative min-h-screen bg-[url('/noise.png')] bg-dark text-white [background-blend-mode:multiply]">
       <AuroraCanvas />
+      <Spotlight />
       {/* NAV */}
       <header className="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-black/50 border-b border-white/10">
         <div className="max-w-6xl mx-auto flex items-center justify-between px-5 sm:px-8 h-14">
@@ -85,24 +88,31 @@ export default function App() {
               </div>
             </div>
             <div className="md:col-span-2">
-              <div className="rounded-3xl border border-white/10 p-6 bg-white/5">
+              <InkBorder className="rounded-3xl">
+                <div className="rounded-3xl p-6 bg-white/5">
                 <p className="text-sm uppercase tracking-widest opacity-60">Latest demos</p>
                 <div className="mt-3">
                   <DemoGallery />
                 </div>
-              </div>
+                </div>
+              </InkBorder>
             </div>
           </div>
         </section>
 
         {/* DEMOS */}
         <Section id="demos" kicker="WIP" title="Demos — sketches, ideas, works-in-progress.">
-          <DemoGallery />
+          <InkBorder className="rounded-2xl">
+            <div className="rounded-2xl p-6 bg-white/5">
+              <DemoGallery />
+            </div>
+          </InkBorder>
         </Section>
 
         {/* MUSIC */}
         <Section id="music" kicker="Artist" title="Music">
-          <div className="rounded-2xl border p-6">
+          <InkBorder className="rounded-2xl">
+            <div className="rounded-2xl p-6 bg-white/5">
             <div className="aspect-video rounded-xl overflow-hidden border">
               <iframe
                 title="spotify-artist"
@@ -123,7 +133,8 @@ export default function App() {
                 />
               </div>
             </div>
-          </div>
+            </div>
+          </InkBorder>
         </Section>
 
         {/* NOTEBOOK */}
@@ -138,11 +149,13 @@ export default function App() {
 
         {/* SUPPORT */}
         <Section id="support" kicker="Support" title="If the music hits, keep the lights on:">
-          <div className="flex flex-wrap gap-3">
-            <LinkBtn href="https://venmo.com/u/friggoffmrlahey">Venmo (@friggoffmrlahey)</LinkBtn>
-            <LinkBtn href="https://www.paypal.com/donate?business=nilsmatteson%40icloud.com&currency_code=USD">PayPal</LinkBtn>
-            <LinkBtn href="#store">Store</LinkBtn>
-          </div>
+          <InkBorder className="rounded-2xl">
+            <div className="rounded-2xl p-6 bg-white/5 flex flex-wrap gap-3">
+              <LinkBtn href="https://venmo.com/u/friggoffmrlahey">Venmo (@friggoffmrlahey)</LinkBtn>
+              <LinkBtn href="https://www.paypal.com/donate?business=nilsmatteson%40icloud.com&currency_code=USD">PayPal</LinkBtn>
+              <LinkBtn href="#store">Store</LinkBtn>
+            </div>
+          </InkBorder>
         </Section>
 
         {/* CONTACT */}
