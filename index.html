@@ -4,15 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
  
-    <!-- 2) your new title & meta description -->
   <title>Nils Matteson</title>
   <meta
     name="description"
     content="Official site of Nils Matteson"
   />
 
-  <!-- 3) your favicon (replace with your actual file) -->
-  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+  <link rel="icon" href="/favicon.ico" />
   
   
   
@@ -164,9 +162,8 @@
   </style>
 </head>
 <body>
-  <!-- 1) Particle animation background -->
   <div id="tsparticles"></div>
-  <button id="theme-toggle" class="theme-toggle">toggle theme</button>
+  <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">🌙</button>
 
   <div class="container">
     <h1>NILS MATTESON</h1>
@@ -269,17 +266,23 @@
     });
 </script>
 
-  <!-- your existing Vault + Cat scripts -->
+  <!-- Vault and cat scripts -->
   <script>
     // Theme toggle
     const themeBtn = document.getElementById('theme-toggle');
+    const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
     const storedTheme = localStorage.getItem('theme');
-    if (storedTheme === 'light') {
+    const useLight = storedTheme ? storedTheme === 'light' : prefersLight;
+    if (useLight) {
       document.body.classList.add('light');
+      themeBtn.textContent = '☀️';
+    } else {
+      themeBtn.textContent = '🌙';
     }
     themeBtn.onclick = () => {
-      document.body.classList.toggle('light');
-      localStorage.setItem('theme', document.body.classList.contains('light') ? 'light' : 'dark');
+      const isLight = document.body.classList.toggle('light');
+      themeBtn.textContent = isLight ? '☀️' : '🌙';
+      localStorage.setItem('theme', isLight ? 'light' : 'dark');
     };
 
     // Vault unlock
