@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Github, Instagram, Music2, Mail, ArrowUpRight, ExternalLink, Download } from "lucide-react";
+import { Github, Instagram, Music2, Mail, ArrowUpRight, ExternalLink } from "lucide-react";
+import AuroraCanvas from "./components/AuroraCanvas";
 // Removed techy particle background to lean into a calmer notebook feel
 import DemoGallery from "./components/DemoGallery";
 
@@ -43,7 +44,8 @@ const LinkBtn = ({ href, children }) => (
 
 export default function App() {
   return (
-    <div className="relative min-h-screen bg-[url('/noise.png')] bg-dark text-white [background-blend-mode:multiply] aurora">
+    <div className="relative min-h-screen bg-[url('/noise.png')] bg-dark text-white [background-blend-mode:multiply]">
+      <AuroraCanvas />
       {/* NAV */}
       <header className="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-black/50 border-b border-white/10">
         <div className="max-w-6xl mx-auto flex items-center justify-between px-5 sm:px-8 h-14">
