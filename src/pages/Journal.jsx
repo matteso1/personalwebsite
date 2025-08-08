@@ -46,7 +46,7 @@ const JournalEntry = ({ date, title, excerpt, tags, featured = false }) => (
 );
 
 // Featured Entry Component
-const FeaturedEntry = ({ date, title, excerpt, image, tags = [] }) => (
+const FeaturedEntry = ({ date, title, excerpt, tags = [] }) => (
   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden">
     {/* Image Side */}
     <div className="h-60 md:h-full relative overflow-hidden">
