@@ -141,8 +141,8 @@ export default function App() {
         {/* SUPPORT */}
         <Section id="support" kicker="Support" title="Streaming pays pennies. If you like it, tip a buck.">
           <div className="flex flex-wrap gap-3">
-            <LinkBtn href="https://venmo.com/u/yoitsnils">Venmo</LinkBtn>
-            <LinkBtn href="https://paypal.me/yoitsnils">PayPal</LinkBtn>
+            <LinkBtn href="https://venmo.com/u/friggoffmrlahey">Venmo (@friggoffmrlahey)</LinkBtn>
+            <LinkBtn href="https://www.paypal.com/donate?business=nilsmatteson%40icloud.com&currency_code=USD">PayPal</LinkBtn>
             <LinkBtn href="#">Store (soon)</LinkBtn>
           </div>
         </Section>
