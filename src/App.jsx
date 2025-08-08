@@ -416,7 +416,7 @@ export default function App() {
             <p className="text-xl text-white/80 leading-relaxed">{site.music.description}</p>
             
             {/* Spotify Player */}
-            <ArtCard className="relative overflow-hidden">
+            <ArtCard className="relative overflow-hidden" hover={false}>
               <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 via-emerald-500/3 to-green-500/5"></div>
               <div className="relative z-10 space-y-6">
                 <div className="flex items-center justify-between">
@@ -442,7 +442,7 @@ export default function App() {
             </ArtCard>
 
             {/* SoundCloud Player */}
-            <ArtCard className="relative overflow-hidden">
+            <ArtCard className="relative overflow-hidden" hover={false}>
               <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 via-red-500/3 to-orange-500/5"></div>
               <div className="relative z-10 space-y-6">
                 <div className="flex items-center justify-between">
