@@ -1,6 +1,66 @@
 {
   "name": "Nils Matteson",
-  "bio": "I’m Nils — songwriter/producer from Madison, WI. Guitar, piano, voice. I build small web things sometimes, but the music is the point.",
+  "tagline": "Artist • Producer • Visionary",
+  "hero": {
+    "title": "An artist's notebook.",
+    "subtitle": "Where sound becomes story.",
+    "description": "I'm Nils — a 22-year-old artist, singer, songwriter, and producer. Born in Albuquerque, raised in Boise, now creating from Madison. Swedish-American dual citizen crafting music that feels human but still moves a crowd."
+  },
+  "about": {
+    "title": "Who I am",
+    "story": "Born in Albuquerque, New Mexico, raised in Boise, Idaho, and now based in Madison, Wisconsin. I'm a 22-year-old artist, singer, songwriter, and producer with dual Swedish-American citizenship. I write, produce, and mix my own records — songs that feel authentic and introspective but still connect with people.",
+    "approach": "My sound blends electronic elements with organic textures and honest lyrics. I'm drawn to creating atmospheric, immersive experiences that invite listeners into a world that's both personal and universal.",
+    "skills": [
+      "Electronic Production",
+      "Songwriting", 
+      "Mixing & Mastering",
+      "Sound Design",
+      "Guitar & Piano",
+      "Vocal Production"
+    ]
+  },
+  "music": {
+    "title": "Music",
+    "description": "Listen to my latest tracks and explore my sonic journey",
+    "featured": {
+      "title": "What Do You Dream About?",
+      "description": "My latest release exploring themes of aspiration and imagination.",
+      "spotifyId": "25FM9yX68IPzFi7FDea91n"
+    },
+    "tracks": [
+      {
+        "title": "What Do You Dream About?",
+        "description": "Latest release exploring themes of aspiration and imagination",
+        "type": "Single",
+        "year": "2025"
+      },
+      {
+        "title": "Night Vision", 
+        "description": "Deep dive into nocturnal soundscapes and late-night reflections",
+        "type": "Demo",
+        "year": "2024"
+      },
+      {
+        "title": "Quantum Theory",
+        "description": "Experimental track blending electronic beats with abstract concepts", 
+        "type": "Demo",
+        "year": "2024"
+      }
+    ]
+  },
+  "demos": {
+    "title": "Demos — sketches, ideas, works-in-progress.",
+    "description": "Raw creativity in motion. These are the building blocks of my artistic journey."
+  },
+  "contact": {
+    "title": "Say hi or send beats.",
+    "description": "Email works best. DMs are fine too.",
+    "cta": "Let's create something beautiful together"
+  },
+  "support": {
+    "title": "If the music hits, keep the lights on:",
+    "description": "Your support helps me continue creating and sharing music with the world."
+  },
   "links": {
     "spotifyArtist": "https://open.spotify.com/artist/2qpBZGqFiVcsYEaJkBahMo",
     "soundcloud": "https://soundcloud.com/sorryitsnils",
