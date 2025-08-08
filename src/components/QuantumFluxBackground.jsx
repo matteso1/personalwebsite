@@ -15,16 +15,6 @@ const QuantumFluxBackground = ({ intensity = 'medium' }) => {
     let animationFrameId;
     let particles = [];
     
-    // Set canvas dimensions
-    const handleResize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      initParticles(); // Reinitialize when resized
-    };
-    
-    window.addEventListener('resize', handleResize);
-    handleResize();
-    
     // Configure based on intensity
     const config = {
       low: {
@@ -64,6 +54,13 @@ const QuantumFluxBackground = ({ intensity = 'medium' }) => {
       }
     }
     
+    // Set canvas dimensions (after functions/constants are defined)
+    const handleResize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      initParticles(); // Reinitialize when resized
+    };
+
     // Animation loop
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -106,7 +103,8 @@ const QuantumFluxBackground = ({ intensity = 'medium' }) => {
       animationFrameId = window.requestAnimationFrame(animate);
     };
     
-    initParticles();
+    window.addEventListener('resize', handleResize);
+    handleResize();
     animate();
     
     // Cleanup
