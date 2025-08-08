@@ -1,0 +1,29 @@
+:root{
+  /* Colors */
+  --color-bg: #0b1220;
+  --color-surface: rgba(255,255,255,0.06);
+  --color-border: rgba(255,255,255,0.12);
+  --color-text: #f5f7ff;
+  --color-muted: rgba(245,247,255,0.65);
+  --color-accent: #8b5cf6; /* violet */
+  --color-accent-2: #60a5fa; /* blue */
+  --color-accent-3: #34d399; /* teal */
+
+  /* Typography */
+  --font-display: 'Poppins', ui-serif, system-ui, sans-serif;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --fs-hero: clamp(2.4rem, 5vw + 1rem, 5rem);
+  --fs-h2: clamp(1.5rem, 1.6vw + 1rem, 2.25rem);
+  --fs-body: clamp(1rem, 0.4vw + 0.9rem, 1.125rem);
+
+  /* Spacing */
+  --radius-xl: 24px;
+  --radius-lg: 16px;
+  --radius-md: 12px;
+}
+
+@media (prefers-color-scheme: light){
+  :root{ --color-text:#0b1220; --color-muted:rgba(11,18,32,0.7); }
+}
+
+

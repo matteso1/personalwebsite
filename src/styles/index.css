@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import './tokens.css';
+
 /* Basic styles */
 html {
   scroll-behavior: smooth;
@@ -9,13 +11,13 @@ html {
 
 body {
   margin: 0;
-  background-color: #0f172a;
-  color: white;
-  font-family: 'Inter', sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--font-display);
   font-weight: 700;
 }
 
@@ -45,4 +47,13 @@ h1, h2, h3, h4, h5, h6 {
   0% { transform: translateY(0) translateX(0) scale(1); }
   50% { transform: translateY(-10px) translateX(6px) scale(1.02); }
   100% { transform: translateY(6px) translateX(-8px) scale(0.98); }
+}
+
+/* Accessible focus ring */
+:where(a,button,[role="button"]) {
+  outline: none;
+}
+:where(a,button,[role="button"]):focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-accent) 70%, transparent);
+  border-radius: 12px;
 }

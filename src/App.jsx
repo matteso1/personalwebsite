@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { motion } from "framer-motion";
 import { Github, Instagram, Music2, Mail, ArrowUpRight, ExternalLink } from "lucide-react";
 import AuroraCanvas from "./components/AuroraCanvas";
@@ -6,6 +6,7 @@ import Spotlight from "./components/Spotlight";
 import InkBorder from "./components/InkBorder";
 // Removed techy particle background to lean into a calmer notebook feel
 import DemoGallery from "./components/DemoGallery";
+import site from "./content/site.json";
 
 // --- QUICK NOTES -------------------------------------------------------------
 // • Drop this file in as src/App.jsx (or src/App.tsx with minor typing tweaks).
@@ -45,6 +46,13 @@ const LinkBtn = ({ href, children }) => (
 );
 
 export default function App() {
+  const m = useMemo(() => ({
+    fade: {
+      hidden: { opacity: 0, y: 24 },
+      show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } }
+    }
+  }), []);
+
   return (
     <div className="relative min-h-screen bg-[url('/noise.png')] bg-dark text-white [background-blend-mode:multiply]">
       <AuroraCanvas />
@@ -61,9 +69,9 @@ export default function App() {
             <a href="#contact" className="hover:opacity-100">Contact</a>
           </nav>
           <div className="flex items-center gap-2">
-            <a href="https://open.spotify.com/artist/2qpBZGqFiVcsYEaJkBahMo" target="_blank" rel="noreferrer" className="p-2 rounded-xl border border-white/10 hover:-translate-y-0.5 transition"><Music2 className="h-4 w-4" /></a>
-            <a href="https://instagram.com/yoitsnils" target="_blank" rel="noreferrer" className="p-2 rounded-xl border border-white/10 hover:-translate-y-0.5 transition"><Instagram className="h-4 w-4" /></a>
-            <a href="https://github.com/matteso1" target="_blank" rel="noreferrer" className="p-2 rounded-xl border border-white/10 hover:-translate-y-0.5 transition"><Github className="h-4 w-4" /></a>
+            <a href={site.links.spotifyArtist} target="_blank" rel="noreferrer" className="p-2 rounded-xl border border-white/10 hover:-translate-y-0.5 transition"><Music2 className="h-4 w-4" /></a>
+            <a href={site.links.instagram} target="_blank" rel="noreferrer" className="p-2 rounded-xl border border-white/10 hover:-translate-y-0.5 transition"><Instagram className="h-4 w-4" /></a>
+            <a href={site.links.github} target="_blank" rel="noreferrer" className="p-2 rounded-xl border border-white/10 hover:-translate-y-0.5 transition"><Github className="h-4 w-4" /></a>
           </div>
         </div>
       </header>
@@ -73,15 +81,12 @@ export default function App() {
         <section className="max-w-6xl mx-auto px-5 sm:px-8 py-16 sm:py-28">
           <div className="grid md:grid-cols-5 gap-10 items-center">
             <div className="md:col-span-3">
-              <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="text-4xl sm:text-6xl font-semibold tracking-tight leading-[1.05]"
-              >
+              <motion.h1 variants={m.fade} initial="hidden" whileInView="show" viewport={{ once: true }} className="font-semibold tracking-tight leading-[1.05]" style={{ fontSize: 'var(--fs-hero)' }}>
                 An artist’s notebook.
               </motion.h1>
-              <p className="mt-6 text-base sm:text-lg opacity-80 max-w-2xl">I’m Nils — songwriter/producer from Madison, WI. Guitar, piano, voice. I build small web things sometimes, but the music is the point.</p>
+              <motion.p variants={m.fade} initial="hidden" whileInView="show" viewport={{ once: true }} className="mt-6 opacity-80 max-w-2xl" style={{ fontSize: 'var(--fs-body)' }}>
+                {site.bio}
+              </motion.p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <LinkBtn href="#demos">Demos</LinkBtn>
                 <LinkBtn href="#music">Hear music</LinkBtn>
@@ -117,7 +122,7 @@ export default function App() {
               <iframe
                 title="spotify-artist"
                 className="w-full h-full"
-                src="https://open.spotify.com/embed/artist/2qpBZGqFiVcsYEaJkBahMo"
+                src={`https://open.spotify.com/embed/artist/${site.links.spotifyArtist.split('/').pop()}`}
                 loading="lazy"
                 allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
               />
@@ -129,7 +134,7 @@ export default function App() {
                   title="soundcloud"
                   className="w-full h-full"
                   allow="autoplay"
-                  src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/sorryitsnils&color=%238b5cf6&auto_play=false&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"
+                    src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(site.links.soundcloud)}&color=%238b5cf6&auto_play=false&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=false`}
                 />
               </div>
             </div>
@@ -151,8 +156,8 @@ export default function App() {
         <Section id="support" kicker="Support" title="If the music hits, keep the lights on:">
           <InkBorder className="rounded-2xl">
             <div className="rounded-2xl p-6 bg-white/5 flex flex-wrap gap-3">
-              <LinkBtn href="https://venmo.com/u/friggoffmrlahey">Venmo (@friggoffmrlahey)</LinkBtn>
-              <LinkBtn href="https://www.paypal.com/donate?business=nilsmatteson%40icloud.com&currency_code=USD">PayPal</LinkBtn>
+              <LinkBtn href={site.links.venmo}>Venmo (@friggoffmrlahey)</LinkBtn>
+              <LinkBtn href={site.links.paypal}>PayPal</LinkBtn>
               <LinkBtn href="#store">Store</LinkBtn>
             </div>
           </InkBorder>
@@ -163,10 +168,10 @@ export default function App() {
           <div className="space-y-4">
             <p className="opacity-80">Email works best. DMs are fine too.</p>
             <div className="flex flex-wrap gap-3">
-              <LinkBtn href="mailto:sendbeats2nils@gmail.com"><Mail className="h-4 w-4" /> sendbeats2nils@gmail.com</LinkBtn>
-              <LinkBtn href="https://instagram.com/yoitsnils"><Instagram className="h-4 w-4" /> Instagram</LinkBtn>
-              <LinkBtn href="https://www.linkedin.com/in/nils-matteson-198326249/"><ExternalLink className="h-4 w-4" /> LinkedIn</LinkBtn>
-              <LinkBtn href="https://github.com/matteso1"><Github className="h-4 w-4" /> GitHub</LinkBtn>
+              <LinkBtn href={site.links.email}><Mail className="h-4 w-4" /> sendbeats2nils@gmail.com</LinkBtn>
+              <LinkBtn href={site.links.instagram}><Instagram className="h-4 w-4" /> Instagram</LinkBtn>
+              <LinkBtn href={site.links.linkedin}><ExternalLink className="h-4 w-4" /> LinkedIn</LinkBtn>
+              <LinkBtn href={site.links.github}><Github className="h-4 w-4" /> GitHub</LinkBtn>
             </div>
           </div>
         </Section>
