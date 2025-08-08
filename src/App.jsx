@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Github, Instagram, Music2, Mail, ArrowUpRight, ExternalLink, Download } from "lucide-react";
-import AnimatedBackground from "./components/AnimatedBackground";
+// Removed techy particle background to lean into a calmer notebook feel
 import DemoGallery from "./components/DemoGallery";
 
 // --- QUICK NOTES -------------------------------------------------------------
@@ -43,8 +43,7 @@ const LinkBtn = ({ href, children }) => (
 
 export default function App() {
   return (
-    <div className="relative min-h-screen bg-dark text-white">
-      <AnimatedBackground intensity="medium" color="accent" />
+    <div className="relative min-h-screen bg-[url('/noise.png')] bg-dark text-white [background-blend-mode:multiply]">
       {/* NAV */}
       <header className="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-black/50 border-b border-white/10">
         <div className="max-w-6xl mx-auto flex items-center justify-between px-5 sm:px-8 h-14">
@@ -92,12 +91,10 @@ export default function App() {
               </div>
             </div>
             <div className="md:col-span-2">
-              <div className="rounded-3xl border border-white/10 p-6 bg-white/5 backdrop-blur">
-                <p className="text-sm uppercase tracking-widest opacity-60">Quick links</p>
-                <div className="mt-3 grid grid-cols-1 gap-2 text-sm">
-                  <LinkBtn href="https://open.spotify.com/artist/2qpBZGqFiVcsYEaJkBahMo">Spotify artist</LinkBtn>
-                  <LinkBtn href="https://www.linkedin.com/in/nils-matteson-198326249/">LinkedIn</LinkBtn>
-                  <LinkBtn href="#support">Support the music</LinkBtn>
+              <div className="rounded-3xl border border-white/10 p-6 bg-white/5">
+                <p className="text-sm uppercase tracking-widest opacity-60">Latest demos</p>
+                <div className="mt-3">
+                  <DemoGallery />
                 </div>
               </div>
             </div>
@@ -110,7 +107,7 @@ export default function App() {
         </Section>
 
         {/* MUSIC */}
-        <Section id="music" kicker="Artist" title="Music on Spotify">
+        <Section id="music" kicker="Artist" title="Music">
           <div className="rounded-2xl border p-6">
             <div className="aspect-video rounded-xl overflow-hidden border">
               <iframe
@@ -121,8 +118,16 @@ export default function App() {
                 allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
               />
             </div>
-            <div className="mt-3">
-              <LinkBtn href="https://open.spotify.com/artist/2qpBZGqFiVcsYEaJkBahMo"><ExternalLink className="h-4 w-4" /> Open artist page</LinkBtn>
+            <div className="mt-6 rounded-xl border border-white/10 p-4 bg-white/5">
+              <p className="text-sm opacity-80 mb-2">SoundCloud (alt):</p>
+              <div className="aspect-video rounded-lg overflow-hidden border">
+                <iframe
+                  title="soundcloud"
+                  className="w-full h-full"
+                  allow="autoplay"
+                  src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/sorryitsnils&color=%238b5cf6&auto_play=false&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"
+                />
+              </div>
             </div>
           </div>
         </Section>

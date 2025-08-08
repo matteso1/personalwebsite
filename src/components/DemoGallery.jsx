@@ -1,10 +1,11 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 
 // Auto-import any audio files placed in src/assets/demos
 // Supported: mp3, wav, ogg, m4a, webm
 const importedDemoMap = import.meta.glob('../assets/demos/*.{mp3,wav,ogg,m4a,webm}', {
   eager: true,
-  as: 'url',
+  query: '?url',
+  import: 'default',
 });
 
 function getFileNameFromUrl(url) {
@@ -26,40 +27,11 @@ export default function DemoGallery() {
     }));
   }, []);
 
-  const [localDemos, setLocalDemos] = useState([]);
-
-  const handlePickLocal = (e) => {
-    const files = Array.from(e.target.files || []);
-    const accepted = files.filter((f) => /\.(mp3|wav|ogg|m4a|webm)$/i.test(f.name));
-    const newItems = accepted.map((file) => ({
-      id: URL.createObjectURL(file),
-      name: file.name,
-      url: URL.createObjectURL(file),
-      source: 'local',
-    }));
-    setLocalDemos((prev) => [...prev, ...newItems]);
-    e.target.value = '';
-  };
-
-  const demos = [...importedDemos, ...localDemos];
+  const demos = importedDemos;
 
   return (
     <div>
-      <div className="flex flex-wrap items-center gap-3 mb-4">
-        <label className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-4 py-2 text-sm font-medium cursor-pointer hover:-translate-y-0.5 transition-all">
-          <input
-            type="file"
-            accept="audio/*"
-            multiple
-            className="hidden"
-            onChange={handlePickLocal}
-          />
-          <span>Add local demos (preview only)</span>
-        </label>
-        <span className="text-xs opacity-70">
-          Files placed in <code className="opacity-90">src/assets/demos</code> are auto-listed after build.
-        </span>
-      </div>
+      <div className="flex flex-wrap items-center gap-3 mb-4 text-xs opacity-70">Works-in-progress. Files in this section are intentionally unofficial.</div>
 
       {demos.length === 0 ? (
         <div className="rounded-2xl border border-white/10 p-6 bg-white/5">
