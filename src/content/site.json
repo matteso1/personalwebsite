@@ -1,75 +1,90 @@
 {
   "name": "Nils Matteson",
-  "tagline": "Artist • Producer • Visionary",
+  "tagline": "CS & DS Student • Software Developer • Machine Learning Enthusiast",
   "hero": {
-    "title": "An artist's notebook.",
-    "subtitle": "Where sound becomes story.",
-    "description": "I'm Nils — a 22-year-old artist, singer, songwriter, and producer. Born in Albuquerque, raised in Boise, now creating from Madison. Swedish-American dual citizen crafting music that feels human but still moves a crowd."
+    "title": "Building the future",
+    "subtitle": "through code and data.",
+    "description": "Data Science B.S. + CS Minor (UW–Madison, May 2026). I build production-ready ML systems and data products: real-time ETL, model training/serving, and interactive dashboards. Swedish-American dual citizen seeking ML/DS/SWE roles."
   },
   "about": {
     "title": "Who I am",
-    "story": "Born in Albuquerque, New Mexico, raised in Boise, Idaho, and now based in Madison, Wisconsin. I'm a 22-year-old artist, singer, songwriter, and producer with dual Swedish-American citizenship. I write, produce, and mix my own records — songs that feel authentic and introspective but still connect with people.",
-    "approach": "My sound blends electronic elements with organic textures and honest lyrics. I'm drawn to creating atmospheric, immersive experiences that invite listeners into a world that's both personal and universal.",
+    "story": "Born in Albuquerque, New Mexico, raised in Boise, Idaho, and now based in Madison, Wisconsin. I'm a Computer Science and Data Science student at UW Madison with dual Swedish-American citizenship. I'm passionate about building production-ready ML systems and data products that solve real-world problems.",
+    "approach": "My work focuses on the intersection of data science and software engineering. I specialize in real-time ETL pipelines, model training/serving, and interactive dashboards. I'm drawn to projects that combine technical complexity with practical applications.",
     "skills": [
-      "Electronic Production",
-      "Songwriting", 
-      "Mixing & Mastering",
-      "Sound Design",
-      "Guitar & Piano",
-      "Vocal Production"
+      "Python", "SQL", "R", "Java", "C/C++", "JavaScript/TypeScript",
+      "PyTorch", "scikit-learn", "XGBoost", "pandas", "NumPy", 
+      "FastAPI/Flask", "REST APIs", "Docker", "PostgreSQL", "Redis",
+      "AWS", "Linux", "Git/GitHub", "CI/CD"
     ]
   },
-  "music": {
-    "title": "Music",
-    "description": "Listen to my latest tracks and explore my sonic journey",
-    "featured": {
-      "title": "What Do You Dream About?",
-      "description": "My latest release exploring themes of aspiration and imagination.",
-      "spotifyId": "25FM9yX68IPzFi7FDea91n"
-    },
-    "tracks": [
+  "projects": {
+    "title": "Projects",
+    "description": "End-to-end ML systems and data products built with production-ready architecture",
+    "featured": [
       {
-        "title": "What Do You Dream About?",
-        "description": "Latest release exploring themes of aspiration and imagination",
-        "type": "Single",
-        "year": "2025"
+        "title": "Madison Metro Bus ETA",
+        "subtitle": "End-to-end ML system",
+        "description": "Built real-time ETA prediction pipeline using GTFS-RT data, feature store (Postgres), and sequence models (LSTM/Transformer). Deployed models via FastAPI with caching; containerized services and automated CI (GitHub Actions). Designed interactive Leaflet dashboard for live route predictions and error diagnostics.",
+        "tech": ["Python", "PyTorch", "FastAPI", "PostgreSQL", "Docker", "React", "Leaflet"],
+        "status": "Active Development",
+        "year": "2024-2025",
+        "highlights": ["Real-time ETL pipeline", "Sequence model training", "Containerized deployment", "Interactive dashboard"]
       },
       {
-        "title": "Night Vision", 
-        "description": "Deep dive into nocturnal soundscapes and late-night reflections",
-        "type": "Demo",
-        "year": "2024"
+        "title": "3D Satellite Visualization",
+        "subtitle": "Advanced spatial visualization",
+        "description": "Developed advanced 3D globe visualization rendering real-time satellite tracking data using math-intensive spatial algorithms. Replicated and enhanced N2YO website functionality in full 3D environment, providing immersive satellite visualization with smooth real-time rendering.",
+        "tech": ["N2YO API", "Vite", "Cesium", "JavaScript"],
+        "status": "Complete",
+        "year": "2025",
+        "highlights": ["3D spatial algorithms", "Real-time data processing", "Interactive 3D globe", "Enhanced UX"]
       },
       {
-        "title": "Quantum Theory",
-        "description": "Experimental track blending electronic beats with abstract concepts", 
-        "type": "Demo",
-        "year": "2024"
+        "title": "Brain2Text 2025",
+        "subtitle": "Neural decoding research team",
+        "description": "Part of research team tackling Brain2Text Kaggle competition—building models that decode raw brain signals from ALS patients into readable text. Handled data wrangling (256-channel neural recordings, 11GB files), environment engineering, and baseline reproduction using bidirectional GRUs with CTC loss on RTX 4090 setup.",
+        "tech": ["PyTorch", "CTC Loss", "Bidirectional GRUs", "Neural Decoding", "h5py"],
+        "status": "Active Research", 
+        "year": "2025",
+        "highlights": ["Real brain-computer interface", "256-channel neural recordings", "Multi-layer RNN training", "LLM rescoring pipeline"]
       }
     ]
   },
-  "demos": {
-    "title": "Demos — sketches, ideas, works-in-progress.",
-    "description": "Raw creativity in motion. These are the building blocks of my artistic journey."
+  "blog": {
+    "title": "Blog & Updates",
+    "description": "Follow my journey in tech, project updates, and insights from my CS/DS studies at UW Madison."
   },
   "contact": {
-    "title": "Say hi or send beats.",
-    "description": "Email works best. DMs are fine too.",
-    "cta": "Let's create something beautiful together"
+    "title": "Let's connect and collaborate.",
+    "description": "Interested in working together or discussing tech opportunities? I'd love to hear from you.",
+    "cta": "Let's build something amazing together"
   },
-  "support": {
-    "title": "If the music hits, keep the lights on:",
-    "description": "Your support helps me continue creating and sharing music with the world."
+  "education": {
+    "title": "Education & Experience",
+    "institution": "University of Wisconsin-Madison",
+    "degree": "B.S. in Data Science, Minor in Computer Science",
+    "status": "Expected May 2026",
+    "location": "Madison, WI",
+    "description": "Focused on machine learning, software engineering, and data visualization. Active participant in UW Madison's machine learning marathon and competitive programming.",
+    "coursework": [
+      "Calculus I–III (MATH 221/222/234)",
+      "Linear Algebra (MATH 340)", 
+      "Discrete Math (COMP SCI 240)",
+      "Data Science Modeling I/II (STAT 240/340)",
+      "Data Science Programming II (CS 320)",
+      "Intro to AI (CS 540)",
+      "Machine Organization (CS 354)",
+      "Programming I/II/III (CS 200/300/400)",
+      "Data/Algorithm Ethics (LIS 461)"
+    ]
   },
   "links": {
-    "spotifyArtist": "https://open.spotify.com/artist/2qpBZGqFiVcsYEaJkBahMo",
-    "soundcloud": "https://soundcloud.com/sorryitsnils",
-    "instagram": "https://instagram.com/yoitsnils",
     "github": "https://github.com/matteso1",
     "linkedin": "https://www.linkedin.com/in/nils-matteson-198326249/",
-    "email": "mailto:sendbeats2nils@gmail.com",
-    "venmo": "https://venmo.com/u/friggoffmrlahey",
-    "paypal": "https://www.paypal.com/donate?business=nilsmatteson%40icloud.com&currency_code=USD"
+    "email": "mailto:nilsmatteson@wisc.edu",
+    "instagram": "https://instagram.com/yoitsnils",
+    "resume": "#",
+    "uwmadison": "https://www.wisc.edu"
   }
 }
 
