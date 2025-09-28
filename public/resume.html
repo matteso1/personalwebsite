@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nils Matteson - Resume</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', serif;
+            line-height: 1.4;
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 0.5in;
+            background: white;
+            color: black;
+            font-size: 11pt;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20pt;
+        }
+        
+        .header h1 {
+            font-size: 18pt;
+            font-weight: bold;
+            margin: 0;
+            margin-bottom: 8pt;
+        }
+        
+        .header .contact {
+            font-size: 11pt;
+        }
+        
+        .section {
+            margin-bottom: 16pt;
+        }
+        
+        .section-title {
+            font-size: 12pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5pt;
+            border-bottom: 1px solid black;
+            margin-bottom: 8pt;
+            padding-bottom: 2pt;
+        }
+        
+        .job-title {
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        .date {
+            float: right;
+            font-weight: normal;
+        }
+        
+        .company {
+            font-style: italic;
+            margin-bottom: 4pt;
+        }
+        
+        .tech-stack {
+            font-style: italic;
+            font-size: 10pt;
+            margin-bottom: 4pt;
+        }
+        
+        ul {
+            margin: 4pt 0;
+            padding-left: 16pt;
+        }
+        
+        li {
+            margin-bottom: 2pt;
+        }
+        
+        .skills-list {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        
+        .skills-list li {
+            margin-bottom: 4pt;
+        }
+        
+        .bold {
+            font-weight: bold;
+        }
+        
+        @media print {
+            body {
+                margin: 0;
+                padding: 0.5in;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Nils Matteson</h1>
+        <div class="contact">
+            Madison, WI • nilsmatteson@icloud.com • nilsmatteson.com
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Summary</div>
+        <p>Data Science B.S. + CS Minor (UW–Madison, May 2026). Build <em>production-ready</em> ML systems and data products: real-time ETL, model training/serving, and interactive dashboards. Skilled in Python, SQL, PyTorch, FastAPI/Flask, Docker, and Git collaboration. Seeking ML/DS/SWE roles.</p>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Technical Skills</div>
+        <ul class="skills-list">
+            <li><span class="bold">Languages:</span> Python, SQL, R, Java, C/C++, Bash, JavaScript/TypeScript</li>
+            <li><span class="bold">ML/DS:</span> PyTorch, scikit-learn, XGBoost, pandas, NumPy, Optuna, time series, seq models</li>
+            <li><span class="bold">Data Eng:</span> ETL/ELT, API ingestion, web scraping, Postgres, Redis, Docker, data validation</li>
+            <li><span class="bold">Web/Cloud:</span> FastAPI/Flask, REST APIs, AWS basics, Linux, Nginx, CI/CD (GitHub Actions), React basics</li>
+            <li><span class="bold">Viz:</span> matplotlib, seaborn, Plotly, dashboard prototyping</li>
+            <li><span class="bold">Collab:</span> Git/GitHub, agile teamwork, peer review, documentation</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Education</div>
+        <div>
+            <span class="job-title">University of Wisconsin–Madison</span>
+            <span class="date">Madison, WI</span>
+        </div>
+        <div class="company">B.S. in Data Science, Minor in Computer Science</div>
+        <div style="margin-bottom: 4pt;"><em>Expected May 2026</em></div>
+        <div><span class="bold">Relevant Coursework:</span> Calculus I–III (MATH 221/222/234), Linear Algebra (MATH 340), Discrete Math (COMP SCI 240), Data Science Modeling I/II (STAT 240/340), Data Science Programming II (CS 320), Intro to AI (CS 540), Machine Organization (CS 354), Programming I/II/III (CS 200/300/400), Data/Algorithm Ethics (LIS 461)</div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Personal Projects</div>
+        
+        <div style="margin-bottom: 12pt;">
+            <div>
+                <span class="job-title">Madison Metro Bus ETA (end-to-end ML system)</span>
+                <span class="date">2024–2025</span>
+            </div>
+            <div class="tech-stack">Python, PyTorch, FastAPI, Postgres, Docker, React/Leaflet</div>
+            <ul>
+                <li>Built real-time ETA prediction pipeline using GTFS-RT data, feature store (Postgres), and seq models (LSTM/Transformer).</li>
+                <li>Deployed models via FastAPI with caching; containerized services and automated CI (GitHub Actions).</li>
+                <li>Designed interactive Leaflet dashboard for live route predictions and error diagnostics.</li>
+            </ul>
+        </div>
+
+        <div style="margin-bottom: 12pt;">
+            <div>
+                <span class="job-title">3D Satellite Visualization</span>
+                <span class="date">2025</span>
+            </div>
+            <div class="tech-stack">N2YO API, Vite, Cesium, JavaScript</div>
+            <ul>
+                <li>Developed advanced 3D globe visualization rendering real-time satellite tracking data using math-intensive spatial algorithms.</li>
+                <li>Replicated and enhanced N2YO website functionality in full 3D environment, providing immersive satellite visualization.</li>
+                <li>Engineered smooth real-time rendering and interactive features to explore satellite paths and earth coverage visually.</li>
+            </ul>
+        </div>
+
+        <div style="margin-bottom: 12pt;">
+            <div>
+                <span class="job-title">Brain2Text (ML Marathon / Kaggle Team)</span>
+                <span class="date">2025</span>
+            </div>
+            <div class="tech-stack">PyTorch, scikit-learn, MLops hygiene</div>
+            <ul>
+                <li>Developed neural pipeline mapping EEG signals to text; evaluated seq models and classical baselines.</li>
+                <li>Implemented reproducible training scripts, experiment logging, and model registry.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Additional</div>
+        <p>English (native), Swedish (fluent); Dual US/Swedish citizenship (Work Authorized in US and EU)<br>
+        Interests: Music production, VST development, Rock Climbing<br>
+        Portfolio: <a href="https://nilsmatteson.com">nilsmatteson.com</a></p>
+    </div>
+</body>
+</html>

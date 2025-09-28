@@ -90,14 +90,14 @@ const HomePage = () => {
                   <span className="text-sm font-medium text-white/90">Available for opportunities</span>
                 </motion.div>
                 
-                <h1 className="font-display font-bold tracking-tight leading-[1.1] mb-6" style={{ fontSize: 'clamp(2.5rem, 8vw, 4.5rem)' }}>
-                  <span className="block text-white mb-2">Hi, I'm {site.name.split(' ')[0]}</span>
-                  <span className="block text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-cyan-400 to-purple-600">
+                <h1 className="font-display font-bold tracking-tight leading-[0.5] mb-8" style={{ fontSize: 'clamp(2.5rem, 8vw, 4.5rem)' }}>
+                  <span className="block text-white mb-4">Hi, I'm {site.name.split(' ')[0]}</span>
+                  <span className="block text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-cyan-400 to-purple-600 leading-[1.3]">
                     {site.hero.subtitle}
                   </span>
                 </h1>
                 
-                <p className="text-xl text-white/80 max-w-2xl leading-relaxed">
+                <p className="text-xl text-white/80 max-w-2xl leading-relaxed mt-6">
                   {site.hero.description}
                 </p>
               </motion.div>
@@ -115,7 +115,7 @@ const HomePage = () => {
                   <ArrowRight className="h-4 w-4" />
                 </Link>
                 <a
-                  href="/resume.pdf"
+                  href="/resume.html"
                   target="_blank"
                   rel="noreferrer"
                   className="inline-flex items-center gap-3 px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-2xl font-medium transition-all duration-300 hover:scale-105"
