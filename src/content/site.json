@@ -11,53 +11,141 @@
     "story": "Born in Albuquerque, New Mexico, raised in Boise, Idaho, and now based in Madison, Wisconsin. I'm a Computer Science and Data Science student at UW Madison with dual Swedish-American citizenship. I'm passionate about building production-ready ML systems and data products that solve real-world problems.",
     "approach": "My work focuses on the intersection of data science and software engineering. I specialize in real-time ETL pipelines, model training/serving, and interactive dashboards. I'm drawn to projects that combine technical complexity with practical applications.",
     "skills": [
-      "Python", "SQL", "R", "Java", "C/C++", "JavaScript/TypeScript",
-      "PyTorch", "scikit-learn", "XGBoost", "pandas", "NumPy", 
-      "FastAPI/Flask", "REST APIs", "Docker", "PostgreSQL", "Redis",
-      "AWS", "Linux", "Git/GitHub", "CI/CD"
+      "Python",
+      "SQL",
+      "R",
+      "Java",
+      "C/C++",
+      "JavaScript/TypeScript",
+      "Go",
+      "Rust",
+      "PyTorch",
+      "scikit-learn",
+      "XGBoost",
+      "pandas",
+      "NumPy",
+      "React",
+      "FastAPI/Flask",
+      "gRPC",
+      "Docker",
+      "PostgreSQL",
+      "Redis",
+      "WebAssembly",
+      "AWS",
+      "Linux",
+      "Git/GitHub",
+      "CI/CD"
     ]
   },
   "projects": {
     "title": "Projects",
-    "description": "End-to-end ML systems and data products built with production-ready architecture",
+    "description": "End-to-end systems, distributed engines, and AI applications.",
     "featured": [
       {
+        "title": "Sentinel",
+        "subtitle": "Distributed Log Streaming Engine",
+        "description": "High-throughput distributed message queue architected from scratch. Engineered a custom LSM-tree storage engine in Go for high-write throughput (100k+ msg/s). Implemented partition-based replication with Raft-inspired leader election over gRPC. Developed a custom binary protocol for zero-copy transmission, reducing network overhead by 40%.",
+        "tech": [
+          "Go",
+          "gRPC",
+          "Protobuf",
+          "LSM Trees",
+          "Distributed Systems"
+        ],
+        "status": "Completed",
+        "year": "2025",
+        "highlights": [
+          "100k+ msg/s ingestion",
+          "Custom LSM-tree engine",
+          "Raft-inspired consensus",
+          "Zero-copy binary protocol"
+        ],
+        "links": {
+          "repo": "https://github.com/matteso1/sentinel",
+          "demo": null
+        }
+      },
+      {
+        "title": "Synapse",
+        "subtitle": "Real-time Collaborative Whiteboard",
+        "description": "Conflict-free collaborative workspace supporting 50+ concurrent users. Built a high-performance WebSocket server in Rust (Actix) using CRDTs (Yjs) for conflict-free state sync. Optimized rendering with WebAssembly and HTML5 Canvas for steady 60 FPS with 10k+ objects. Scaled via Redis Pub/Sub.",
+        "tech": [
+          "Rust",
+          "WebAssembly",
+          "WebSockets",
+          "Redis",
+          "React",
+          "CRDTs"
+        ],
+        "status": "Completed",
+        "year": "2025",
+        "highlights": [
+          "Rust WebSocket Server",
+          "Wasm Rendering Engine",
+          "CRDT Conflict Resolution",
+          "Redis Pub/Sub Scaling"
+        ],
+        "links": {
+          "repo": "https://github.com/matteso1/synapse",
+          "demo": null
+        }
+      },
+      {
+        "title": "Aura",
+        "subtitle": "3D Audio-Reactive AI Universe",
+        "description": "Immersive generative art experience syncing 3D visuals with live audio. Developed a reactivity engine using Web Audio API for real-time FFT analysis mapped to Three.js shader uniforms. Wrote custom GLSL ray-marching shaders for volumetric lighting. Integrated OpenAI Whisper for lyric transcription and Stable Diffusion for texture generation.",
+        "tech": [
+          "Three.js",
+          "WebGL",
+          "PyTorch",
+          "Stable Diffusion",
+          "Web Audio API",
+          "GLSL"
+        ],
+        "status": "Completed",
+        "year": "2025",
+        "highlights": [
+          "Real-time FFT Analysis",
+          "Custom GLSL Shaders",
+          "AI Texture Generation",
+          "Volumetric Lighting"
+        ],
+        "links": {
+          "repo": "https://github.com/matteso1/aura",
+          "demo": "https://aura-visualizer.vercel.app"
+        }
+      },
+      {
         "title": "Madison Metro Bus ETA",
-        "subtitle": "End-to-end ML system",
-        "description": "Built real-time ETA prediction pipeline using GTFS-RT data, feature store (Postgres), and sequence models (LSTM/Transformer). Deployed models via FastAPI with caching; containerized services and automated CI (GitHub Actions). Designed interactive Leaflet dashboard for live route predictions and error diagnostics.",
-        "tech": ["Python", "PyTorch", "FastAPI", "PostgreSQL", "Docker", "React", "Leaflet"],
-        "status": "Active Development",
+        "subtitle": "End-to-end ML Pipeline",
+        "description": "ML pipeline predicting bus arrival times more accurately than official schedules. Architected ingestion pipe for GTFS-RT streams (1M+ positions/mo) into Postgres/PostGIS. Trained LSTM/Transformer models reducing MAE by 25%. Containerized inference API with Docker and deployed via GitHub Actions CI/CD ensuring 99.9% uptime.",
+        "tech": [
+          "Python",
+          "FastAPI",
+          "Docker",
+          "Postgres",
+          "LSTM/Transformer",
+          "Leaflet"
+        ],
+        "status": "Active",
         "year": "2024-2025",
-        "highlights": ["Real-time ETL pipeline", "Sequence model training", "Containerized deployment", "Interactive dashboard"]
-      },
-      {
-        "title": "3D Satellite Visualization",
-        "subtitle": "Advanced spatial visualization",
-        "description": "Developed advanced 3D globe visualization rendering real-time satellite tracking data using math-intensive spatial algorithms. Replicated and enhanced N2YO website functionality in full 3D environment, providing immersive satellite visualization with smooth real-time rendering.",
-        "tech": ["N2YO API", "Vite", "Cesium", "JavaScript"],
-        "status": "Complete",
-        "year": "2025",
-        "highlights": ["3D spatial algorithms", "Real-time data processing", "Interactive 3D globe", "Enhanced UX"]
-      },
-      {
-        "title": "Brain2Text 2025",
-        "subtitle": "Neural decoding research team",
-        "description": "Part of research team tackling Brain2Text Kaggle competition—building models that decode raw brain signals from ALS patients into readable text. Handled data wrangling (256-channel neural recordings, 11GB files), environment engineering, and baseline reproduction using bidirectional GRUs with CTC loss on RTX 4090 setup.",
-        "tech": ["PyTorch", "CTC Loss", "Bidirectional GRUs", "Neural Decoding", "h5py"],
-        "status": "Active Research", 
-        "year": "2025",
-        "highlights": ["Real brain-computer interface", "256-channel neural recordings", "Multi-layer RNN training", "LLM rescoring pipeline"]
+        "highlights": [
+          "GTFS-RT ETL Pipeline",
+          "Transformer Sequence Models",
+          "PostGIS Feature Store",
+          "CI/CD Deployment"
+        ],
+        "links": {
+          "repo": "https://github.com/matteso1/madison-bus-eta",
+          "demo": null
+        }
       }
     ]
   },
-  "blog": {
-    "title": "Blog & Updates",
-    "description": "Follow my journey in tech, project updates, and insights from my CS/DS studies at UW Madison."
-  },
   "contact": {
-    "title": "Let's connect and collaborate.",
-    "description": "Interested in working together or discussing tech opportunities? I'd love to hear from you.",
-    "cta": "Let's build something amazing together"
+    "title": "Let's connect.",
+    "description": "I'm always open to discussing new opportunities in ML, Data Science, and Systems Engineering.",
+    "cta": "Get in touch"
   },
   "education": {
     "title": "Education & Experience",
@@ -65,27 +153,15 @@
     "degree": "B.S. in Data Science, Minor in Computer Science",
     "status": "Expected May 2026",
     "location": "Madison, WI",
-    "description": "Focused on machine learning, software engineering, and data visualization. Active participant in UW Madison's machine learning marathon and competitive programming.",
-    "coursework": [
-      "Calculus I–III (MATH 221/222/234)",
-      "Linear Algebra (MATH 340)", 
-      "Discrete Math (COMP SCI 240)",
-      "Data Science Modeling I/II (STAT 240/340)",
-      "Data Science Programming II (CS 320)",
-      "Intro to AI (CS 540)",
-      "Machine Organization (CS 354)",
-      "Programming I/II/III (CS 200/300/400)",
-      "Data/Algorithm Ethics (LIS 461)"
-    ]
+    "description": "Focused on machine learning, software engineering, and systems. Active in competitive programming.",
+    "coursework": []
   },
   "links": {
     "github": "https://github.com/matteso1",
     "linkedin": "https://www.linkedin.com/in/nils-matteson-198326249/",
     "email": "mailto:nilsmatteson@wisc.edu",
     "instagram": "https://instagram.com/yoitsnils",
-    "resume": "#",
+    "resume": "/resume.pdf",
     "uwmadison": "https://www.wisc.edu"
   }
 }
-
-

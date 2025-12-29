@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link, useLocation } from "react-router-dom";
 import { Github, Linkedin, Instagram, Menu, X } from "lucide-react";
-import AuroraCanvas from "./AuroraCanvas";
-import Spotlight from "./Spotlight";
 import site from "../content/site.json";
 
 const Layout = ({ children }) => {
@@ -16,27 +14,25 @@ const Layout = ({ children }) => {
     } else {
       document.body.style.overflow = 'unset';
     }
-    
+
     return () => {
       document.body.style.overflow = 'unset';
     };
   }, [mobileMenuOpen]);
 
+  // Simplified Navigation
   const navigationItems = [
     { name: 'Home', path: '/' },
-    { name: 'Projects', path: '/projects' },
-    { name: 'Blog', path: '/blog' },
-    { name: 'About', path: '/about' },
-    { name: 'Contact', path: '/contact' }
+    { name: 'Projects', path: '/projects' }
   ];
 
   return (
-    <div className="relative min-h-screen text-white overflow-x-hidden" style={{ backgroundColor: 'var(--color-bg)' }}>
-      <AuroraCanvas />
-      <Spotlight />
-      
+    <div className="relative min-h-screen text-white overflow-x-hidden bg-zinc-950">
+      {/* Clean Background */}
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(120,0,255,0.1),rgba(0,0,0,0))] pointer-events-none" />
+
       {/* Enhanced Navigation */}
-      <motion.header 
+      <motion.header
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
@@ -47,32 +43,30 @@ const Layout = ({ children }) => {
           <motion.div
             whileHover={{ scale: 1.05 }}
           >
-            <Link 
-              to="/" 
+            <Link
+              to="/"
               className="font-display font-bold text-xl tracking-tight hover:text-purple-400 transition-colors"
             >
               {site.name}
             </Link>
           </motion.div>
-          
+
           <nav className="hidden sm:flex items-center gap-8 text-sm font-medium">
             {navigationItems.map((item) => (
               <motion.div key={item.name} whileHover={{ y: -2 }}>
-                <Link 
+                <Link
                   to={item.path}
-                  className={`text-white/80 hover:text-white transition-colors relative group ${
-                    location.pathname === item.path ? 'text-white' : ''
-                  }`}
+                  className={`text-white/80 hover:text-white transition-colors relative group ${location.pathname === item.path ? 'text-white' : ''
+                    }`}
                 >
                   {item.name}
-                  <span className={`absolute inset-x-0 -bottom-1 h-0.5 bg-gradient-to-r from-purple-500 to-cyan-500 transition-transform origin-left ${
-                    location.pathname === item.path ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
-                  }`}></span>
+                  <span className={`absolute inset-x-0 -bottom-1 h-0.5 bg-gradient-to-r from-purple-500 to-cyan-500 transition-transform origin-left ${location.pathname === item.path ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+                    }`}></span>
                 </Link>
               </motion.div>
             ))}
           </nav>
-          
+
           {/* Mobile Menu Button */}
           <motion.button
             className="sm:hidden p-2 rounded-xl glass border-white/10"
@@ -81,18 +75,18 @@ const Layout = ({ children }) => {
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </motion.button>
-          
+
           <div className="hidden sm:flex items-center gap-3">
             {[
               { href: site.links.github, icon: Github, label: "GitHub" },
               { href: site.links.linkedin, icon: Linkedin, label: "LinkedIn" },
               { href: site.links.instagram, icon: Instagram, label: "Instagram" }
             ].map(({ href, icon: Icon, label }) => (
-              <motion.a 
+              <motion.a
                 key={label}
-                href={href} 
-                target="_blank" 
-                rel="noreferrer" 
+                href={href}
+                target="_blank"
+                rel="noreferrer"
                 className="p-3 rounded-2xl glass border-white/10 hover:border-purple-400/50 hover:bg-purple-500/10 transition-all duration-300"
                 whileHover={{ scale: 1.1, y: -2 }}
                 whileTap={{ scale: 0.95 }}
@@ -140,7 +134,7 @@ const Layout = ({ children }) => {
                 </motion.div>
               ))}
             </nav>
-            
+
             <div className="mt-6 pt-6 border-t border-white/10">
               <div className="flex justify-center gap-4">
                 {[
@@ -148,11 +142,11 @@ const Layout = ({ children }) => {
                   { href: site.links.linkedin, icon: Linkedin, label: "LinkedIn" },
                   { href: site.links.instagram, icon: Instagram, label: "Instagram" }
                 ].map(({ href, icon: Icon, label }) => (
-                  <motion.a 
+                  <motion.a
                     key={label}
-                    href={href} 
-                    target="_blank" 
-                    rel="noreferrer" 
+                    href={href}
+                    target="_blank"
+                    rel="noreferrer"
                     className="p-4 rounded-2xl glass border-white/10 hover:border-purple-400/50 hover:bg-purple-500/10 transition-all duration-300"
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
@@ -181,9 +175,9 @@ const Layout = ({ children }) => {
               <h3 className="font-display font-bold text-xl text-white mb-2">{site.name}</h3>
               <p className="text-white/60 text-sm">{site.tagline}</p>
             </div>
-            
+
             <div className="text-center">
-              <motion.button 
+              <motion.button
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-full glass border-white/20 hover:border-purple-400/50 text-white/80 hover:text-white transition-all duration-300"
                 whileHover={{ scale: 1.05, y: -2 }}
@@ -191,7 +185,7 @@ const Layout = ({ children }) => {
                 Back to top
               </motion.button>
             </div>
-            
+
             <div className="text-right">
               <p className="text-white/60 text-sm">
                 © {new Date().getFullYear()} {site.name}
