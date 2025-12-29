@@ -25,9 +25,9 @@ src/
 │   ├── AboutPage.jsx         # Detailed background (/about)
 │   └── ContactPage.jsx       # Contact information (/contact)
 ├── content/
-│   └── site.json            # 🔥 MAIN CONTENT FILE - Edit this for most changes
+│   └── site.json            # MAIN CONTENT FILE - Edit this for most changes
 ├── data/
-│   └── blogPosts.js         # 🔥 BLOG POSTS - Add new posts here
+│   └── blogPosts.js         # BLOG POSTS - Add new posts here
 └── styles/
     ├── index.css            # Global styles
     └── tokens.css           # Colors, fonts, spacing variables
