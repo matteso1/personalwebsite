@@ -137,7 +137,7 @@
         ],
         "links": {
           "repo": "https://github.com/matteso1/madison-bus-eta",
-          "demo": null
+          "demo": "https://madison-bus-eta.vercel.app/"
         }
       }
     ]
