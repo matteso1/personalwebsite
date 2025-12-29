@@ -2,11 +2,11 @@
 
 Professional portfolio website showcasing my Computer Science and Data Science work at UW-Madison. Built with React, featuring a multi-page layout, interactive blog system, and project showcases.
 
-🌐 **Live Site**: [personalwebsite-git-main-nils-s-projects.vercel.app](https://personalwebsite-git-main-nils-s-projects.vercel.app)
+**Live Site**: [personalwebsite-git-main-nils-s-projects.vercel.app](https://personalwebsite-git-main-nils-s-projects.vercel.app)
 
 ---
 
-## 🏗️ Project Structure
+## Project Structure
 
 ```
 src/
@@ -35,10 +35,10 @@ src/
 
 ---
 
-## 🎯 Quick Edit Guide
+## Quick Edit Guide
 
 ### **Want to change your bio, name, or contact info?**
-📁 **Edit**: `src/content/site.json`
+**Edit**: `src/content/site.json`
 ```json
 {
   "name": "Your Name",
@@ -50,7 +50,7 @@ src/
 ```
 
 ### **Want to add/update projects?**
-📁 **Edit**: `src/content/site.json` → find `"projects"` → `"featured"` array
+**Edit**: `src/content/site.json` → find `"projects"` → `"featured"` array
 ```json
 {
   "title": "Project Name",
@@ -62,7 +62,7 @@ src/
 ```
 
 ### **Want to add a new blog post?**
-📁 **Edit**: `src/data/blogPosts.js` → add to `blogPosts` array
+**Edit**: `src/data/blogPosts.js` → add to `blogPosts` array
 ```javascript
 {
   id: "unique-id",
@@ -77,13 +77,13 @@ src/
 ```
 
 ### **Want to update your skills?**
-📁 **Edit**: `src/content/site.json` → find `"about"` → `"skills"` array
+**Edit**: `src/content/site.json` → find `"about"` → `"skills"` array
 ```json
 "skills": ["Python", "Machine Learning", "React", "Docker"]
 ```
 
 ### **Want to add coursework?**
-📁 **Edit**: `src/content/site.json` → find `"education"` → `"coursework"` array
+**Edit**: `src/content/site.json` → find `"education"` → `"coursework"` array
 ```json
 "coursework": [
   "Data Structures (CS 400)",
@@ -92,7 +92,7 @@ src/
 ```
 
 ### **Want to update social links?**
-📁 **Edit**: `src/content/site.json` → find `"links"`
+**Edit**: `src/content/site.json` → find `"links"`
 ```json
 "links": {
   "github": "https://github.com/yourusername",
@@ -103,7 +103,7 @@ src/
 
 ---
 
-## 📄 Page Breakdown
+## Page Breakdown
 
 ### **Home Page** (`src/pages/HomePage.jsx`)
 - **Hero section** with your name and bio
@@ -134,7 +134,7 @@ src/
 
 ---
 
-## 🔧 Development Commands
+## Development Commands
 
 ```bash
 # Start development server (http://localhost:5173)
@@ -152,7 +152,7 @@ npm run lint
 
 ---
 
-## 📝 Content Management
+## Content Management
 
 ### **Personal Information**
 **File**: `src/content/site.json`
@@ -186,7 +186,7 @@ Replace this file with your photo. Keep the same name and it will automatically 
 
 ---
 
-## 🎨 Styling
+## Styling
 
 ### **Colors & Themes**
 **File**: `src/styles/tokens.css`
@@ -209,7 +209,7 @@ Replace this file with your photo. Keep the same name and it will automatically 
 
 ---
 
-## 🚀 Deployment
+## Deployment
 
 ### **Vercel (Current)**
 - **Auto-deploys** when you push to GitHub
@@ -224,19 +224,19 @@ Replace this file with your photo. Keep the same name and it will automatically 
 
 ---
 
-## 📊 Current Features
+## Current Features
 
-✅ **Multi-page navigation** (no more scroll-heavy single page!)  
-✅ **Working blog system** with individual post pages  
-✅ **Project showcases** with detailed descriptions  
-✅ **Contact forms** with proper links  
-✅ **Mobile responsive** design  
-✅ **Professional styling** perfect for job applications  
-✅ **SEO-optimized** URLs and meta tags  
+**Multi-page navigation** (no more scroll-heavy single page!)  
+**Working blog system** with individual post pages  
+**Project showcases** with detailed descriptions  
+**Contact forms** with proper links  
+**Mobile responsive** design  
+**Professional styling** perfect for job applications  
+**SEO-optimized** URLs and meta tags  
 
 ---
 
-## 🔧 Common Tasks
+## Common Tasks
 
 ### **Update graduation date**
 ```json
@@ -284,7 +284,7 @@ Replace this file with your photo. Keep the same name and it will automatically 
 
 ---
 
-## 📚 Technologies Used
+## Technologies Used
 
 - **React 19** + React Router for navigation
 - **Framer Motion** for animations
