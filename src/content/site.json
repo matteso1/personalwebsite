@@ -9,7 +9,7 @@
   "about": {
     "title": "Who I am",
     "story": "Born in Albuquerque, New Mexico, raised in Boise, Idaho, and now based in Madison, Wisconsin. I'm a Computer Science and Data Science student at UW Madison with dual Swedish-American citizenship. When I'm not coding, you'll find me in Ableton producing electronic music, playing guitar, or experimenting with sound design. Music production has been a creative outlet that keeps me inspired and constantly learning.",
-    "approach": "My work focuses on the intersection of data science and software engineering. I specialize in real-time ETL pipelines, model training/serving, and interactive dashboards. I'm drawn to projects that combine technical complexity with practical applications — whether that's building ML systems or crafting the perfect synth patch.",
+    "approach": "My work focuses on the intersection of data science and software engineering. I specialize in real-time ETL pipelines, model training/serving, and interactive dashboards. I'm drawn to projects that combine technical complexity with practical applications, whether that's building ML systems or crafting the perfect synth patch.",
     "skills": [
       "Python",
       "SQL",
