@@ -44,25 +44,26 @@
       {
         "title": "Sentinel",
         "subtitle": "Distributed Log Streaming Engine",
-        "description": "High-throughput distributed message queue architected from scratch. Engineered a custom LSM-tree storage engine in Go for high-write throughput (100k+ msg/s). Implemented partition-based replication with Raft-inspired leader election over gRPC. Developed a custom binary protocol for zero-copy transmission, reducing network overhead by 40%.",
+        "description": "High-throughput distributed message queue built from scratch in Go. Custom LSM-tree storage engine achieving 1.7M writes/sec and 3.9M reads/sec. Features Raft-inspired consensus for leader election, gRPC streaming API with Protobuf, Kafka-style topics/partitions, and Prometheus metrics. 5,600+ lines of production-quality Go with 21 passing tests.",
         "tech": [
           "Go",
           "gRPC",
           "Protobuf",
           "LSM Trees",
+          "Raft",
           "Distributed Systems"
         ],
         "status": "Completed",
         "year": "2025",
         "highlights": [
-          "100k+ msg/s ingestion",
-          "Custom LSM-tree engine",
-          "Raft-inspired consensus",
-          "Zero-copy binary protocol"
+          "1.7M writes/sec",
+          "3.9M reads/sec",
+          "Custom LSM-tree",
+          "Raft consensus"
         ],
         "links": {
           "repo": "https://github.com/matteso1/sentinel",
-          "demo": null
+          "demo": "https://sentinel-three-delta.vercel.app"
         }
       },
       {
