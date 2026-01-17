@@ -7,41 +7,54 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Enhanced color system
-        dark: '#0a0a0f',
-        'dark-elevated': '#12121a',
-        'dark-surface': '#1a1a24',
-        accent: '#8b5cf6',
-        'accent-light': '#a78bfa',
-        'accent-dark': '#7c3aed',
-        secondary: '#06b6d4',
-        'secondary-light': '#22d3ee',
-        warm: '#f59e0b',
-        'warm-light': '#fbbf24',
+        // Terminal color system
+        'terminal': {
+          DEFAULT: '#1e1e21',
+          bg: '#0a0a0b',
+          surface: '#111113',
+          green: '#00ff9f',
+          cyan: '#00d4ff',
+          amber: '#ffb800',
+          red: '#ff4757',
+          muted: '#4a4a52',
+        },
       },
       fontFamily: {
-        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
-        display: ['Satoshi', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-        mono: ['Geist Mono', 'SF Mono', 'Monaco', 'Inconsolata', 'monospace'],
+        sans: ['JetBrains Mono', 'monospace'],
+        display: ['Space Grotesk', 'sans-serif'],
+        mono: ['JetBrains Mono', 'monospace'],
       },
       fontSize: {
-        'hero': 'var(--fs-hero)',
-        'hero-sub': 'var(--fs-hero-sub)',
-        'h2': 'var(--fs-h2)',
+        'hero': 'clamp(2.5rem, 8vw, 5rem)',
+        'hero-sub': 'clamp(1rem, 2vw, 1.25rem)',
       },
       spacing: {
         '18': '4.5rem',
         '88': '22rem',
         '128': '32rem',
       },
-      borderRadius: {
-        '2xl': '1.5rem',
-        '3xl': '2rem',
-      },
       animation: {
-        'fade-in-up': 'fade-in-up 0.8s ease-out forwards',
-        'glow': 'glow-pulse 3s ease-in-out infinite',
-        'aurora': 'aurora-float 20s ease-in-out infinite alternate',
+        'fade-in-up': 'fade-in-up 0.6s ease-out forwards',
+        'glow-pulse': 'glow-pulse 3s ease-in-out infinite',
+        'blink': 'blink 1s step-end infinite',
+      },
+      keyframes: {
+        'fade-in-up': {
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        'glow-pulse': {
+          '0%, 100%': {
+            textShadow: '0 0 10px #00ff9f, 0 0 20px #00ff9f',
+          },
+          '50%': {
+            textShadow: '0 0 20px #00ff9f, 0 0 40px #00ff9f',
+          },
+        },
+        'blink': {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0' },
+        },
       },
       backdropBlur: {
         '4xl': '72px',
