@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useLocation } from "react-router-dom";
-import { Github, Linkedin, Mail, Menu, X, Terminal, FileCode, User, Send } from "lucide-react";
+import { Github, Linkedin, Mail, Menu, X, Terminal, FileCode, User, Send, BookOpen } from "lucide-react";
 import site from "../content/site.json";
 import GameOfLife from "./GameOfLife";
 
@@ -28,7 +28,8 @@ const Layout = ({ children }) => {
 
   const navigationItems = [
     { name: 'Index', path: '/', icon: Terminal, num: '01' },
-    { name: 'Projects', path: '/projects', icon: FileCode, num: '02' }
+    { name: 'Projects', path: '/projects', icon: FileCode, num: '02' },
+    { name: 'Blog', path: '/blog', icon: BookOpen, num: '03' }
   ];
 
   return (
@@ -68,11 +69,10 @@ const Layout = ({ children }) => {
                 className={`group relative flex flex-col items-center`}
               >
                 <div
-                  className={`w-10 h-10 flex items-center justify-center border transition-all duration-300 ${
-                    isActive
-                      ? 'border-terminal-green bg-terminal-green/10 text-terminal-green'
-                      : 'border-terminal text-terminal-muted hover:border-terminal-green/50 hover:text-terminal-green'
-                  }`}
+                  className={`w-10 h-10 flex items-center justify-center border transition-all duration-300 ${isActive
+                    ? 'border-terminal-green bg-terminal-green/10 text-terminal-green'
+                    : 'border-terminal text-terminal-muted hover:border-terminal-green/50 hover:text-terminal-green'
+                    }`}
                 >
                   <Icon className="w-5 h-5" />
                 </div>
