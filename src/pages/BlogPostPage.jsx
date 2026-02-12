@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import mermaid from "mermaid";
 import { ArrowLeft, Calendar, Clock, Github, ExternalLink } from "lucide-react";
 import blogPosts from "../data/blogPosts";
 import {
@@ -45,55 +44,6 @@ const Diagram = ({ name }) => {
         );
     }
     return <DiagramComponent />;
-};
-
-const Mermaid = ({ chart }) => {
-    const [svg, setSvg] = React.useState('');
-    const [error, setError] = React.useState(null);
-    const id = React.useId().replace(/:/g, '');
-    const containerRef = React.useRef(null);
-
-    React.useEffect(() => {
-        const renderChart = async () => {
-            try {
-                setError(null);
-                const uniqueId = `mermaid-${id}`;
-                // Pass container ref for better sizing calculation
-                const { svg } = await mermaid.render(uniqueId, chart, containerRef.current);
-                setSvg(svg);
-            } catch (err) {
-                console.error("Mermaid failed to render", err);
-                setError(err.message);
-            }
-        };
-
-        if (chart && containerRef.current) {
-            renderChart();
-        }
-    }, [chart, id, containerRef]);
-
-    if (error) {
-        return (
-            <div className="my-8 p-4 border border-terminal-red/50 bg-terminal-surface/50 rounded-sm overflow-hidden">
-                <p className="text-terminal-red text-xs mb-2 font-bold uppercase tracking-wider">Mermaid Render Error</p>
-                <pre className="text-terminal-red/80 text-xs overflow-x-auto whitespace-pre-wrap font-mono mb-4">
-                    {error}
-                </pre>
-                <div className="text-terminal-muted text-xs border-t border-terminal-red/20 pt-2">
-                    <p className="mb-1">Raw Content:</p>
-                    <pre className="font-mono whitespace-pre">{chart}</pre>
-                </div>
-            </div>
-        );
-    }
-
-    return (
-        <div
-            ref={containerRef}
-            className="my-8 flex justify-center bg-terminal-surface/50 p-4 border border-terminal rounded-sm overflow-x-auto"
-            dangerouslySetInnerHTML={{ __html: svg }}
-        />
-    );
 };
 
 // Custom dark theme that matches the terminal aesthetic
@@ -230,10 +180,6 @@ const markdownComponents = {
         if (match && match[1] === "diagram") {
             const diagramName = String(children).trim();
             return <Diagram name={diagramName} />;
-        }
-
-        if (match && match[1] === "mermaid") {
-            return <Mermaid chart={String(children).replace(/\n$/, "")} />;
         }
 
         return (

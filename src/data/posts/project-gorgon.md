@@ -14,6 +14,10 @@ The arithmetic intensity of autoregressive decoding is roughly 1-2 FLOPs per byt
 
 I built a full speculative decoding engine from scratch to understand how this works in practice. It did not go smoothly.
 
+```diagram
+speculative-comparison
+```
+
 ## The System
 
 Project Gorgon implements Medusa-style speculative decoding for Llama-3-8B (4-bit quantized). The main components:
@@ -25,18 +29,8 @@ Project Gorgon implements Medusa-style speculative decoding for Llama-3-8B (4-bi
 - **KV cache with trim-on-reject** -- rejected branches are trimmed, not recomputed
 - **Full benchmark harness** -- reproducible JSONL reports with per-iteration metrics
 
-```mermaid
-graph LR
-    H["Hidden State"] --> L1["Linear 4096->4096"]
-    L1 --> S["SiLU"]
-    S --> Add((+))
-    H -.-> Add
-    Add --> L2["Linear 4096->Vocab"]
-    L2 --> Lo["logits"]
-    
-    style H fill:#1e1e2e,stroke:#00ff9f
-    style Lo fill:#1e1e2e,stroke:#00d4ff
-    style Add fill:#333,stroke:#fff
+```diagram
+architecture-overview
 ```
 
 90 tests. End-to-end training, inference, and benchmarking.
@@ -89,15 +83,14 @@ logits = lm_head(normed)              # projection to vocab
 
 `outputs.hidden_states[-1]` returns the **pre-norm** hidden state. But our `lm_head` was initialized from the backbone's own lm_head, which expects **post-norm** input. The single ResidualBlock in each head had to simultaneously learn to approximate RMSNorm AND predict shifted tokens.
 
+```diagram
+head-architecture-before
+```
+
 **Fix:** Copy the backbone's RMSNorm layer, freeze its parameters, prepend it to each head:
 
-```mermaid
-graph TD
-    H["Hidden State (pre-norm)"] --> N["RMSNorm (frozen)"]
-    N --> R["ResidualBlock (Linear + SiLU + skip)"]
-    R --> LH["lm_head"]
-    LH --> Logits
-    style N stroke:#ffb800,stroke-dasharray: 5 5
+```diagram
+head-architecture-after
 ```
 
 Now at initialization, each head computes `lm_head(RMSNorm(hidden))` -- the backbone's own next-token prediction. Training only needs to learn the delta for shifted positions.
@@ -150,21 +143,12 @@ Paths to >1x that I would explore next:
 
 Given 4 heads with top-k=4, the Cartesian product gives 4 + 16 + 64 + 256 = 340 candidates. That is too many for 23% head-0 acceptance. We implemented three pruning strategies:
 
-```mermaid
-graph TD
-    Root((root)) --> H1a[h1]
-    Root --> H1b[h1]
-    Root --> H1c[h1]
-    Root --> H1d[h1]
-    H1a --> H2a[h2]
-    H1a --> H2b[h2]
-    H1a --> H2c[h2]
-    H1a --> H2d[h2]
-    H1b --> H2e[h2...]
-    
-    style Root fill:#00d4ff,color:#000
-    style H1a stroke:#00ff9f
-    style H2a stroke:#ffb800
+```diagram
+candidate-tree
+```
+
+```diagram
+pruning-strategies
 ```
 
 **Confidence threshold.** Prune candidates with softmax probability below a threshold.
@@ -185,6 +169,10 @@ Three implementations of tree attention:
 
 **Fused mask-free kernel** (140 LOC). The key insight: the tree structure is fully described by a compact `parents` array of N int32 values. Instead of materializing an (N, N) mask, the kernel walks the parents array in registers to compute ancestor relationships on-the-fly:
 
+```diagram
+kernel-comparison
+```
+
 ```python
 @triton.jit
 def _fused_tree_verify_kernel(Q, K, V, Parents, Out, ..., MAX_DEPTH: tl.constexpr):
@@ -203,6 +191,32 @@ For N=340 candidates, this replaces 115,600 booleans with 340 int32 values -- a 
 
 Having three implementations means each validates the others. Any disagreement beyond floating-point tolerance is a bug.
 
+## Tree Attention
+
+Standard causal attention uses a triangular mask. Tree attention generalizes this: each candidate token attends only to its **ancestors** in the tree (and itself). This maintains causal consistency.
+
+```diagram
+tree-attention-mask
+```
+
+The mask is built with vectorized ancestor propagation. Starting from the direct parent array, we iteratively propagate ancestor relationships upward until convergence. For a tree of depth D, this takes at most D iterations.
+
+## Verification and KV Cache Management
+
+```diagram
+speculative-loop
+```
+
+After the tree-attention forward pass, we check each root-to-leaf path:
+
+1. For each path, compare the verifier's argmax at position *i* with the draft token at position *i+1*
+2. Accept the **longest matching prefix** across all paths
+3. Collect the verifier's own prediction at the last accepted position as a **bonus token**
+
+Even if all drafts are wrong, we get 1 token (the bonus) -- identical to autoregressive decoding. The verification is vectorized: a single argmax over all logits, a single CPU transfer, and the winning path is found in one pass without redundant loops or GPU synchronization points.
+
+KV cache management uses trim-on-reject: the verification pass produces cache entries for all N candidate positions, but only the accepted path should be kept. We trim the cache to the accepted prefix length after each iteration -- cheaper than checkpoint/rollback or full recomputation.
+
 ## Training
 
 ### Training Loss Curve
@@ -216,6 +230,10 @@ Training config: 3e-4 peak LR with 500-step warmup, cosine decay to 1e-5, effect
 ### Knowledge Distillation
 
 The heads are trained via distillation from the frozen backbone:
+
+```diagram
+training-pipeline
+```
 
 1. Run backbone on WikiText with `torch.no_grad()` to get hidden states
 2. Head *k* receives hidden state at position *t*, predicts ground truth token at *t + k*
