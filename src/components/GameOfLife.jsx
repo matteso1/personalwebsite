@@ -120,9 +120,20 @@ const GameOfLife = ({ className = '' }) => {
     gridRef.current = createGrid(cols, rows);
 
     const animate = (timestamp) => {
+      if (!canvasRef.current) return;
+
       if (timestamp - lastUpdateRef.current >= UPDATE_INTERVAL) {
-        gridRef.current = nextGeneration(gridRef.current, cols, rows);
-        draw(ctx, gridRef.current, cols, rows, canvas.width, canvas.height);
+        // Recalculate dimensions to match current canvas size (handling resize)
+        const currentCols = Math.ceil(canvas.width / CELL_SIZE);
+        const currentRows = Math.ceil(canvas.height / CELL_SIZE);
+
+        // Ensure grid matches dimensions if needed (safety check)
+        if (!gridRef.current || gridRef.current.length !== currentCols) {
+          gridRef.current = createGrid(currentCols, currentRows);
+        }
+
+        gridRef.current = nextGeneration(gridRef.current, currentCols, currentRows);
+        draw(ctx, gridRef.current, currentCols, currentRows, canvas.width, canvas.height);
         lastUpdateRef.current = timestamp;
       }
       animationRef.current = requestAnimationFrame(animate);
