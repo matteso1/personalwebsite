@@ -1,48 +1,85 @@
 # Building a Speculative Decoding Engine from Scratch
 
-*A deep dive into Project Gorgon: custom Triton kernels, tree-structured attention, adaptive pruning, and the debugging story of a missing normalization layer.*
+*Custom Triton kernels, tree-structured attention, and four bugs that made it 12x slower than baseline.*
 
 ---
 
 ## The Problem with Autoregressive Inference
 
-Large language model inference is fundamentally **memory-bandwidth bound**. Each token generation requires a full forward pass through the model, but the actual computation is dominated by moving weights from VRAM to compute units. The GPU's arithmetic units sit idle waiting for data. Generating 128 tokens means 128 sequential forward passes -- even though the GPU could handle significantly more work per pass.
+Large language model inference is fundamentally **memory-bandwidth bound**. Each token generation requires a full forward pass through the model, but the actual computation is dominated by moving weights from VRAM to compute units. The GPU's arithmetic units sit idle waiting for data. Generating 128 tokens means 128 sequential forward passes -- even though the GPU could handle more work per pass.
 
-The arithmetic intensity (FLOPs per byte of memory traffic) of autoregressive decoding is roughly 1-2, well below the ~300 ratio needed to fully utilize an A100's compute. We are paying for 80GB of VRAM and 312 TFLOPS of compute, but only using the bandwidth.
+The arithmetic intensity of autoregressive decoding is roughly 1-2 FLOPs per byte of memory traffic, well below the ~300 ratio needed to fully utilize an A100. We are paying for 80GB of VRAM and 312 TFLOPS of compute, but only using the bandwidth.
 
-**Speculative decoding** attacks this directly: use a cheap model to *draft* multiple tokens, then *verify* them all in a single backbone pass. If the drafts are good, you get multiple tokens for the price of one forward pass. If they are bad, you lose only the cost of drafting (which is negligible) and still get one token -- the same as normal decoding. The worst case is autoregressive speed; the best case is a proportional speedup to the number of accepted tokens.
+**Speculative decoding** attacks this directly: use a cheap model to *draft* multiple tokens, then *verify* them all in a single backbone pass. If the drafts are good, you get multiple tokens for the price of one forward pass. If they are bad, you still get one token -- the same as normal decoding. The worst case is autoregressive speed; the best case is proportional speedup to the number of accepted tokens.
 
-```diagram
-speculative-comparison
+I built a full speculative decoding engine from scratch to understand how this works in practice. It did not go smoothly.
+
+## The System
+
+Project Gorgon implements Medusa-style speculative decoding for Llama-3-8B (4-bit quantized). The main components:
+
+- **4 Medusa draft heads** -- lightweight MLPs attached to the backbone's hidden states, each predicting a different future token position
+- **Tree-structured candidate generation** -- Cartesian product trees with adaptive pruning (confidence thresholds, path-probability products, entropy-weighted expansion)
+- **Tree attention kernels** -- three implementations: Triton (127 LOC), CUDA (88 LOC), and a fused mask-free kernel (140 LOC)
+- **Vectorized verification** -- single argmax over all candidates, single CPU transfer, no GPU syncs in the loop
+- **KV cache with trim-on-reject** -- rejected branches are trimmed, not recomputed
+- **Full benchmark harness** -- reproducible JSONL reports with per-iteration metrics
+
+```mermaid
+graph LR
+    H["Hidden State"] --> L1["Linear 4096->4096"]
+    L1 --> S["SiLU"]
+    S --> Add((+))
+    H -.-> Add
+    Add --> L2["Linear 4096->Vocab"]
+    L2 --> Lo["logits"]
+    
+    style H fill:#1e1e2e,stroke:#00ff9f
+    style Lo fill:#1e1e2e,stroke:#00d4ff
+    style Add fill:#333,stroke:#fff
 ```
 
-## Architecture Overview
+90 tests. End-to-end training, inference, and benchmarking.
 
-The full system connects several components: a frozen Llama-3 backbone, lightweight Medusa draft heads, a tree-structured candidate generator, and custom GPU kernels for efficient verification.
+## Results
 
-```diagram
-architecture-overview
-```
+### The Progression
 
-## Medusa Draft Heads
+| Stage | Head 0 Acc. | Speedup | What Changed |
+|-------|-------------|---------|--------------|
+| First benchmark (random heads) | 0.2% | 0.08x (12x slower) | Nothing loaded -- benchmarking random weights |
+| After RMSNorm fix (step 10k) | 23.2% | 0.25x | Added frozen norm, fixed checkpoint loading |
+| After hook optimization (step 30k) | 23.2% | 0.66x | Replaced output_hidden_states with forward hook |
 
-The standard approach to speculative decoding uses a separate smaller model as the drafter. Medusa takes a different path: attach lightweight "heads" directly to the backbone's hidden states. Each head is trained to predict a different future position.
+### Final Benchmark (H100 80GB, 30k training steps)
 
-### The Head Architecture
+| Metric | Baseline | Speculative |
+|--------|----------|-------------|
+| Tokens/second | 35.71 | 23.47 |
+| Total time (2560 tokens) | 71.7s | 109.1s |
 
-A natural first attempt is simple: take the hidden state, pass it through a residual block, then project to vocabulary logits.
+| Head | Acceptance Rate |
+|------|----------------|
+| Head 0 (next token) | 23.2% |
+| Head 1 (+2 positions) | 7.9% |
+| Head 2 (+3 positions) | 5.4% |
+| Head 3 (+4 positions) | 3.2% |
 
-```diagram
-head-architecture-before
-```
+**Mean accepted length (tau): 0.40 tokens per iteration.**
 
-Head *k* receives the backbone's hidden state at position *t* and predicts the token at position *t + k*. The `lm_head` (the final projection to vocabulary logits) is initialized from the backbone's own lm_head weights, giving heads a strong starting point.
+The system is still 0.66x baseline speed. Here is why, and what I learned getting it from 0.08x to 0.66x.
 
-This seems reasonable, but there is a subtle architectural bug that took real debugging to find.
+## Bug 1: Benchmarking Random Heads
 
-### The Missing Normalization Layer
+The first A100 benchmark showed 0.2% acceptance and 0.08x speedup -- 12x slower than just running the model normally. My first instinct was that the heads needed more training. They did, but that was not the main problem.
 
-Llama-3 (and most modern LLMs) use a **pre-norm** architecture. The forward pass looks like:
+The benchmark script called `load_backbone_4bit()` which creates fresh `MedusaHead` instances with randomly initialized weights. It had no `--heads-checkpoint` flag. The 10,000-step training run had produced checkpoints, but the benchmark never loaded them. I was measuring random heads.
+
+**Fix:** Added `--heads-checkpoint` CLI flag and `load_trained_heads()` utility with format compatibility handling (torch.compile `_orig_mod.` prefix stripping, dtype casting, device placement).
+
+## Bug 2: The Missing Normalization Layer
+
+Llama-3 uses a pre-norm architecture:
 
 ```python
 hidden = transformer_layers(input)    # pre-norm hidden state
@@ -50,212 +87,163 @@ normed = RMSNorm(hidden)              # model.norm
 logits = lm_head(normed)              # projection to vocab
 ```
 
-The `outputs.hidden_states[-1]` that we extract from HuggingFace returns the **pre-norm** hidden state. But our lm_head was initialized from the backbone's lm_head, which expects **post-norm** input. The single ResidualBlock has to simultaneously learn to approximate RMSNorm AND predict shifted tokens.
+`outputs.hidden_states[-1]` returns the **pre-norm** hidden state. But our `lm_head` was initialized from the backbone's own lm_head, which expects **post-norm** input. The single ResidualBlock in each head had to simultaneously learn to approximate RMSNorm AND predict shifted tokens.
 
-The symptom was devastating: after 10,000 training steps, the benchmark showed a **0.2% acceptance rate** and **0.08x speedup** -- 12x slower than just running the backbone normally. The heads were performing barely better than random.
+**Fix:** Copy the backbone's RMSNorm layer, freeze its parameters, prepend it to each head:
 
-The fix is architectural:
-
-```diagram
-head-architecture-after
+```mermaid
+graph TD
+    H["Hidden State (pre-norm)"] --> N["RMSNorm (frozen)"]
+    N --> R["ResidualBlock (Linear + SiLU + skip)"]
+    R --> LH["lm_head"]
+    LH --> Logits
+    style N stroke:#ffb800,stroke-dasharray: 5 5
 ```
 
-We copy the backbone's RMSNorm layer, freeze its parameters, and prepend it to each head. Now at initialization (before any training), each head computes approximately `lm_head(RMSNorm(hidden))` -- which is exactly the backbone's own next-token prediction. The ResidualBlock starts as an approximate identity (skip connection), and training only needs to learn the small delta for shifted-position prediction.
+Now at initialization, each head computes `lm_head(RMSNorm(hidden))` -- the backbone's own next-token prediction. Training only needs to learn the delta for shifted positions.
 
-This is the difference between training heads that start from a strong baseline versus training heads that start from random noise. The loss should drop dramatically in the first few hundred steps.
+## Bug 3: Dead Learning Rate Schedule
 
-### Three Problems, Not One
+The cosine LR scheduler decayed to exactly 0.0 (no `eta_min`). The first training run did 10,000 steps. A resumed run from step 6,500 was in the tail of cosine decay with near-zero learning rate. Most effective training happened only in the first ~5,000 steps.
 
-The 0.2% acceptance rate actually had three root causes:
+Additionally, the `load_config` function had a subtle override bug: CLI default values (e.g. `warmup_steps=50`) always overwrote the YAML config values (`warmup_steps=500`) because the function used direct assignment instead of `setdefault()`.
 
-1. **The benchmark never loaded trained checkpoints.** The benchmark script called `load_backbone_4bit()` which creates fresh MedusaHead instances with random weights. There was no `--heads-checkpoint` flag. We were benchmarking random heads.
+**Fix:** Set `eta_min=1e-5` so the LR never flatlines. Changed config loading to use `setdefault()` so YAML values are only overridden by explicitly passed CLI args.
 
-2. **Missing RMSNorm** (described above). Even with proper checkpoint loading, the trained heads had to learn both normalization and position-shifting simultaneously.
+## Bug 4: Verification Overhead
 
-3. **Training config issues.** The cosine LR scheduler decayed to exactly 0.0 (no `eta_min`). A resumed training run from step 6,500 was in the tail of cosine decay with near-zero learning rate. Most effective training happened only in the first run.
+After fixing bugs 1-3 and retraining for 30k steps, the heads showed 23% acceptance on head 0. But the speedup was still only 0.25x. The time breakdown revealed the problem: measured draft + verify + kv_trim accounted for only ~8% of total elapsed time. Where was the other 92%?
 
-Each fix individually would have been insufficient. All three had to be addressed together.
+The culprit: `output_hidden_states=True` on every verification forward pass. This forces the model to allocate and return hidden state tensors from **all 33 transformer layers** -- roughly 33 tensors of shape `(1, seq_len, 4096)`. We only needed the last one.
+
+Meanwhile, the baseline used HuggingFace's optimized `model.generate()`, which never allocates hidden states.
+
+**Fix:** Register a forward hook on `model.model.norm` (the final RMSNorm) to capture the post-norm hidden state directly. Falls back to `output_hidden_states=True` for models without the expected structure (test mocks).
+
+```python
+class _HiddenCapture:
+    def register(self, model):
+        target = model.model.norm
+        def _hook(module, inp, out):
+            self.hidden = out
+        self._handle = target.register_forward_hook(_hook)
+```
+
+This brought verify time from ~10.1s to ~4.9s across the benchmark, improving speedup from 0.25x to 0.66x.
+
+## Why It Is Still < 1x
+
+At 0.66x, the speculative engine is still slower than baseline. The core issue:
+
+**Mean accepted length (tau) is 0.40.** With the bonus token, each iteration yields ~1.4 tokens. But the verification pass processes all tree candidates (up to 30 with top_k=2), making it more expensive than a single autoregressive step. For speculative decoding to break even, tau needs to be high enough that the extra tokens per iteration outweigh the verification cost.
+
+The Medusa paper reports 40-60% acceptance rates with 2+ tau. Our 23% on head 0 suggests the heads have not converged enough, or the training data (WikiText) does not transfer well to the benchmark prompts.
+
+Paths to >1x that I would explore next:
+
+1. **Better training data.** WikiText is encyclopedic text. The benchmark prompts may have different distribution. Training on a diverse corpus (RedPajama, SlimPajama) would likely improve generalization.
+2. **Longer training.** The loss curve shows high variance and slow convergence. 100k+ steps with a lower LR might help.
+3. **Per-head loss weighting.** Currently all 4 heads contribute equally to the loss. Weighting head 0 more heavily would prioritize the most impactful head.
+4. **Smaller trees.** With low tau, the tree overhead dominates. Using fewer heads (1-2) with higher top_k might give better speedup than 4 heads with low acceptance.
 
 ## Tree-Structured Candidate Generation
 
-Given 4 heads with top-k=4, the naive approach produces a Cartesian product tree:
+Given 4 heads with top-k=4, the Cartesian product gives 4 + 16 + 64 + 256 = 340 candidates. That is too many for 23% head-0 acceptance. We implemented three pruning strategies:
 
-```diagram
-candidate-tree
+```mermaid
+graph TD
+    Root((root)) --> H1a[h1]
+    Root --> H1b[h1]
+    Root --> H1c[h1]
+    Root --> H1d[h1]
+    H1a --> H2a[h2]
+    H1a --> H2b[h2]
+    H1a --> H2c[h2]
+    H1a --> H2d[h2]
+    H1b --> H2e[h2...]
+    
+    style Root fill:#00d4ff,color:#000
+    style H1a stroke:#00ff9f
+    style H2a stroke:#ffb800
 ```
 
-Total candidates: 4 + 16 + 64 + 256 = 340 across 4 levels. Each root-to-leaf path is a possible continuation sequence. We verify all of them in a single forward pass.
+**Confidence threshold.** Prune candidates with softmax probability below a threshold.
 
-### Tree Attention
+**Path-probability product.** Track cumulative probability along each root-to-leaf path. Deep branches with low cumulative confidence are pruned.
 
-Standard causal attention uses a triangular mask. Tree attention generalizes this: each candidate token attends only to its **ancestors** in the tree (and itself). This maintains causal consistency -- each candidate only sees the tokens it would have seen if generated sequentially along its path.
+**Entropy-weighted thresholds.** Scale the threshold by `(1 - normalized_entropy)` per head. Uncertain heads get lower thresholds, allowing broader exploration. Confident heads are pruned aggressively.
 
-```diagram
-tree-attention-mask
-```
-
-The mask is built with vectorized ancestor propagation. Starting from the direct parent array, we iteratively propagate ancestor relationships upward until convergence. For a tree of depth D, this takes at most D iterations.
-
-### Adaptive Pruning
-
-Not all 340 candidates are worth verifying. Many branches represent sequences the model would never actually generate. We implemented three pruning strategies:
-
-```diagram
-pruning-strategies
-```
-
-**Confidence threshold.** After computing softmax probabilities for each head's predictions, prune any candidate with probability below a threshold. If head 2 gives token X only 3% probability, we skip it.
-
-**Path-probability product.** Track the cumulative probability along each root-to-leaf path. A candidate might have 40% probability from its head, but if its parent had 10% probability, the path probability is only 4%. Prune deep paths with low cumulative confidence.
-
-**Entropy-weighted thresholds.** Not all heads are equally confident. A head with high entropy (spread-out probability distribution) is genuinely uncertain -- pruning it aggressively would remove valid candidates. We scale the threshold by `(1 - normalized_entropy)`: confident heads get pruned more, uncertain heads get to explore.
-
-The combination lets the tree adapt to the input. Easy, predictable sequences produce small trees (fast verification). Difficult, high-entropy sequences produce larger trees (more candidates, higher chance of finding a match).
+With `top_k=2`, the tree shrinks to 2 + 4 + 8 + 16 = 30 candidates -- much less verification overhead.
 
 ## Custom GPU Kernels
 
-### The Standard Triton Kernel
+Three implementations of tree attention:
 
-The baseline implementation materializes the full (N, N) boolean attention mask, then passes it to a Triton kernel that does standard masked multi-head attention:
+**Triton kernel** (127 LOC). Parameterized by `BLOCK_N` and `BLOCK_D`, with masked softmax. The tree mask is pre-materialized as an (N, N) boolean tensor.
 
-```python
-@triton.jit
-def _tree_attention_kernel(Q, K, V, Mask, Out, ...):
-    row = tl.program_id(0)
-    # Load Q row
-    q = tl.load(Q + row * stride_q + tl.arange(0, BLOCK_D))
-    # Compute scores against all K
-    for j in range(0, N, BLOCK_N):
-        k = tl.load(K + j * stride_k + ...)
-        score = tl.sum(q * k, axis=0)
-        mask = tl.load(Mask + row * N + j + ...)
-        score = tl.where(mask, score, float('-inf'))
-        # ... softmax, accumulate V
-```
+**CUDA kernel** (88 LOC). Shared-memory softmax with per-block parallelism. Direct control over memory layout.
 
-This works, but the (N, N) mask is wasteful. For N=340 candidates, that is 115,600 booleans -- larger than the actual Q, K, V tensors for typical hidden dimensions.
-
-### The Fused Mask-Free Kernel
-
-The key insight: the tree structure is fully described by a compact `parents` array of N int32 values. `parents[i]` gives the index of node i's parent (-1 for root). We can compute the ancestor relationship on-the-fly instead of materializing the mask.
-
-```diagram
-kernel-comparison
-```
+**Fused mask-free kernel** (140 LOC). The key insight: the tree structure is fully described by a compact `parents` array of N int32 values. Instead of materializing an (N, N) mask, the kernel walks the parents array in registers to compute ancestor relationships on-the-fly:
 
 ```python
 @triton.jit
 def _fused_tree_verify_kernel(Q, K, V, Parents, Out, ..., MAX_DEPTH: tl.constexpr):
     row = tl.program_id(0)
-
-    # Phase 1: Walk parents array, build ancestor bitmask in registers
-    ancestor_mask = 1 << row   # self
+    # Build ancestor bitmask by walking parents (unrolls at compile time)
+    ancestor_mask = 1 << row
     cur = row
     for _ in tl.static_range(0, MAX_DEPTH):
         p = tl.load(Parents + cur)
         ancestor_mask |= tl.where(p >= 0, 1 << p, 0)
         cur = tl.where(p >= 0, p, cur)
-
-    # Phase 2: Q*K attention with bitmask instead of mask tensor
-    q = tl.load(Q + row * stride_q + tl.arange(0, BLOCK_D))
-    for j in range(0, N, BLOCK_N):
-        k = tl.load(K + ...)
-        score = tl.sum(q * k, axis=0)
-        is_ancestor = (ancestor_mask >> j) & 1
-        score = tl.where(is_ancestor, score, float('-inf'))
-        # ... softmax, accumulate V
+    # Use bitmask instead of loading N booleans from global memory
 ```
 
-`MAX_DEPTH` is a `tl.constexpr`, so the ancestor walk unrolls completely at compile time. For typical Medusa trees (depth 3-5, N < 100), the walk is 3-5 scalar loads per row, compared to reading N boolean values from global memory.
+For N=340 candidates, this replaces 115,600 booleans with 340 int32 values -- a 340x reduction in mask memory. The ancestor walk is 3-5 scalar loads per row for typical Medusa trees (depth 3-5).
 
-The memory savings are proportional to N: we replace an O(N^2) mask tensor with an O(N) parents array. For N=340, this is a 340x reduction in mask memory.
+Having three implementations means each validates the others. Any disagreement beyond floating-point tolerance is a bug.
 
-We also wrote a plain CUDA kernel (88 LOC) for comparison, using shared-memory softmax with per-block parallelism. Having three implementations (reference PyTorch, Triton, CUDA) means each one validates the others -- any disagreement beyond floating-point tolerance indicates a bug.
+## Training
 
-## Verification and KV Cache Management
+### Training Loss Curve
 
-### The Speculative Decoding Loop
+![Training Loss](/loss_curve.png)
 
-```diagram
-speculative-loop
-```
+30,000 steps on WikiText-103 with 4 Medusa heads. The loss drops quickly from ~10 to ~5 in the first 1,000 steps, then oscillates between 3-7 for the rest of training. Minimum loss: 2.83 at step ~18,000. The high variance reflects the difficulty of predicting tokens 2-4 positions ahead -- some sequences are predictable, others are not.
 
-### Greedy Acceptance
+Training config: 3e-4 peak LR with 500-step warmup, cosine decay to 1e-5, effective batch size 16, bf16 mixed precision. ~97 minutes on H100 80GB.
 
-After the tree-attention forward pass, we check each root-to-leaf path:
+### Knowledge Distillation
 
-1. For each path, compare the verifier's argmax at position *i* with the draft token at position *i+1*
-2. Accept the **longest matching prefix** across all paths
-3. Collect the verifier's own prediction at the last accepted position as a **bonus token**
+The heads are trained via distillation from the frozen backbone:
 
-Even if all drafts are wrong, we get 1 token (the bonus) -- identical to autoregressive decoding. The verification is vectorized: a single argmax over all logits, a single CPU transfer, and the winning path is found in one pass without redundant loops or GPU synchronization points.
+1. Run backbone on WikiText with `torch.no_grad()` to get hidden states
+2. Head *k* receives hidden state at position *t*, predicts ground truth token at *t + k*
+3. Loss = cross-entropy between head logits and shifted targets
+4. Only head parameters (~8M total for 4 heads) receive gradients
 
-### KV Cache Trim-on-Reject
-
-Speculative decoding complicates KV cache management. The verification pass produces cache entries for all N candidate positions, but only the accepted path should be kept. We trim the cache to the accepted prefix length after each iteration. This is cheaper than the alternative approaches (checkpoint/rollback, or full recomputation) because trim is a single slice operation per layer.
-
-The implementation wraps HuggingFace's `DynamicCache` and handles both the legacy tuple-of-tuples format and the modern `DynamicCache` object format. After trimming, we update the internal `_seen_tokens` counter to keep the cache consistent for subsequent forward passes.
+Training uses all sequence positions (`hidden[:, :-k, :] -> targets[:, k:]`), giving ~500x more signal per batch than last-token-only distillation.
 
 ## Per-Iteration Instrumentation
 
 Every speculative iteration records an `IterationStats`:
 
-```python
-@dataclass
-class IterationStats:
-    tree_size: int          # Number of candidates in the tree
-    accepted_length: int    # Number of accepted tokens (excluding bonus)
-    head_acceptance: list   # Per-head acceptance (True/False per head)
-    time_draft_ms: float    # Time spent building candidate tree
-    time_verify_ms: float   # Time spent in backbone forward pass
-    time_kv_trim_ms: float  # Time spent trimming KV cache
-```
+- `tree_size` and `accepted_length` for tree utilization
+- `head_acceptance: List[bool]` for per-head breakdown
+- `time_draft_ms`, `time_verify_ms`, `time_kv_trim_ms` for timing
 
-From these, we compute aggregate metrics:
-
-- **Mean accepted length (tau)**: The average number of tokens accepted per iteration. This is the key metric -- higher tau means more tokens per forward pass.
-- **Per-head acceptance rates**: How often each head's prediction matches the verifier. Head 0 (next token) should have the highest rate; deeper heads will be lower.
-- **Tree utilization**: What fraction of the tree's candidates were actually accepted. Low utilization means the tree is too large -- adaptive pruning should help.
-
-These metrics feed directly into the ablation runner, which sweeps across configurations (num_heads, top_k, depth, confidence_threshold) to find the Pareto frontier of tree size vs. acceptance rate.
-
-## Training Pipeline
-
-### Knowledge Distillation
-
-The heads are trained via knowledge distillation from the frozen backbone:
-
-```diagram
-training-pipeline
-```
-
-1. Run backbone on WikiText training data with `torch.no_grad()` to get hidden states
-2. Head *k* receives hidden state at position *t*, must predict the ground truth token at position *t + k*
-3. Loss = cross-entropy between head logits and shifted ground truth targets
-4. Only head parameters (~8M total for 4 heads) receive gradients; backbone (8B) and RMSNorm are frozen
-
-Training uses all sequence positions (`hidden[:, :-k, :] -> targets[:, k:]`), not just the last token. This gives roughly 500x more training signal per batch compared to last-token-only distillation.
-
-### Training Configuration
-
-The training runs for 30,000 steps with:
-
-- **3e-4 peak learning rate** with 500-step linear warmup
-- **Cosine annealing** to eta_min=1e-5 (never decays to zero)
-- **Gradient clipping** at max_norm=1.0
-- **Effective batch size 16** (4 samples x 4 gradient accumulation steps)
-- **bf16 mixed precision** for A100/H100 compatibility
-
-A previous training run (10k steps) failed to produce useful heads due to the missing RMSNorm and the LR schedule decaying to exactly zero. The current configuration addresses both issues.
+Aggregate metrics: mean accepted length (tau), per-head acceptance rates, tree utilization (fraction of tree nodes accepted). These feed into the ablation runner which sweeps (num_heads, top_k, depth, confidence_threshold) to find the Pareto frontier.
 
 ## What I Would Do Differently
 
-**Start with the norm.** The missing RMSNorm was the single biggest issue and it took careful debugging to identify. In hindsight, the architectural mismatch is obvious: if the backbone's lm_head expects normalized input, the heads should provide normalized input. The lesson is to trace the exact data flow through the model before designing auxiliary components.
+**Validate before training.** Before committing to 10,000 training steps, I should have verified that freshly initialized heads (with backbone lm_head weights) could at least approximate head-0 accuracy on a few examples. A 100-step sanity check would have caught the RMSNorm issue immediately.
 
-**Validate early with a trivial test.** Before training for 10,000 steps, I should have verified that the heads could at least approximate head-0 (next-token) accuracy with minimal training. A 100-step sanity check would have revealed the RMSNorm issue immediately.
+**Benchmark with checkpoint loading from day one.** The missing `--heads-checkpoint` flag was embarrassing. Every benchmark script should accept a checkpoint path. Test the inference path end-to-end before investing in training.
 
-**Instrument from the start.** The `IterationStats` infrastructure was added after the first failed benchmark. Having per-iteration metrics from day one would have made the diagnosis faster -- we would have seen that every head had near-zero acceptance, not just low overall acceptance.
+**Profile early.** The `output_hidden_states` overhead was invisible until I added timing instrumentation. Adding `IterationStats` and time breakdowns from the start would have revealed this on the first benchmark run.
+
+**Start with 1-2 heads.** Four heads is ambitious. Head 0 is by far the most impactful (23% vs 3-8% for deeper heads). Starting with a single head, getting it to 50%+ acceptance, then adding more would have been a better strategy.
 
 ---
 
-*Project Gorgon is open source. The full implementation, including all kernels, training scripts, and benchmark infrastructure, is available on [GitHub](https://github.com/matteso1/ProjectGorgon).*
+*Project Gorgon is open source at [github.com/matteso1/ProjectGorgon](https://github.com/matteso1/ProjectGorgon). 90 tests, three GPU kernels, and four bugs that each taught me something.*
