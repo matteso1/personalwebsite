@@ -1,32 +1,45 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getScores, saveScore, isHighScore } from '../services/scoreService.js';
+import { getScores, saveAuthenticatedScore, getPersonalBest } from '../services/scoreService.js';
 
-export function useHighScores() {
+export function useHighScores(userId, displayName) {
   const [scores, setScores] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [personalBest, setPersonalBest] = useState(null);
 
   const fetchScores = useCallback(async () => {
     setLoading(true);
-    const data = await getScores(10);
+    const data = await getScores(25);
     setScores(data);
     setLoading(false);
   }, []);
+
+  const fetchPersonalBest = useCallback(async () => {
+    if (!userId) { setPersonalBest(null); return; }
+    const best = await getPersonalBest(userId);
+    setPersonalBest(best);
+  }, [userId]);
 
   useEffect(() => {
     fetchScores();
   }, [fetchScores]);
 
-  const submitScore = useCallback(async (name, score) => {
-    const result = await saveScore(name, score);
+  useEffect(() => {
+    fetchPersonalBest();
+  }, [fetchPersonalBest]);
+
+  const submitScore = useCallback(async (score) => {
+    if (!userId || !displayName) return null;
+    // Only submit if it beats the current personal best
+    if (personalBest !== null && score <= personalBest) {
+      return null;
+    }
+    const result = await saveAuthenticatedScore(userId, displayName, score);
     if (result) {
+      setPersonalBest(score);
       await fetchScores();
     }
     return result;
-  }, [fetchScores]);
+  }, [userId, displayName, personalBest, fetchScores]);
 
-  const checkHighScore = useCallback(async (score) => {
-    return isHighScore(score, 10);
-  }, []);
-
-  return { scores, loading, submitScore, checkHighScore, refetch: fetchScores };
+  return { scores, loading, personalBest, submitScore, refetch: fetchScores };
 }

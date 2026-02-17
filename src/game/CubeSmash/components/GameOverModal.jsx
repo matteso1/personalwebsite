@@ -10,7 +10,6 @@ function useCountUp(target, duration = 1000) {
     const tick = (now) => {
       const elapsed = now - start;
       const progress = Math.min(elapsed / duration, 1);
-      // Ease-out quad
       const eased = 1 - (1 - progress) * (1 - progress);
       setValue(Math.round(eased * target));
       if (progress < 1) {
@@ -24,25 +23,19 @@ function useCountUp(target, duration = 1000) {
   return value;
 }
 
-export default function GameOverModal({ score, onReset, onSubmitScore, checkHighScore }) {
-  const [name, setName] = useState('');
+export default function GameOverModal({ score, onReset, isLoggedIn, personalBest, onSubmitScore }) {
   const [submitted, setSubmitted] = useState(false);
-  const [isHigh, setIsHigh] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
+  const [isNewBest, setIsNewBest] = useState(false);
   const displayScore = useCountUp(score, 1000);
 
   useEffect(() => {
-    checkHighScore(score).then(setIsHigh);
-  }, [score, checkHighScore]);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!name.trim() || submitting) return;
-    setSubmitting(true);
-    await onSubmitScore(name.trim(), score);
-    setSubmitted(true);
-    setSubmitting(false);
-  };
+    if (!isLoggedIn) return;
+    const newBest = personalBest === null || score > personalBest;
+    setIsNewBest(newBest);
+    if (newBest) {
+      onSubmitScore(score).then(() => setSubmitted(true));
+    }
+  }, []); // Run once on mount
 
   return (
     <div className="bb-gameover-overlay">
@@ -52,30 +45,22 @@ export default function GameOverModal({ score, onReset, onSubmitScore, checkHigh
           {displayScore.toLocaleString()}
         </div>
 
-        {isHigh && !submitted && (
-          <form onSubmit={handleSubmit} className="mb-4">
-            <div className="text-terminal-amber text-xs mb-2">NEW HIGH SCORE -- ENTER YOUR NAME</div>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              maxLength={16}
-              placeholder="PLAYER_NAME"
-              className="w-full bg-terminal-surface border border-terminal text-terminal-green px-3 py-2 text-sm font-mono focus:outline-none focus:border-terminal-green mb-3"
-              autoFocus
-            />
-            <button
-              type="submit"
-              disabled={!name.trim() || submitting}
-              className="w-full border border-terminal-green text-terminal-green py-2 text-sm font-mono hover:bg-terminal-green/10 transition-colors disabled:opacity-30"
-            >
-              {submitting ? 'SUBMITTING...' : 'SUBMIT_SCORE'}
-            </button>
-          </form>
-        )}
-
-        {submitted && (
-          <div className="text-terminal-green text-xs mb-4">SCORE SUBMITTED</div>
+        {isLoggedIn ? (
+          <div className="mb-4">
+            {isNewBest ? (
+              <div className="text-terminal-amber text-xs">
+                {submitted ? 'NEW PERSONAL BEST -- SAVED' : 'SAVING...'}
+              </div>
+            ) : (
+              <div className="text-terminal-muted text-xs">
+                YOUR_BEST: {personalBest?.toLocaleString()}
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="text-terminal-muted text-xs mb-4">
+            LOGIN TO SAVE SCORES
+          </div>
         )}
 
         <button

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { useGameState } from './hooks/useGameState.js';
 import { useDragAndDrop } from './hooks/useDragAndDrop.js';
 import { useHighScores } from './hooks/useHighScores.js';
+import { useAuth } from './hooks/useAuth.js';
 import { PHASES } from './logic/gameEngine.js';
 import { getPieceBounds } from './logic/pieces.js';
 import Grid from './components/Grid.jsx';
@@ -9,11 +10,13 @@ import PieceTray from './components/PieceTray.jsx';
 import ScoreDisplay from './components/ScoreDisplay.jsx';
 import GameOverModal from './components/GameOverModal.jsx';
 import HighScoreBoard from './components/HighScoreBoard.jsx';
+import AuthPanel from './components/AuthPanel.jsx';
 import './styles/blockBlast.css';
 
 export default function BlockBlast() {
   const { state, placePiece, reset } = useGameState();
-  const { scores, loading, submitScore, checkHighScore, refetch } = useHighScores();
+  const { user, isLoggedIn, displayName, authLoading, login, register, logout } = useAuth();
+  const { scores, loading, personalBest, submitScore, refetch } = useHighScores(user?.id, displayName);
   const {
     dragging,
     dragPosRef,
@@ -38,7 +41,7 @@ export default function BlockBlast() {
       }, 850);
       return () => clearTimeout(timer);
     }
-  }, [state.lastScoreDelta, state.score]); // score as dep so each placement triggers
+  }, [state.lastScoreDelta, state.score]);
 
   const handleReset = () => {
     reset();
@@ -52,6 +55,16 @@ export default function BlockBlast() {
       onPointerUp={onPointerUp}
       onPointerCancel={onPointerUp}
     >
+      {/* Auth */}
+      <AuthPanel
+        isLoggedIn={isLoggedIn}
+        displayName={displayName}
+        authLoading={authLoading}
+        onLogin={login}
+        onRegister={register}
+        onLogout={logout}
+      />
+
       {/* Score */}
       <div className="mb-4">
         <ScoreDisplay score={state.score} streak={state.streak} linesCleared={state.linesCleared} />
@@ -82,6 +95,12 @@ export default function BlockBlast() {
         draggingIndex={dragging ? dragging.pieceIndex : -1}
       />
 
+      {/* Leaderboard */}
+      <div className="mt-6">
+        <div className="section-label mb-3">HIGH_SCORES</div>
+        <HighScoreBoard scores={scores} loading={loading} />
+      </div>
+
       {/* Floating drag piece */}
       {dragging && (
         <FloatingPiece
@@ -97,16 +116,11 @@ export default function BlockBlast() {
         <GameOverModal
           score={state.score}
           onReset={handleReset}
+          isLoggedIn={isLoggedIn}
+          personalBest={personalBest}
           onSubmitScore={submitScore}
-          checkHighScore={checkHighScore}
         />
       )}
-
-      {/* Leaderboard */}
-      <div className="mt-6">
-        <div className="section-label mb-3">HIGH_SCORES</div>
-        <HighScoreBoard scores={scores} loading={loading} />
-      </div>
     </div>
   );
 }
