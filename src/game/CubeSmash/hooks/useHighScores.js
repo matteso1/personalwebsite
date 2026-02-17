@@ -29,17 +29,13 @@ export function useHighScores(userId, displayName) {
 
   const submitScore = useCallback(async (score) => {
     if (!userId || !displayName) return null;
-    // Only submit if it beats the current personal best
-    if (personalBest !== null && score <= personalBest) {
-      return null;
-    }
     const result = await saveAuthenticatedScore(userId, displayName, score);
     if (result) {
-      setPersonalBest(score);
+      setPersonalBest(prev => Math.max(prev ?? 0, score));
       await fetchScores();
     }
     return result;
-  }, [userId, displayName, personalBest, fetchScores]);
+  }, [userId, displayName, fetchScores]);
 
   return { scores, loading, personalBest, submitScore, refetch: fetchScores };
 }

@@ -32,7 +32,7 @@ export default function HighScoreBoard({ scores, loading }) {
           }`}
         >
           <span>{String(i + 1).padStart(2, '0')}</span>
-          <span className="truncate">{s.display_name}</span>
+          <span className="truncate">{s.display_name || s.player_name || 'UNKNOWN'}</span>
           <span className="text-right">{s.score.toLocaleString()}</span>
         </div>
       ))}

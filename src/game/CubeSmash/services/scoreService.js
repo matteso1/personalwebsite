@@ -16,6 +16,11 @@ export async function getScores(limit = 10) {
 
 export async function saveAuthenticatedScore(userId, displayName, score) {
   if (!supabase) return null;
+
+  // Check if user already has a higher score
+  const existing = await getPersonalBest(userId);
+  if (existing !== null && score <= existing) return null;
+
   const { data, error } = await supabase
     .from('high_scores')
     .upsert(

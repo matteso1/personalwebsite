@@ -25,17 +25,16 @@ function useCountUp(target, duration = 1000) {
 
 export default function GameOverModal({ score, onReset, isLoggedIn, personalBest, onSubmitScore }) {
   const [submitted, setSubmitted] = useState(false);
-  const [isNewBest, setIsNewBest] = useState(false);
+  const submittedRef = useRef(false);
   const displayScore = useCountUp(score, 1000);
 
+  const isNewBest = isLoggedIn && (personalBest === null || score > personalBest);
+
   useEffect(() => {
-    if (!isLoggedIn) return;
-    const newBest = personalBest === null || score > personalBest;
-    setIsNewBest(newBest);
-    if (newBest) {
-      onSubmitScore(score).then(() => setSubmitted(true));
-    }
-  }, []); // Run once on mount
+    if (!isLoggedIn || !isNewBest || submittedRef.current) return;
+    submittedRef.current = true;
+    onSubmitScore(score).then(() => setSubmitted(true));
+  }, [isLoggedIn, isNewBest, score, onSubmitScore]);
 
   return (
     <div className="bb-gameover-overlay">
