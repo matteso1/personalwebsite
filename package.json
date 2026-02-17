@@ -13,6 +13,7 @@
     "@heroicons/react": "^2.2.0",
     "@react-three/drei": "^10.0.7",
     "@react-three/fiber": "^9.1.2",
+    "@supabase/supabase-js": "^2.95.3",
     "aos": "^2.3.4",
     "framer-motion": "^11.3.28",
     "lucide-react": "^0.469.0",

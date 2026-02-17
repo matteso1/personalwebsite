@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useLocation } from "react-router-dom";
-import { Github, Linkedin, Mail, Menu, X, Terminal, FileCode, User, Send, BookOpen } from "lucide-react";
+import { Github, Linkedin, Mail, Menu, X, Terminal, FileCode, User, Send, BookOpen, Gamepad2 } from "lucide-react";
 import site from "../content/site.json";
 import GameOfLife from "./GameOfLife";
 
@@ -29,7 +29,8 @@ const Layout = ({ children }) => {
   const navigationItems = [
     { name: 'Index', path: '/', icon: Terminal, num: '01' },
     { name: 'Projects', path: '/projects', icon: FileCode, num: '02' },
-    { name: 'Blog', path: '/blog', icon: BookOpen, num: '03' }
+    { name: 'Blog', path: '/blog', icon: BookOpen, num: '03' },
+    { name: 'Arcade', path: '/arcade', icon: Gamepad2, num: '04' }
   ];
 
   return (

@@ -1,0 +1,289 @@
+/* ===== Grid ===== */
+.bb-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  gap: 1px;
+  background: #1e1e21;
+  border: 1px solid #4a4a52;
+  border-radius: 4px;
+  aspect-ratio: 1;
+  width: 100%;
+  max-width: 400px;
+  user-select: none;
+  touch-action: none;
+  box-shadow: 0 0 20px rgba(0, 255, 159, 0.06), 0 0 60px rgba(0, 255, 159, 0.03);
+}
+
+/* ===== Cells ===== */
+.bb-cell {
+  background: #111113;
+  position: relative;
+  border-radius: 2px;
+  transition: background-color 0.15s ease;
+}
+
+/* Checkerboard pattern on empty cells */
+.bb-cell--alt {
+  background: #131316;
+}
+
+.bb-cell--filled {
+  box-shadow:
+    inset 1px 1px 2px rgba(255, 255, 255, 0.12),
+    inset -1px -1px 2px rgba(0, 0, 0, 0.3),
+    0 0 4px var(--cell-color, #00ff9f);
+  border-radius: 2px;
+}
+
+.bb-cell--ghost-valid {
+  opacity: 0.35;
+}
+
+.bb-cell--ghost-invalid {
+  opacity: 0.25;
+  background: #ff4757 !important;
+}
+
+/* Just-placed pulse */
+.bb-cell--just-placed {
+  animation: cell-placed 250ms ease-out;
+}
+
+@keyframes cell-placed {
+  0% {
+    filter: brightness(1.8);
+    transform: scale(1.12);
+  }
+  100% {
+    filter: brightness(1);
+    transform: scale(1);
+  }
+}
+
+/* Clear animation -- two-stage: white flash -> shrink + fade */
+.bb-cell--clearing {
+  animation: cell-clear 600ms ease-out forwards;
+}
+
+@keyframes cell-clear {
+  0% {
+    filter: brightness(1);
+    transform: scale(1);
+    opacity: 1;
+  }
+  30% {
+    filter: brightness(3);
+    transform: scale(1.15);
+    opacity: 1;
+  }
+  100% {
+    filter: brightness(0);
+    transform: scale(0.6);
+    opacity: 0;
+  }
+}
+
+/* ===== Piece tray ===== */
+.bb-tray {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 1rem 0;
+  min-height: 5rem;
+}
+
+/* Mini piece preview in tray */
+.bb-piece-preview {
+  display: grid;
+  gap: 2px;
+  cursor: grab;
+  touch-action: none;
+  padding: 0.5rem;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.bb-piece-preview:hover {
+  border-color: #4a4a52;
+  transform: scale(1.05);
+}
+
+.bb-piece-preview:active {
+  cursor: grabbing;
+}
+
+/* Staggered entrance for pieces */
+.bb-piece-preview--enter {
+  animation: piece-enter 300ms ease-out backwards;
+}
+
+@keyframes piece-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Empty piece slot placeholder */
+.bb-piece-preview--empty {
+  opacity: 0.15;
+  pointer-events: none;
+  border: 1px dashed #4a4a52;
+  border-radius: 4px;
+  min-width: 50px;
+  min-height: 50px;
+}
+
+.bb-piece-preview--disabled {
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+.bb-piece-cell {
+  width: 16px;
+  height: 16px;
+  border-radius: 2px;
+}
+
+/* ===== Floating drag piece ===== */
+.bb-drag-float {
+  position: fixed;
+  pointer-events: none;
+  z-index: 100;
+  display: grid;
+  gap: 1px;
+  opacity: 0.85;
+}
+
+.bb-drag-float--lifted {
+  transform: scale(1.15);
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+}
+
+.bb-drag-cell {
+  width: var(--cell-size, 40px);
+  height: var(--cell-size, 40px);
+  border-radius: 2px;
+}
+
+/* ===== Score display ===== */
+.bb-score {
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.bb-score-value {
+  transition: transform 150ms ease-out, filter 150ms ease-out;
+}
+
+.bb-score-value--bump {
+  animation: score-bump 300ms ease-out;
+}
+
+@keyframes score-bump {
+  0% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  30% {
+    transform: scale(1.25);
+    filter: brightness(1.5);
+  }
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+
+/* Streak badge fade */
+.bb-streak {
+  animation: streak-in 300ms ease-out;
+}
+
+.bb-streak--exit {
+  animation: streak-out 300ms ease-out forwards;
+}
+
+@keyframes streak-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes streak-out {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-4px); }
+}
+
+/* Floating score popup */
+.bb-score-popup {
+  position: absolute;
+  pointer-events: none;
+  z-index: 80;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #00ff9f;
+  text-shadow: 0 0 8px rgba(0, 255, 159, 0.5);
+  animation: score-float 800ms ease-out forwards;
+}
+
+@keyframes score-float {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-40px) scale(0.8);
+  }
+}
+
+/* ===== Game over overlay ===== */
+.bb-gameover-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 10, 11, 0.85);
+  backdrop-filter: blur(4px);
+  z-index: 50;
+  animation: fade-in 0.3s ease-out;
+}
+
+.bb-gameover-card {
+  animation: modal-enter 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modal-enter {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 480px) {
+  .bb-grid {
+    max-width: 320px;
+  }
+  .bb-piece-cell {
+    width: 13px;
+    height: 13px;
+  }
+}
