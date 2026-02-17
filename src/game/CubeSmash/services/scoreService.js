@@ -21,13 +21,13 @@ export async function saveAuthenticatedScore(userId, displayName, score) {
   const existing = await getPersonalBest(userId);
   if (existing !== null && score <= existing) return null;
 
+  const payload = { user_id: userId, display_name: displayName, player_name: displayName, score };
+
   const { data, error } = await supabase
     .from('high_scores')
-    .upsert(
-      { user_id: userId, display_name: displayName, score },
-      { onConflict: 'user_id' }
-    )
+    .upsert(payload, { onConflict: 'user_id' })
     .select();
+
   if (error) {
     console.error('Failed to save score:', error);
     return null;
