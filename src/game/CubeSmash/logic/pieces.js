@@ -9,7 +9,7 @@ const LARGE_PIECES = PIECE_DEFS.filter(p => p.cells.length >= 5);
 // Line pieces that can fill horizontal/vertical gaps
 const LINE_PIECES_BY_LENGTH = {};
 for (const p of PIECE_DEFS) {
-  if (p.id.startsWith('line') || p.id === 'dot') {
+  if (p.id.startsWith('line')) {
     const len = p.cells.length;
     if (!LINE_PIECES_BY_LENGTH[len]) LINE_PIECES_BY_LENGTH[len] = [];
     LINE_PIECES_BY_LENGTH[len].push(p);

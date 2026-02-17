@@ -38,7 +38,7 @@ export function gameReducer(state, action) {
       if (!canPlace(state.grid, piece, row, col)) return state;
 
       let grid = placePiece(state.grid, piece, row, col);
-      const placementScore = calculatePlacementScore(piece.cells.length);
+      const placementScore = calculatePlacementScore();
       let score = state.score + placementScore;
 
       // Track which cells were just placed for pulse animation
