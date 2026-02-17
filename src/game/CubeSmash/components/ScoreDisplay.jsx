@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 
-export default function ScoreDisplay({ score, streak, linesCleared }) {
+export default function ScoreDisplay({ score, combo, linesCleared }) {
   const prevScoreRef = useRef(score);
   const [bumping, setBumping] = useState(false);
 
@@ -27,10 +27,10 @@ export default function ScoreDisplay({ score, streak, linesCleared }) {
         <span className="text-terminal-muted text-xs">LINES</span>
         <div className="text-terminal-cyan text-lg">{linesCleared}</div>
       </div>
-      {streak > 1 && (
+      {combo > 0 && (
         <div className="bb-streak">
-          <span className="text-terminal-muted text-xs">STREAK</span>
-          <div className="text-terminal-amber text-lg">x{streak}</div>
+          <span className="text-terminal-muted text-xs">COMBO</span>
+          <div className="text-terminal-amber text-lg">x{combo}</div>
         </div>
       )}
     </div>

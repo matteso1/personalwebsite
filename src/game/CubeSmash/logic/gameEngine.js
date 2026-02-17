@@ -1,6 +1,6 @@
 import { createEmptyGrid, canPlace, placePiece, findCompletedLines, clearLines, canAnyPieceFit } from './board.js';
 import { getRandomPieces, getSmartPieces } from './pieces.js';
-import { calculatePlacementScore, calculateClearScore } from './scoring.js';
+import { calculatePlacementScore, calculateClearScore, shouldResetCombo } from './scoring.js';
 
 export const PHASES = {
   PLAYING: 'PLAYING',
@@ -13,7 +13,8 @@ export function createInitialState() {
     grid: createEmptyGrid(),
     pieces: getRandomPieces(3),
     score: 0,
-    streak: 0,
+    combo: 0,
+    movesSinceLastClear: 0,
     phase: PHASES.PLAYING,
     clearingCells: null, // Set of "r,c" strings to animate
     justPlacedCells: null, // Set of "r,c" strings for placement pulse
@@ -65,14 +66,15 @@ export function gameReducer(state, action) {
           for (let r = 0; r < 8; r++) clearingCells.add(`${r},${c}`);
         }
 
-        const { lineScore, newStreak } = calculateClearScore(totalLines, state.streak);
+        const { lineScore, newCombo } = calculateClearScore(totalLines, state.combo);
 
         return {
           ...state,
           grid,
           pieces,
           score: score + lineScore,
-          streak: newStreak,
+          combo: newCombo,
+          movesSinceLastClear: 0,
           phase: PHASES.CLEARING,
           clearingCells,
           justPlacedCells,
@@ -82,7 +84,10 @@ export function gameReducer(state, action) {
         };
       }
 
-      // No lines cleared -- reset streak
+      // No lines cleared -- increment moves since last clear
+      const movesSinceLastClear = state.movesSinceLastClear + 1;
+      const combo = shouldResetCombo(movesSinceLastClear) ? 0 : state.combo;
+
       let nextPieces = pieces;
       // If all 3 pieces used, deal new set
       if (pieces.every(p => p === null)) {
@@ -96,7 +101,8 @@ export function gameReducer(state, action) {
           grid,
           pieces: nextPieces,
           score,
-          streak: 0,
+          combo: 0,
+          movesSinceLastClear,
           phase: PHASES.GAME_OVER,
           clearingCells: null,
           justPlacedCells,
@@ -109,7 +115,8 @@ export function gameReducer(state, action) {
         grid,
         pieces: nextPieces,
         score,
-        streak: 0,
+        combo,
+        movesSinceLastClear,
         phase: PHASES.PLAYING,
         clearingCells: null,
         justPlacedCells,

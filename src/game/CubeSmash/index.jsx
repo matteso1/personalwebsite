@@ -67,7 +67,7 @@ export default function BlockBlast() {
 
       {/* Score */}
       <div className="mb-4">
-        <ScoreDisplay score={state.score} streak={state.streak} linesCleared={state.linesCleared} />
+        <ScoreDisplay score={state.score} combo={state.combo} linesCleared={state.linesCleared} />
       </div>
 
       {/* Grid */}
