@@ -1,4 +1,4 @@
-import { PIECE_DEFS } from './constants.js';
+import { PIECE_DEFS, GRID_SIZE } from './constants.js';
 import { getBoardDensity, getNearCompleteLines, canPieceFitAnywhere } from './board.js';
 
 // === Piece lookup by ID ===
@@ -23,6 +23,7 @@ const WEIGHTED_POOL = [];
 
 // Common pieces (high weight) -- the bread and butter
 const COMMON_PIECES = [
+  'dot',
   'line2h', 'line2v',
   'line3h', 'line3v',
   'line4h', 'line4v',
@@ -34,6 +35,8 @@ const COMMON_PIECES = [
 
 // Uncommon pieces (medium weight) -- appear regularly but less often
 const UNCOMMON_PIECES = [
+  'diag2a', 'diag2b',
+  'diag3a', 'diag3b',
   'corner1', 'corner2', 'corner3', 'corner4',
   'L1', 'L2', 'L3', 'L4',
   'J1', 'J2', 'J3', 'J4',
@@ -108,6 +111,28 @@ const SYNERGY_SETS = [
   ['rect2x3', 'line5h', 'square'],
   ['rect3x2', 'line5v', 'square'],
 ];
+
+// Small pieces useful for patching isolated gaps
+const GAP_FILLERS = ['dot', 'line2h', 'line2v', 'diag2a', 'diag2b'];
+
+// Count isolated empty cells (empty cells where no adjacent empty cell shares
+// the same row or column in a way that a 2+ cell line piece could fill them)
+function countIsolatedGaps(grid) {
+  let count = 0;
+  for (let r = 0; r < GRID_SIZE; r++) {
+    for (let c = 0; c < GRID_SIZE; c++) {
+      if (grid[r][c] !== null) continue;
+      // Check if any orthogonal neighbor is also empty
+      const hasEmptyNeighbor =
+        (r > 0 && grid[r - 1][c] === null) ||
+        (r < GRID_SIZE - 1 && grid[r + 1][c] === null) ||
+        (c > 0 && grid[r][c - 1] === null) ||
+        (c < GRID_SIZE - 1 && grid[r][c + 1] === null);
+      if (!hasEmptyNeighbor) count++;
+    }
+  }
+  return count;
+}
 
 // === Strategy 1: Synergy Sets (~25%) ===
 function strategySynergy() {
@@ -239,6 +264,16 @@ export function getSmartPieces(count, grid) {
   }
   if (pieces.length > count) {
     pieces.length = count;
+  }
+
+  // Isolated gap injection: if the board has lonely 1x1 holes,
+  // replace one piece with a small filler so the player can patch them
+  const isolatedGaps = countIsolatedGaps(grid);
+  if (isolatedGaps >= 2) {
+    // Replace the last piece with a gap filler
+    pieces[pieces.length - 1] = { ...byId(pickRandom(GAP_FILLERS)) };
+  } else if (isolatedGaps === 1 && Math.random() < 0.5) {
+    pieces[pieces.length - 1] = { ...byId(pickRandom(GAP_FILLERS)) };
   }
 
   // Post-selection rules

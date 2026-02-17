@@ -17,6 +17,17 @@ export const PIECE_COLORS = {
 
 // Piece definitions: each is an array of [row, col] offsets from origin
 export const PIECE_DEFS = [
+  // 1-cell single block
+  { id: 'dot', cells: [[0, 0]], color: PIECE_COLORS.O },
+
+  // 2-cell diagonal
+  { id: 'diag2a', cells: [[0, 0], [1, 1]], color: PIECE_COLORS.S },
+  { id: 'diag2b', cells: [[0, 1], [1, 0]], color: PIECE_COLORS.Z },
+
+  // 3-cell diagonal
+  { id: 'diag3a', cells: [[0, 0], [1, 1], [2, 2]], color: PIECE_COLORS.S },
+  { id: 'diag3b', cells: [[0, 2], [1, 1], [2, 0]], color: PIECE_COLORS.Z },
+
   // 2-cell lines
   { id: 'line2h', cells: [[0, 0], [0, 1]], color: PIECE_COLORS.I },
   { id: 'line2v', cells: [[0, 0], [1, 0]], color: PIECE_COLORS.I },
