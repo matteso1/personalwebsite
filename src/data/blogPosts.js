@@ -1,5 +1,6 @@
 import projectGorgonContent from "./posts/project-gorgon.md?raw";
 import madisonBusEtaContent from "./posts/madison-bus-eta.md?raw";
+import wattbotRagContent from "./posts/wattbot-rag.md?raw";
 
 const blogPosts = [
   {
@@ -13,6 +14,18 @@ const blogPosts = [
     github: "https://github.com/matteso1/madison-bus-eta",
     demo: "https://madisonbuseta.com",
     content: madisonBusEtaContent
+  },
+  {
+    slug: "wattbot-rag-bedrock",
+    title: "Deploying RAG in AWS Bedrock: Benchmarking 9 LLMs on the WattBot Challenge",
+    subtitle: "Ensemble majority voting beat every individual model. The highest-citation model finished last.",
+    date: "2026-02-17",
+    readTime: "10 min read",
+    tags: ["RAG", "AWS Bedrock", "LLM Evaluation", "NLP", "Python", "Ensemble Methods"],
+    summary: "How our team deployed the #1 WattBot Challenge RAG system on AWS Bedrock and benchmarked 9 LLMs and 3 ensemble strategies across 282 questions. Built the evaluation framework, cost tracking, and discovered that model behavior matters more than raw accuracy.",
+    github: "https://github.com/matteso1/KohakuRAG_UI",
+    demo: "https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2026-02-17.html",
+    content: wattbotRagContent
   },
   {
     slug: "project-gorgon",
