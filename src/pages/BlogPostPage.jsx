@@ -307,6 +307,17 @@ const BlogPostPage = () => {
                                 <ExternalLink className="w-3 h-3" />
                             </a>
                         )}
+                        {post.demo && (
+                            <a
+                                href={post.demo}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="flex items-center gap-1.5 hover:text-terminal-green transition-colors"
+                            >
+                                <ExternalLink className="w-4 h-4" />
+                                Live demo
+                            </a>
+                        )}
                     </div>
 
                     {/* Tags */}
@@ -366,6 +377,17 @@ const BlogPostPage = () => {
                                 >
                                     <Github className="w-5 h-5" />
                                     View on GitHub
+                                </a>
+                            )}
+                            {post.demo && (
+                                <a
+                                    href={post.demo}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="inline-flex items-center gap-3 px-6 py-3 border border-terminal-green text-terminal-green font-semibold hover:bg-terminal-green/10 transition-colors"
+                                >
+                                    <ExternalLink className="w-5 h-5" />
+                                    Try it live
                                 </a>
                             )}
                             <Link
