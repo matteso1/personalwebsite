@@ -42,6 +42,56 @@
     "description": "End-to-end systems, distributed engines, and AI applications.",
     "featured": [
       {
+        "title": "LockBox",
+        "subtitle": "Offline Local-First Password Manager",
+        "description": "Fully offline password manager that keeps your passwords encrypted on your machine -- no cloud, no accounts, no telemetry. AES-256-GCM encryption with Argon2id key derivation (64 MB memory cost). TOTP 2FA support, 30-day quick unlock via Windows DPAPI, password strength validation by zxcvbn, and a built-in cryptographic password/passphrase generator. Compiles to a single .exe with zero runtime dependencies.",
+        "tech": [
+          "Python",
+          "PyQt6",
+          "AES-256-GCM",
+          "Argon2id",
+          "TOTP",
+          "Windows DPAPI"
+        ],
+        "status": "Completed",
+        "year": "2025",
+        "highlights": [
+          "AES-256-GCM + AAD",
+          "Argon2id Key Derivation",
+          "TOTP Two-Factor Auth",
+          "Single .exe Distribution"
+        ],
+        "links": {
+          "repo": "https://github.com/matteso1/lockbox",
+          "download": "https://github.com/matteso1/lockbox/releases/latest"
+        }
+      },
+      {
+        "title": "Madison Metro Bus ETA",
+        "subtitle": "End-to-end ML Pipeline",
+        "description": "ML pipeline predicting bus arrival times more accurately than official schedules. Architected ingestion pipe for GTFS-RT streams (1M+ positions/mo) into Postgres/PostGIS. Trained LSTM/Transformer models reducing MAE by 25%. Containerized inference API with Docker and deployed via GitHub Actions CI/CD ensuring 99.9% uptime.",
+        "tech": [
+          "Python",
+          "FastAPI",
+          "Docker",
+          "Postgres",
+          "LSTM/Transformer",
+          "Leaflet"
+        ],
+        "status": "Active",
+        "year": "2024-2025",
+        "highlights": [
+          "GTFS-RT ETL Pipeline",
+          "Transformer Sequence Models",
+          "PostGIS Feature Store",
+          "CI/CD Deployment"
+        ],
+        "links": {
+          "repo": "https://github.com/matteso1/madison-bus-eta",
+          "demo": "https://madisonbuseta.com"
+        }
+      },
+      {
         "title": "Sentinel",
         "subtitle": "Distributed Log Streaming Engine",
         "description": "High-throughput distributed message queue built from scratch in Go. Custom LSM-tree storage engine achieving 1.7M writes/sec and 3.9M reads/sec. Features Raft-inspired consensus for leader election, gRPC streaming API with Protobuf, Kafka-style topics/partitions, and Prometheus metrics. 5,600+ lines of production-quality Go with 21 passing tests.",
@@ -114,56 +164,6 @@
         "links": {
           "repo": "https://github.com/matteso1/aura",
           "demo": "https://matteso1.github.io/aura"
-        }
-      },
-      {
-        "title": "Madison Metro Bus ETA",
-        "subtitle": "End-to-end ML Pipeline",
-        "description": "ML pipeline predicting bus arrival times more accurately than official schedules. Architected ingestion pipe for GTFS-RT streams (1M+ positions/mo) into Postgres/PostGIS. Trained LSTM/Transformer models reducing MAE by 25%. Containerized inference API with Docker and deployed via GitHub Actions CI/CD ensuring 99.9% uptime.",
-        "tech": [
-          "Python",
-          "FastAPI",
-          "Docker",
-          "Postgres",
-          "LSTM/Transformer",
-          "Leaflet"
-        ],
-        "status": "Active",
-        "year": "2024-2025",
-        "highlights": [
-          "GTFS-RT ETL Pipeline",
-          "Transformer Sequence Models",
-          "PostGIS Feature Store",
-          "CI/CD Deployment"
-        ],
-        "links": {
-          "repo": "https://github.com/matteso1/madison-bus-eta",
-          "demo": "https://madisonbuseta.com"
-        }
-      },
-      {
-        "title": "LockBox",
-        "subtitle": "Offline Local-First Password Manager",
-        "description": "Fully offline password manager that keeps your passwords encrypted on your machine -- no cloud, no accounts, no telemetry. AES-256-GCM encryption with Argon2id key derivation (64 MB memory cost). TOTP 2FA support, 30-day quick unlock via Windows DPAPI, password strength validation by zxcvbn, and a built-in cryptographic password/passphrase generator. Compiles to a single .exe with zero runtime dependencies.",
-        "tech": [
-          "Python",
-          "PyQt6",
-          "AES-256-GCM",
-          "Argon2id",
-          "TOTP",
-          "Windows DPAPI"
-        ],
-        "status": "Completed",
-        "year": "2025",
-        "highlights": [
-          "AES-256-GCM + AAD",
-          "Argon2id Key Derivation",
-          "TOTP Two-Factor Auth",
-          "Single .exe Distribution"
-        ],
-        "links": {
-          "repo": "https://github.com/matteso1/lockbox",
-          "download": "https://github.com/matteso1/lockbox/releases/latest"
         }
       }
     ]
