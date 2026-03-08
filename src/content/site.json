@@ -54,7 +54,7 @@
           "Windows DPAPI"
         ],
         "status": "Completed",
-        "year": "2025",
+        "year": "2026",
         "highlights": [
           "AES-256-GCM + AAD",
           "Argon2id Key Derivation",
@@ -79,7 +79,7 @@
           "Leaflet"
         ],
         "status": "Active",
-        "year": "2024-2025",
+        "year": "2024-2026",
         "highlights": [
           "GTFS-RT ETL Pipeline",
           "Transformer Sequence Models",
