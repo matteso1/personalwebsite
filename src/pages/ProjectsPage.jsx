@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Github, ExternalLink, ArrowUpRight } from "lucide-react";
+import { Github, ExternalLink, ArrowUpRight, Download } from "lucide-react";
 import site from "../content/site.json";
 
 const ProjectsPage = () => {
@@ -75,6 +75,16 @@ const ProjectsPage = () => {
                           <ExternalLink className="w-4 h-4" />
                         </a>
                       )}
+                      {project.links?.download && (
+                        <a
+                          href={project.links.download}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="p-2 border border-terminal text-terminal-muted hover:text-terminal-amber hover:border-terminal-amber transition-colors"
+                        >
+                          <Download className="w-4 h-4" />
+                        </a>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -130,6 +140,17 @@ const ProjectsPage = () => {
                 >
                   <span className="text-sm">View live project</span>
                   <ArrowUpRight className="w-4 h-4 group-hover/link:translate-x-1 group-hover/link:-translate-y-1 transition-transform" />
+                </a>
+              )}
+              {project.links?.download && (
+                <a
+                  href={project.links.download}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center justify-between p-4 md:px-8 border-t border-terminal text-terminal-muted hover:text-terminal-amber hover:bg-terminal-amber/5 transition-all group/link"
+                >
+                  <span className="text-sm">Download for Windows (.exe)</span>
+                  <Download className="w-4 h-4 group-hover/link:translate-y-0.5 transition-transform" />
                 </a>
               )}
             </motion.article>
