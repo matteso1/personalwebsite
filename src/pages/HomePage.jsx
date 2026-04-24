@@ -1,381 +1,799 @@
-import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import React from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Download, MapPin, Music, Code, Coffee } from "lucide-react";
+import {
+  Github, ArrowUpRight, Mail, Download, MapPin, ArrowRight,
+} from "lucide-react";
 import site from "../content/site.json";
+import Dossier from "../components/Dossier";
+import WindowFrame from "../components/WindowFrame";
+import AsciiCanvas from "../components/AsciiCanvas";
+import ForkGraph from "../components/ForkGraph";
+import CardTilt from "../components/CardTilt";
+import ProjectBand from "../components/ProjectBand";
+import MoshStrip from "../components/MoshStrip";
+import ScrambleText from "../components/ScrambleText";
+import {
+  DOSSIER_PORTRAIT, SYS_PANEL, CONTACT_BANNER,
+} from "../lib/ascii";
 
-// Typewriter effect component
-const Typewriter = ({ text, delay = 0, speed = 50 }) => {
-  const [displayText, setDisplayText] = useState('');
-  const [started, setStarted] = useState(false);
-
-  useEffect(() => {
-    const startTimer = setTimeout(() => setStarted(true), delay);
-    return () => clearTimeout(startTimer);
-  }, [delay]);
-
-  useEffect(() => {
-    if (!started) return;
-    let i = 0;
-    const timer = setInterval(() => {
-      if (i < text.length) {
-        setDisplayText(text.slice(0, i + 1));
-        i++;
-      } else {
-        clearInterval(timer);
-      }
-    }, speed);
-    return () => clearInterval(timer);
-  }, [started, text, speed]);
+export default function HomePage() {
+  const [featured, ...rest] = site.projects;
 
   return (
-    <span>
-      {displayText}
-      <span className="text-terminal-green animate-pulse">|</span>
-    </span>
-  );
-};
+    <div>
+      {/* ═══════════════ HERO ══════════════════════════════════ */}
+      <section style={{ position: "relative", padding: "54px 22px 40px" }}>
+        <div style={{ maxWidth: 1440, margin: "0 auto" }}>
+          {/* top chips */}
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 28 }}>
+            <span className="chip rust">
+              <span className="dot" /> available · summer '27 intern
+            </span>
+            <span className="chip blue">
+              <MapPin size={12} /> san francisco · bay area
+            </span>
+            <span className="chip ghost">swedish-american</span>
+            <span className="chip amber">open to · sde / mle</span>
+          </div>
 
-const HomePage = () => {
-  return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="min-h-[calc(100vh-3.5rem)] flex flex-col justify-center px-6 md:px-12 lg:px-20 py-20">
-        <div className="max-w-5xl">
-          {/* Section label */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            className="section-label mb-8"
-          >
-            01 INDEX
-          </motion.div>
-
-          {/* Main headline */}
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] mb-8"
-          >
-            <span className="text-white">I'm </span>
-            <span className="text-terminal-green animate-glow-pulse">Nils</span>
-            <span className="text-white">.</span>
-            <br />
-            <span className="text-terminal-muted">I build systems that scale.</span>
-          </motion.h1>
-
-          {/* Subtitle with typewriter */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.6 }}
-            className="text-lg md:text-xl text-terminal-muted mb-12 max-w-2xl font-light"
-          >
-            <Typewriter
-              text="Data Science & CS student at UW-Madison. I build distributed systems, ML pipelines, and high-performance applications. Looking for my first full-time role where I can learn fast and ship real products."
-              delay={800}
-              speed={25}
-            />
-          </motion.div>
-
-          {/* CTA Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 1.5 }}
-            className="flex flex-wrap gap-4"
-          >
-            <Link to="/projects">
-              <motion.button
-                className="group flex items-center gap-3 px-6 py-3 bg-terminal-green text-terminal-bg font-semibold hover:bg-terminal-green/90 transition-colors"
-                whileHover={{ x: 4 }}
-                whileTap={{ scale: 0.98 }}
+          <div className="hero-grid">
+            {/* LEFT — huge name + serif */}
+            <div>
+              <div
+                className="mono"
+                style={{
+                  fontSize: 10.5,
+                  letterSpacing: "0.22em",
+                  textTransform: "uppercase",
+                  color: "var(--paper-dim)",
+                  marginBottom: 10,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 10,
+                }}
               >
-                See my work
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </motion.button>
-            </Link>
+                <span style={{ color: "var(--rust)" }}>01</span>
+                <span style={{ width: 20, height: 1, background: "var(--paper-dim)" }} />
+                subject · cs / ds / swe
+              </div>
 
-            <motion.a
-              href={site.links.resume}
-              className="flex items-center gap-3 px-6 py-3 border border-terminal text-terminal-muted hover:text-terminal-green hover:border-terminal-green transition-colors"
-              whileHover={{ x: 4 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <Download className="w-4 h-4" />
-              Resume
-            </motion.a>
-          </motion.div>
+              <h1
+                className="hed"
+                style={{
+                  fontSize: "clamp(88px, 17vw, 260px)",
+                  letterSpacing: "-0.015em",
+                  lineHeight: 0.8,
+                  color: "var(--paper)",
+                }}
+              >
+                <ScrambleText text="NILS" duration={1100} />
+                <span style={{ color: "var(--rust)" }}>.</span>
+                <br />
+                <span
+                  style={{
+                    WebkitTextStroke: "2px var(--paper)",
+                    color: "transparent",
+                    display: "inline-block",
+                  }}
+                >
+                  <ScrambleText text="MATTESON" duration={1400} />
+                </span>
+              </h1>
+
+              <div
+                className="holo-panel"
+                style={{
+                  maxWidth: 680,
+                  marginTop: 36,
+                  padding: "22px 26px 24px",
+                }}
+              >
+                {/* corner ticks — keeps the ascii-dossier vocabulary */}
+                <span
+                  aria-hidden
+                  style={{
+                    position: "absolute",
+                    top: -1,
+                    left: -1,
+                    width: 12,
+                    height: 12,
+                    borderTop: "1px solid var(--accent)",
+                    borderLeft: "1px solid var(--accent)",
+                    zIndex: 2,
+                  }}
+                />
+                <span
+                  aria-hidden
+                  style={{
+                    position: "absolute",
+                    bottom: -1,
+                    right: -1,
+                    width: 12,
+                    height: 12,
+                    borderBottom: "1px solid var(--accent-2)",
+                    borderRight: "1px solid var(--accent-2)",
+                    zIndex: 2,
+                  }}
+                />
+                <div
+                  className="mono"
+                  style={{
+                    fontSize: 9.5,
+                    letterSpacing: "0.28em",
+                    color: "var(--paper-dim)",
+                    textTransform: "uppercase",
+                    marginBottom: 10,
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 8,
+                  }}
+                >
+                  <span
+                    style={{
+                      width: 6,
+                      height: 6,
+                      background: "var(--accent)",
+                      boxShadow: "0 0 8px var(--accent)",
+                    }}
+                  />
+                  transmission / 0001
+                </div>
+                <p
+                  className="serif"
+                  style={{
+                    fontSize: "clamp(24px, 3vw, 38px)",
+                    lineHeight: 1.18,
+                    color: "var(--paper)",
+                    margin: 0,
+                  }}
+                >
+                  i build{" "}
+                  <span
+                    style={{
+                      color: "var(--accent)",
+                      textShadow: "0 0 14px rgba(198,247,39,0.55)",
+                    }}
+                  >
+                    systems
+                  </span>{" "}
+                  that shouldn't work, then i break them to figure out{" "}
+                  <span
+                    style={{
+                      color: "var(--accent-2)",
+                      textShadow: "0 0 14px rgba(255,46,160,0.55)",
+                    }}
+                  >
+                    why.
+                  </span>
+                </p>
+
+                <div
+                  style={{
+                    height: 1,
+                    background:
+                      "linear-gradient(90deg, var(--accent), transparent 70%)",
+                    margin: "18px 0 16px",
+                    opacity: 0.55,
+                  }}
+                />
+
+                <p
+                  style={{
+                    fontSize: 14.5,
+                    lineHeight: 1.7,
+                    color: "var(--paper-mid)",
+                    margin: 0,
+                    maxWidth: 600,
+                  }}
+                >
+                  {site.hero.subtitle}
+                </p>
+              </div>
+
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 28 }}>
+                <a href={site.links.resume} target="_blank" rel="noreferrer" className="btn primary">
+                  <ArrowRight size={12} /> resume
+                </a>
+                <Link to="/work" className="btn">
+                  <span style={{ color: "var(--paper-dim)" }}>02</span> view work
+                </Link>
+                <a href={site.links.github} target="_blank" rel="noreferrer" className="btn amber">
+                  <Github size={12} /> github
+                </a>
+              </div>
+            </div>
+
+            {/* RIGHT — dossier tower */}
+            <div className="hero-right">
+              <CardTilt maxTilt={10} glareStrength={0.28}>
+                <Dossier stamp="CLASSIFIED · 0426" style={{ padding: 0 }}>
+                  <div
+                    style={{
+                      padding: "18px 20px 6px",
+                      borderBottom: "1px dashed var(--hairline-2)",
+                    }}
+                  >
+                    <div className="mono" style={{ fontSize: 10, letterSpacing: "0.22em", color: "var(--paper-dim)", textTransform: "uppercase" }}>
+                      // subject profile
+                    </div>
+                    <div className="hed" style={{ fontSize: 34, lineHeight: 0.95, marginTop: 6, letterSpacing: 0 }}>
+                      N<span style={{ color: "var(--rust)" }}>/</span>M
+                    </div>
+                  </div>
+
+                  <AsciiCanvas
+                    art={DOSSIER_PORTRAIT}
+                    color="var(--paper-mid)"
+                    size={10.5}
+                    style={{ padding: "14px 16px 8px" }}
+                    typewrite
+                    speed={12}
+                  />
+
+                  <div style={{ padding: "14px 20px 20px", borderTop: "1px dashed var(--hairline-2)" }}>
+                    <div className="field" style={{ padding: "6px 0" }}>
+                      <span className="field-key">origin</span>
+                      <span className="field-val rust">boise, id → madison, wi</span>
+                    </div>
+                    <div className="field" style={{ padding: "6px 0" }}>
+                      <span className="field-key">current</span>
+                      <span className="field-val rust">uw-madison · cs + ds '26</span>
+                    </div>
+                    <div className="field" style={{ padding: "6px 0" }}>
+                      <span className="field-key">next</span>
+                      <span className="field-val rust">neu mscs · sv '26–'28</span>
+                    </div>
+                    <div className="field" style={{ padding: "6px 0", borderBottom: "none" }}>
+                      <span className="field-key">shipping</span>
+                      <span className="field-val">
+                        <a href={site.links.thaw} target="_blank" rel="noreferrer" style={{ color: "var(--rust)", textDecoration: "none" }}>
+                          thaw.sh ↗
+                        </a>
+                      </span>
+                    </div>
+                  </div>
+                </Dossier>
+              </CardTilt>
+            </div>
+          </div>
+        </div>
+
+        <style>{`
+          .hero-grid {
+            display: grid;
+            grid-template-columns: 1.55fr 1fr;
+            gap: 48px;
+            align-items: start;
+          }
+          @media (max-width: 980px) {
+            .hero-grid { grid-template-columns: 1fr; }
+            .hero-right { order: -1; max-width: 420px; }
+          }
+        `}</style>
+      </section>
+
+      {/* ═══════════════ TICKER ═════════════════════════════ */}
+      <section style={{ marginTop: 6 }}>
+        <div className="ticker">
+          <div className="ticker-track">
+            {[...site.marquee, ...site.marquee].map((m, i) => (
+              <span key={i} className="ticker-item">
+                <span>{m}</span>
+                <span className="ticker-sep">◆</span>
+              </span>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* About / Story Section */}
-      <section className="px-6 md:px-12 lg:px-20 py-20 border-t border-terminal">
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="max-w-5xl"
-        >
-          <div className="section-label mb-12">02 ABOUT</div>
+      {/* ═══════════════ NOW — four dossiers ═════════════════ */}
+      <section style={{ padding: "74px 22px 44px" }}>
+        <div style={{ maxWidth: 1440, margin: "0 auto" }}>
+          <SectionHead
+            index="02"
+            label="now"
+            title={<>current <span className="serif" style={{ color: "var(--rust)" }}>operations</span>.</>}
+            meta={`updated ${new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" }).toLowerCase()}`}
+          />
 
-          <div className="grid md:grid-cols-2 gap-12">
-            {/* Left column - story */}
-            <div className="space-y-6">
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-                className="text-xl text-white leading-relaxed"
+          <div className="now-grid">
+            {site.now.items.map((item, i) => {
+              const accent = ["rust", "blue", "amber", "rust"][i % 4];
+              const accentVar = accent === "rust" ? "var(--rust)" : accent === "amber" ? "var(--amber)" : "var(--accent-3)";
+              return (
+              <Dossier
+                key={item.label}
+                accent={accent}
+                stamp={`N.${String(i + 1).padStart(2, "0")} / 04`}
+                style={{ padding: "24px 26px" }}
               >
-                I care deeply about understanding how things work at a fundamental level.
-              </motion.p>
-
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-                className="text-terminal-muted leading-relaxed"
-              >
-                I'm from the Pacific Northwest, studying Data Science and Computer Science at UW-Madison. I didn't start with tutorials - I started by building things I didn't know how to build, breaking them, and figuring out why.
-              </motion.p>
-
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                className="text-terminal-muted leading-relaxed"
-              >
-                That's how I ended up writing a distributed message queue from scratch, building real-time collaboration systems in Rust, and training ML models that outperform baseline approaches. I learn by doing the hard thing first.
-              </motion.p>
-
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.3 }}
-                className="text-terminal-muted leading-relaxed"
-              >
-                Outside of engineering, I produce electronic music - it's taught me that great work comes from iteration and attention to detail.
-              </motion.p>
-            </div>
-
-            {/* Right column - quick facts terminal style */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="terminal-card p-6 glow-border"
-            >
-              <div className="text-terminal-green text-sm mb-4 font-medium">
-                {`>`} cat ~/nils/facts.txt
-              </div>
-              <div className="space-y-4 text-sm">
-                <div className="flex items-start gap-3">
-                  <MapPin className="w-4 h-4 text-terminal-green mt-0.5" />
-                  <div>
-                    <div className="text-white">Location</div>
-                    <div className="text-terminal-muted">Madison, WI (from the Pacific Northwest)</div>
-                  </div>
+                <div
+                  className="mono"
+                  style={{
+                    display: "inline-flex",
+                    gap: 8,
+                    padding: "3px 9px",
+                    border: `1px dashed ${accentVar}`,
+                    color: accentVar,
+                    fontSize: 10,
+                    letterSpacing: "0.18em",
+                    textTransform: "uppercase",
+                    marginBottom: 18,
+                  }}
+                >
+                  {item.label}
                 </div>
-                <div className="flex items-start gap-3">
-                  <Music className="w-4 h-4 text-terminal-green mt-0.5" />
-                  <div>
-                    <div className="text-white">Outside work</div>
-                    <div className="text-terminal-muted">Electronic music production in Ableton</div>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Code className="w-4 h-4 text-terminal-green mt-0.5" />
-                  <div>
-                    <div className="text-white">Current focus</div>
-                    <div className="text-terminal-muted">High-throughput systems and ML infrastructure</div>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Coffee className="w-4 h-4 text-terminal-green mt-0.5" />
-                  <div>
-                    <div className="text-white">Approach</div>
-                    <div className="text-terminal-muted">Learn by building, iterate until it works</div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </motion.div>
-      </section>
-
-      {/* What I Do Section */}
-      <section className="px-6 md:px-12 lg:px-20 py-20 border-t border-terminal">
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="max-w-5xl"
-        >
-          <div className="section-label mb-12">03 WHAT I DO</div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                num: '01',
-                title: 'Distributed Systems',
-                description: 'I build high-throughput systems from scratch. Message queues, consensus protocols, custom storage engines. The stuff that makes everything else possible.'
-              },
-              {
-                num: '02',
-                title: 'Machine Learning',
-                description: 'End-to-end ML pipelines - from data ingestion to model serving. I care about models that work in production, not just notebooks.'
-              },
-              {
-                num: '03',
-                title: 'Full-Stack Development',
-                description: 'Real-time apps, interactive experiences, WebAssembly optimization. If it runs in a browser and needs to be fast, I\'m interested.'
-              }
-            ].map((item, index) => (
-              <motion.div
-                key={item.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="terminal-card p-6 glow-border group"
-              >
-                <div className="text-terminal-green text-xs mb-4">{`// ${item.num}`}</div>
-                <h3 className="font-display text-xl font-bold text-white mb-3 group-hover:text-terminal-green transition-colors">
+                <h3 className="hed" style={{ fontSize: "clamp(34px, 4vw, 52px)", letterSpacing: 0, color: "var(--paper)", lineHeight: 0.92 }}>
                   {item.title}
                 </h3>
-                <p className="text-terminal-muted text-sm leading-relaxed">
-                  {item.description}
+                <p style={{ marginTop: 14, color: "var(--paper-mid)", fontSize: 14, lineHeight: 1.65 }}>
+                  {item.text}
                 </p>
-              </motion.div>
-            ))}
+              </Dossier>
+              );
+            })}
           </div>
-        </motion.div>
+        </div>
+
+        <style>{`
+          .now-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 22px;
+          }
+          @media (max-width: 820px) {
+            .now-grid { grid-template-columns: 1fr; }
+          }
+        `}</style>
       </section>
 
-      {/* Stack Section - Condensed */}
-      <section className="px-6 md:px-12 lg:px-20 py-20 border-t border-terminal">
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="max-w-5xl"
-        >
-          <div className="section-label mb-12">04 STACK</div>
+      <MoshStrip length={200} label="status · nominal" bursts={5} />
 
-          <div className="terminal-card p-8 glow-border">
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {[
-                { title: 'Languages', items: ['Go', 'Rust', 'Python', 'TypeScript', 'C/C++', 'SQL'] },
-                { title: 'ML & Data', items: ['PyTorch', 'scikit-learn', 'pandas', 'XGBoost'] },
-                { title: 'Systems', items: ['gRPC', 'Docker', 'Redis', 'PostgreSQL', 'AWS'] },
-                { title: 'Web', items: ['React', 'FastAPI', 'WebAssembly', 'Three.js'] }
-              ].map((category, index) => (
-                <motion.div
-                  key={category.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
+      {/* ═══════════════ WORK — featured + grid ═══════════════ */}
+      <section style={{ padding: "74px 22px 36px" }}>
+        <div style={{ maxWidth: 1440, margin: "0 auto" }}>
+          <SectionHead
+            index="03"
+            label="work"
+            title={<>selected <span className="serif" style={{ color: "var(--amber)" }}>artifacts</span>.</>}
+            right={
+              <Link to="/work" className="btn" style={{ padding: "9px 14px" }}>
+                all projects <ArrowUpRight size={12} />
+              </Link>
+            }
+          />
+
+          {/* Featured — the thaw window */}
+          <WindowFrame
+            title={`WORK / ${featured.title}.exe`}
+            subtitle={`${featured.year} · ${featured.role}`}
+            tint="rust"
+            style={{ marginBottom: 36 }}
+          >
+            <div className="feat-grid">
+              <div style={{ padding: "32px 30px" }}>
+                <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
+                  <span className="chip rust"><span className="dot" /> active</span>
+                  <span className="chip ghost">{featured.year}</span>
+                </div>
+
+                <h3
+                  className="hed"
+                  style={{
+                    fontSize: "clamp(68px, 10vw, 148px)",
+                    letterSpacing: "-0.015em",
+                    lineHeight: 0.82,
+                    color: "var(--rust)",
+                  }}
                 >
-                  <h4 className="text-terminal-green text-sm font-medium mb-3">
-                    {`// ${category.title}`}
-                  </h4>
-                  <div className="flex flex-wrap gap-2">
-                    {category.items.map((item) => (
-                      <span
-                        key={item}
-                        className="text-xs text-terminal-muted hover:text-white transition-colors cursor-default"
-                      >
-                        {item}
-                      </span>
-                    ))}
-                  </div>
-                </motion.div>
+                  {featured.title}
+                </h3>
+
+                <p
+                  className="serif"
+                  style={{
+                    fontSize: "clamp(22px, 2.3vw, 28px)",
+                    lineHeight: 1.25,
+                    color: "var(--paper)",
+                    marginTop: 14,
+                    marginBottom: 16,
+                  }}
+                >
+                  {featured.subtitle}
+                </p>
+
+                <p style={{ fontSize: 15, lineHeight: 1.65, color: "var(--paper-mid)", maxWidth: 580, marginBottom: 22 }}>
+                  {featured.description}
+                </p>
+
+                <div
+                  className="mono"
+                  style={{
+                    padding: "12px 14px",
+                    borderLeft: "2px solid var(--rust)",
+                    background: "var(--rust-soft)",
+                    fontSize: 12,
+                    letterSpacing: "0.02em",
+                    color: "var(--paper)",
+                    marginBottom: 22,
+                    maxWidth: 580,
+                  }}
+                >
+                  <span style={{ color: "var(--rust)" }}>→&nbsp;</span>
+                  {featured.receipt}
+                </div>
+
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 24 }}>
+                  {featured.tech.map((t) => (
+                    <span key={t} className="pill">{t}</span>
+                  ))}
+                </div>
+
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                  {featured.links?.site && (
+                    <a href={featured.links.site} target="_blank" rel="noreferrer" className="btn primary">
+                      {featured.links.site.replace("https://", "")} <ArrowUpRight size={12} />
+                    </a>
+                  )}
+                  {featured.links?.repo && (
+                    <a href={featured.links.repo} target="_blank" rel="noreferrer" className="btn">
+                      <Github size={12} /> source
+                    </a>
+                  )}
+                  {featured.links?.pypi && (
+                    <a href={featured.links.pypi} target="_blank" rel="noreferrer" className="btn amber">
+                      <Download size={12} /> pypi
+                    </a>
+                  )}
+                </div>
+              </div>
+
+              {/* Right: fork ASCII on tinted panel */}
+              <div
+                style={{
+                  borderLeft: "1px solid var(--hairline-2)",
+                  background:
+                    "radial-gradient(ellipse 80% 60% at 50% 30%, rgba(198,247,39,0.22), transparent 72%), #000",
+                  padding: "32px 26px",
+                  position: "relative",
+                  overflow: "hidden",
+                }}
+              >
+                <div className="mono" style={{ fontSize: 10, letterSpacing: "0.22em", color: "var(--paper-dim)", textTransform: "uppercase", marginBottom: 14 }}>
+                  <span style={{ color: "var(--rust)" }}>//</span> the primitive
+                </div>
+                <ForkGraph color="#C6F727" accentColor="#FF2EA0" />
+                <div
+                  className="mono"
+                  style={{ marginTop: 22, fontSize: 11, lineHeight: 1.8, color: "var(--paper-mid)", letterSpacing: "0.02em" }}
+                >
+                  <div><span style={{ color: "var(--amber)" }}>$</span> snapshot weights + kv + scheduler</div>
+                  <div><span style={{ color: "var(--amber)" }}>$</span> hydrate N children from fork point</div>
+                  <div><span style={{ color: "var(--amber)" }}>$</span> skip prefill · diverge · repeat</div>
+                  <div style={{ marginTop: 10, color: "var(--rust)" }}>▸ bit-identical · 400× amortized</div>
+                </div>
+              </div>
+            </div>
+          </WindowFrame>
+
+          <div className="mono" style={{ fontSize: 10.5, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--paper-dim)", marginBottom: 14, display: "inline-flex", gap: 10, alignItems: "center" }}>
+            <span style={{ width: 18, height: 1, background: "var(--accent-3)" }} />
+            ▸ side quests · archive stream
+          </div>
+        </div>
+        <ProjectBand projects={rest} startIndex={2} />
+
+        <style>{`
+          .feat-grid {
+            display: grid;
+            grid-template-columns: 1.55fr 1fr;
+          }
+          @media (max-width: 900px) {
+            .feat-grid { grid-template-columns: 1fr; }
+            .feat-grid > div:nth-child(2) { border-left: none !important; border-top: 1px solid var(--hairline-2); }
+          }
+        `}</style>
+      </section>
+
+      {/* ═══════════════ ABOUT + STATS ═════════════════════ */}
+      <section style={{ padding: "48px 22px 44px" }}>
+        <div style={{ maxWidth: 1440, margin: "0 auto" }}>
+          <SectionHead
+            index="04"
+            label="about"
+            title={<>the short <span className="serif" style={{ color: "var(--rust)" }}>version</span>.</>}
+          />
+
+          <div className="about-grid">
+            <div className="holo-panel" style={{ padding: "30px 32px" }}>
+              <p
+                className="serif"
+                style={{
+                  fontSize: "clamp(24px, 2.6vw, 34px)",
+                  lineHeight: 1.22,
+                  color: "var(--paper)",
+                  marginBottom: 28,
+                  marginTop: 0,
+                }}
+              >
+                {site.about.lead}
+              </p>
+              {site.about.paragraphs.map((p, i, arr) => (
+                <p
+                  key={i}
+                  style={{
+                    fontSize: 15,
+                    lineHeight: 1.75,
+                    color: "var(--paper-mid)",
+                    marginBottom: i === arr.length - 1 ? 0 : 18,
+                  }}
+                >
+                  {p}
+                </p>
               ))}
             </div>
+
+            <div>
+              <WindowFrame title="SYS / vitals.cfg" tint="amber">
+                <AsciiCanvas art={SYS_PANEL} color="var(--amber)" size={11} style={{ padding: "14px 16px" }} />
+              </WindowFrame>
+
+              <div
+                className="holo-panel"
+                data-accent="amber"
+                style={{ marginTop: 18, padding: "6px 22px" }}
+              >
+                {site.stats.map((s, i) => (
+                  <div key={s.label} className="field">
+                    <span className="field-key">{s.label}</span>
+                    <span
+                      className={`field-val ${i % 2 === 0 ? "rust" : "amber"}`}
+                      style={{ fontFamily: "'Big Shoulders Display', sans-serif", fontWeight: 900, fontSize: 32, letterSpacing: 0, lineHeight: 1, textAlign: "right" }}
+                    >
+                      {s.value}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
-        </motion.div>
+        </div>
+        <style>{`
+          .about-grid {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 56px;
+            align-items: start;
+          }
+          @media (max-width: 900px) {
+            .about-grid { grid-template-columns: 1fr; gap: 32px; }
+          }
+        `}</style>
       </section>
 
-      {/* Education Section */}
-      <section className="px-6 md:px-12 lg:px-20 py-20 border-t border-terminal">
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="max-w-5xl"
-        >
-          <div className="section-label mb-12">05 EDUCATION</div>
+      {/* ═══════════════ STACK ═════════════════════════════ */}
+      <section style={{ padding: "48px 22px 44px" }}>
+        <div style={{ maxWidth: 1440, margin: "0 auto" }}>
+          <SectionHead
+            index="05"
+            label="stack"
+            title={<>tools on the <span className="serif" style={{ color: "var(--amber)" }}>workbench</span>.</>}
+          />
+          <div className="stack-grid">
+            {site.stack.map((group, i) => {
+              const accent = ["amber", "blue", "rust", "blue"][i % 4];
+              const accentVar = accent === "rust" ? "var(--rust)" : accent === "amber" ? "var(--amber)" : "var(--accent-3)";
+              return (
+              <Dossier key={group.group} accent={accent} style={{ padding: "20px 22px" }}>
+                <div
+                  className="mono"
+                  style={{
+                    fontSize: 10.5,
+                    letterSpacing: "0.22em",
+                    textTransform: "uppercase",
+                    color: accentVar,
+                    marginBottom: 14,
+                  }}
+                >
+                  // {group.group}
+                </div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                  {group.items.map((item) => (
+                    <span key={item} className="pill">{item}</span>
+                  ))}
+                </div>
+              </Dossier>
+              );
+            })}
+          </div>
+        </div>
+        <style>{`
+          .stack-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+          }
+          @media (max-width: 900px) { .stack-grid { grid-template-columns: repeat(2, 1fr); } }
+          @media (max-width: 560px) { .stack-grid { grid-template-columns: 1fr; } }
+        `}</style>
+      </section>
 
-          <div className="terminal-card p-8 glow-border">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+      {/* ═══════════════ EDUCATION ═════════════════════════ */}
+      <section style={{ padding: "48px 22px 44px" }}>
+        <div style={{ maxWidth: 1440, margin: "0 auto" }}>
+          <SectionHead
+            index="06"
+            label="education"
+            title={<>school — current <span className="serif" style={{ color: "var(--rust)" }}>&amp; next</span>.</>}
+          />
+          <div className="edu-grid">
+            {site.education.map((ed, i) => (
+              <WindowFrame key={ed.institution} title={`EDU / ${i === 0 ? "current" : "next"}.log`} tint={i === 0 ? "rust" : "amber"}>
+                <div style={{ padding: "22px 24px" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 14 }}>
+                    <div
+                      className="mono"
+                      style={{
+                        fontSize: 10.5,
+                        letterSpacing: "0.22em",
+                        textTransform: "uppercase",
+                        color: i === 0 ? "var(--rust)" : "var(--amber)",
+                      }}
+                    >
+                      {i === 0 ? "▶ current" : "▷ incoming"}
+                    </div>
+                    <div className="mono" style={{ fontSize: 10.5, color: "var(--paper-dim)", letterSpacing: "0.14em" }}>
+                      {ed.date}
+                    </div>
+                  </div>
+                  <h3
+                    className="hed"
+                    style={{
+                      fontSize: "clamp(28px, 3vw, 40px)",
+                      letterSpacing: 0,
+                      lineHeight: 1,
+                      color: "var(--paper)",
+                    }}
+                  >
+                    {ed.institution}
+                  </h3>
+                  <p className="serif" style={{ fontSize: 20, lineHeight: 1.3, color: i === 0 ? "var(--rust)" : "var(--amber)", marginTop: 6, marginBottom: 10 }}>
+                    {ed.degree}
+                  </p>
+                  <p className="mono" style={{ fontSize: 11, letterSpacing: "0.08em", color: "var(--paper-dim)", marginBottom: 14, display: "inline-flex", gap: 6, alignItems: "center" }}>
+                    <MapPin size={11} /> {ed.location}
+                  </p>
+                  <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 8 }}>
+                    {ed.highlights.map((h, j) => (
+                      <li key={j} style={{ fontSize: 13, lineHeight: 1.55, color: "var(--paper-mid)", display: "flex", gap: 10 }}>
+                        <span style={{ color: i === 0 ? "var(--rust)" : "var(--amber)" }}>▸</span>
+                        <span>{h}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </WindowFrame>
+            ))}
+          </div>
+        </div>
+        <style>{`
+          .edu-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 22px;
+          }
+          @media (max-width: 900px) { .edu-grid { grid-template-columns: 1fr; } }
+        `}</style>
+      </section>
+
+      <MoshStrip length={220} label="end of transmission" bursts={6} />
+
+      {/* ═══════════════ CONTACT — terminal ═══════════════════ */}
+      <section style={{ padding: "74px 22px 92px" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <SectionHead
+            index="07"
+            label="contact"
+            title={<>let's <span className="serif" style={{ color: "var(--rust)" }}>talk</span>.</>}
+          />
+
+          <WindowFrame title="TERMINAL / nm@matteson ~ contact" tint="rust">
+            <div className="term" style={{ borderTop: 0, borderLeft: 0, borderRight: 0, borderBottom: 0, padding: "28px 32px" }}>
+              <AsciiCanvas art={CONTACT_BANNER} color="var(--rust)" size={11} style={{ marginBottom: 18 }} />
+
+              <div><span className="term-prompt">$</span> whoami</div>
+              <div className="term-out">nils · swe / mle · wi → ca · swedish-american</div>
+              <div style={{ height: 10 }} />
+
+              <div><span className="term-prompt">$</span> cat intent.txt</div>
+              <div className="term-out" style={{ maxWidth: 760 }}>
+                {site.contact.body}
+              </div>
+              <div style={{ height: 10 }} />
+
+              <div><span className="term-prompt">$</span> ls channels/</div>
+              <div style={{ marginLeft: 14, marginTop: 6, display: "flex", flexDirection: "column", gap: 4 }}>
+                <a href={site.links.email} className="mono" style={{ color: "var(--amber)", textDecoration: "none" }}>
+                  <span className="term-key">▸</span>&nbsp; mail <span style={{ color: "var(--paper-dim)" }}>→</span> nilsmatteson@icloud.com
+                </a>
+                <a href={site.links.linkedin} target="_blank" rel="noreferrer" className="mono" style={{ color: "var(--amber)", textDecoration: "none" }}>
+                  <span className="term-key">▸</span>&nbsp; linkedin <span style={{ color: "var(--paper-dim)" }}>→</span> nils-matteson
+                </a>
+                <a href={site.links.github} target="_blank" rel="noreferrer" className="mono" style={{ color: "var(--amber)", textDecoration: "none" }}>
+                  <span className="term-key">▸</span>&nbsp; github <span style={{ color: "var(--paper-dim)" }}>→</span> matteso1
+                </a>
+                <a href={site.links.resume} target="_blank" rel="noreferrer" className="mono" style={{ color: "var(--amber)", textDecoration: "none" }}>
+                  <span className="term-key">▸</span>&nbsp; resume <span style={{ color: "var(--paper-dim)" }}>→</span> resume.pdf
+                </a>
+              </div>
+              <div style={{ height: 14 }} />
+
               <div>
-                <h3 className="font-display text-2xl font-bold text-white mb-2">
-                  {site.education.institution}
-                </h3>
-                <p className="text-terminal-green mb-2">{site.education.degree}</p>
-                <p className="text-terminal-muted text-sm">{site.education.status}</p>
+                <span className="term-prompt">$</span>{" "}
+                <span className="term-out caret">_</span>
               </div>
-              <div className="text-right">
-                <div className="text-terminal-green text-lg font-bold">2026</div>
-                <div className="text-terminal-muted text-sm">{site.education.location}</div>
+
+              <div style={{ marginTop: 28, display: "flex", flexWrap: "wrap", gap: 10 }}>
+                <a href={site.links.email} className="btn primary">
+                  <Mail size={12} /> say hello
+                </a>
+                <a href={site.links.linkedin} target="_blank" rel="noreferrer" className="btn amber">
+                  linkedin <ArrowUpRight size={12} />
+                </a>
+                <a href={site.links.github} target="_blank" rel="noreferrer" className="btn">
+                  <Github size={12} /> github
+                </a>
               </div>
             </div>
-          </div>
-        </motion.div>
-      </section>
-
-      {/* Contact CTA */}
-      <section className="px-6 md:px-12 lg:px-20 py-20 border-t border-terminal">
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="max-w-5xl"
-        >
-          <div className="section-label mb-12">06 LET'S TALK</div>
-
-          <div className="terminal-card p-8 md:p-12">
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-white mb-4">
-              Want to build something cool?
-            </h2>
-            <p className="text-terminal-muted mb-8 max-w-xl">
-              I'm looking for internships and full-time roles in ML, systems engineering, or anything that involves making computers do impressive things. Let's chat.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <a
-                href={site.links.email}
-                className="inline-flex items-center gap-3 px-6 py-3 bg-terminal-green text-terminal-bg font-semibold hover:bg-terminal-green/90 transition-colors"
-              >
-                Get in touch
-                <ArrowRight className="w-4 h-4" />
-              </a>
-              <Link
-                to="/projects"
-                className="inline-flex items-center gap-3 px-6 py-3 border border-terminal text-terminal-muted hover:text-terminal-green hover:border-terminal-green transition-colors"
-              >
-                View my projects
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-          </div>
-        </motion.div>
+          </WindowFrame>
+        </div>
       </section>
     </div>
   );
-};
+}
 
-export default HomePage;
+/* Section heading — small reusable block */
+function SectionHead({ index, label, title, meta, right }) {
+  return (
+    <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 24, flexWrap: "wrap", marginBottom: 30 }}>
+      <div style={{ display: "flex", gap: 28, alignItems: "flex-end" }}>
+        <div className="big-idx">{index}</div>
+        <div>
+          <div
+            className="mono"
+            style={{
+              fontSize: 10.5,
+              letterSpacing: "0.26em",
+              textTransform: "uppercase",
+              color: "var(--paper-dim)",
+              marginBottom: 12,
+              display: "inline-flex",
+              gap: 10,
+              alignItems: "center",
+            }}
+          >
+            <span style={{ width: 22, height: 1, background: "var(--rust)" }} />
+            / {label}
+          </div>
+          <h2
+            className="hed"
+            style={{
+              fontSize: "clamp(40px, 6.4vw, 92px)",
+              letterSpacing: "-0.01em",
+              lineHeight: 0.88,
+              color: "var(--paper)",
+            }}
+          >
+            {title}
+          </h2>
+          {meta && (
+            <div className="mono" style={{ marginTop: 8, fontSize: 11, letterSpacing: "0.12em", color: "var(--paper-dim)" }}>
+              {meta}
+            </div>
+          )}
+        </div>
+      </div>
+      {right}
+    </div>
+  );
+}

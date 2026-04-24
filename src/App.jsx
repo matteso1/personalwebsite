@@ -1,25 +1,32 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
-import Layout from "./components/Layout";
+import React, { useEffect } from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
+import Shell from "./components/Shell";
 import HomePage from "./pages/HomePage";
-import ProjectsPage from "./pages/ProjectsPage";
-import BlogPage from "./pages/BlogPage";
-import BlogPostPage from "./pages/BlogPostPage";
-import ArcadePage from "./pages/ArcadePage";
+import WorkPage from "./pages/WorkPage";
+import WritingPage from "./pages/WritingPage";
+import WritingPostPage from "./pages/WritingPostPage";
 
-function App() {
-  return (
-    <Layout>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/projects" element={<ProjectsPage />} />
-        <Route path="/blog" element={<BlogPage />} />
-        <Route path="/blog/:slug" element={<BlogPostPage />} />
-        <Route path="/arcade" element={<ArcadePage />} />
-        <Route path="*" element={<HomePage />} />
-      </Routes>
-    </Layout>
-  );
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+  return null;
 }
 
-export default App;
+export default function App() {
+  return (
+    <>
+      <ScrollToTop />
+      <Shell>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/projects" element={<WorkPage />} />
+          <Route path="/work" element={<WorkPage />} />
+          <Route path="/blog" element={<WritingPage />} />
+          <Route path="/writing" element={<WritingPage />} />
+          <Route path="/blog/:slug" element={<WritingPostPage />} />
+          <Route path="/writing/:slug" element={<WritingPostPage />} />
+        </Routes>
+      </Shell>
+    </>
+  );
+}
