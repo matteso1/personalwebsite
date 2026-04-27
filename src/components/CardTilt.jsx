@@ -1,8 +1,8 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 /**
- * CardTilt — cursor-following 3D tilt + roaming glare, opt-in wrapper.
- * Use sparingly (hero cards only). Respects prefers-reduced-motion.
+ * CardTilt — cursor-following 3D tilt + roaming glare + click-to-spin.
+ * Click the card to trigger a one-shot 720° flip with foil flare.
  *
  *   <CardTilt>
  *     <Dossier ...>...</Dossier>
@@ -16,11 +16,12 @@ export default function CardTilt({
   className = "",
 }) {
   const wrapRef = useRef(null);
+  const innerRef = useRef(null);
+  const [spinning, setSpinning] = useState(false);
 
   useEffect(() => {
     const el = wrapRef.current;
     if (!el) return;
-    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
     if (window.matchMedia?.("(pointer: coarse)").matches) return; // skip touch
 
     let raf = 0;
@@ -62,16 +63,36 @@ export default function CardTilt({
     };
   }, [maxTilt]);
 
+  /* Click-to-spin: re-trigger the animation on every click by pulsing the
+     class off and back on. Duration matches the CSS keyframe (800ms) so
+     React state and the visual finish together. */
+  const onClick = () => {
+    const node = innerRef.current;
+    if (!node) return;
+    node.classList.remove("card-tilt-spin");
+    void node.offsetWidth; // force reflow so the class re-add re-triggers
+    node.classList.add("card-tilt-spin");
+    setSpinning(true);
+    window.clearTimeout(onClick._t);
+    onClick._t = window.setTimeout(() => {
+      node.classList.remove("card-tilt-spin");
+      setSpinning(false);
+    }, 800);
+  };
+
   return (
     <div
       ref={wrapRef}
       className={`card-tilt ${className}`.trim()}
       style={{
         "--glare-strength": glareStrength,
+        cursor: "pointer",
         ...style,
       }}
+      onClick={onClick}
+      data-spinning={spinning ? "true" : undefined}
     >
-      <div className="card-tilt-inner">
+      <div ref={innerRef} className="card-tilt-inner">
         {children}
         <div className="card-tilt-shine" aria-hidden />
         <div className="card-tilt-glare" aria-hidden />

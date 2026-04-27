@@ -7,6 +7,7 @@ import site from "../content/site.json";
 import Dossier from "../components/Dossier";
 import WindowFrame from "../components/WindowFrame";
 import AsciiCanvas from "../components/AsciiCanvas";
+import PixelPortrait from "../components/PixelPortrait";
 import ForkGraph from "../components/ForkGraph";
 import CardTilt from "../components/CardTilt";
 import ProjectBand from "../components/ProjectBand";
@@ -221,14 +222,14 @@ export default function HomePage() {
                     </div>
                   </div>
 
-                  <AsciiCanvas
-                    art={DOSSIER_PORTRAIT}
-                    color="var(--paper-mid)"
-                    size={10.5}
-                    style={{ padding: "14px 16px 8px" }}
-                    typewrite
-                    speed={12}
-                  />
+                  <div style={{ padding: "14px 16px 8px", display: "flex", justifyContent: "center" }}>
+                    <PixelPortrait
+                      fill="var(--paper-mid)"
+                      eye="var(--accent)"
+                      cell={4}
+                      style={{ width: "60%", maxWidth: 200 }}
+                    />
+                  </div>
 
                   <div style={{ padding: "14px 20px 20px", borderTop: "1px dashed var(--hairline-2)" }}>
                     <div className="field" style={{ padding: "6px 0" }}>

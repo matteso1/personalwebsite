@@ -35,33 +35,33 @@ export const SIGIL = String.raw`
   ║   vector  : sv '26  ║
   ╚═════════════════════╝`;
 
-/* — Hero dossier portrait (abstract silhouette) — */
+/* — Hero dossier portrait (abstract silhouette built from full/half blocks) —
+   Uses only ASCII + ▀▄█ so it renders identically across font fallbacks.
+   Half-tones (▓▒░) were swapped out because their advance-width drifts on
+   non-Menlo monospace stacks (Windows/Consolas), distorting the figure. */
 export const DOSSIER_PORTRAIT = String.raw`
- ┌──── SUBJECT / N.M ─────────┐
- │                            │
- │        ░▒▓▓▓▓▓▒░           │
- │      ▒▓█████████▓▒         │
- │     ▓███████████████▓      │
- │    ▓████▀░░░░░░▀████▓      │
- │    ████░          ░████    │
- │    ███░   ▓▓   ▓▓  ░███    │
- │    ███░   ▀▀   ▀▀  ░███    │
- │    ███░    ░ ░ ░   ░███    │
- │    ▓███░    ▀▀▀    ░███▓   │
- │     ▓█████▒▒▒▒▒▓█████▓     │
- │      ▒▓█████████████▓▒     │
- │        ▒▓█████████▓▒       │
- │         ░▓███████▓░        │
- │          ░▒████▒░          │
- │             ▓▓             │
- │           ▓████▓           │
- │         ████████           │
- │        ██████████          │
- │       ████████████         │
- │       ████████████         │
- │        ▓████████▓          │
- │                            │
- └────────────────────────────┘`;
+ +----- SUBJECT / N.M ---------+
+ |                             |
+ |          ▄█████▄            |
+ |        ▄█████████▄          |
+ |       ███████████           |
+ |      █████████████          |
+ |      █████   █████          |
+ |      ████ ▀█  ▀█ ██         |
+ |      ████  ▀   ▀ ██         |
+ |      ████   ▄▄   ██         |
+ |      ████   ▀▀   ██         |
+ |       █████▄▄▄█████         |
+ |        ▀█████████▀          |
+ |          ▀█████▀            |
+ |            ███              |
+ |          ███████            |
+ |         █████████           |
+ |        ███████████          |
+ |        ███████████          |
+ |         █████████           |
+ |                             |
+ +-----------------------------+`;
 
 /* — Fork diagram (for thaw feature card) — */
 export const FORK_DIAGRAM = String.raw`
