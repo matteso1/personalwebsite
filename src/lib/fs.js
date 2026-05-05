@@ -51,10 +51,6 @@ function invalidateIndex() {
   _indexAt = 0;
 }
 
-if (typeof window !== "undefined") {
-  window.addEventListener("vim:saved", invalidateIndex);
-}
-
 export async function listAll({ force = false } = {}) {
   if (!isSupabaseConfigured) return [];
   const fresh = _indexCache && Date.now() - _indexAt < INDEX_TTL_MS;
@@ -125,8 +121,12 @@ export async function writeFile({ path, content }) {
   if (!content || !content.trim()) throw new Error("E: empty buffer");
   if (content.length > 4096) throw new Error(`E: file too large (${content.length}/4096)`);
 
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) throw new Error("E: not signed in (run `signin` to write files)");
+  // getSession reads the cached session — no network call, no race with the
+  // post-OAuth state restore. (getUser would round-trip to /auth/v1/user and
+  // can return null briefly right after the OAuth redirect lands.)
+  const { data: { session } } = await supabase.auth.getSession();
+  const sessionUser = session?.user;
+  if (!sessionUser) throw new Error("E: not signed in (run `signin` to write files)");
 
   const { data, error } = await supabase
     .from("fs_files")
@@ -136,7 +136,8 @@ export async function writeFile({ path, content }) {
   if (error) {
     if (error.code === "23505") throw new Error(`E: ${p} already exists`);
     if (error.code === "42501" || /row-level security/i.test(error.message)) {
-      throw new Error(`E: write denied — your home is /home/${(user.user_metadata?.user_name || "").toLowerCase()}/`);
+      const handle = (sessionUser.user_metadata?.user_name || "").toLowerCase();
+      throw new Error(`E: write denied — your home is /home/${handle}/`);
     }
     throw new Error(error.message || "write failed");
   }

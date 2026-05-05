@@ -117,11 +117,11 @@ export default function FsPage() {
       push("err", "filesystem offline (supabase not configured).");
       return;
     }
-    // pre-fetch the index so the first `ls` is instant
-    listAll().catch(() => {});
-    if (initialCwd && initialCwd !== "/") {
-      // if it points at a file, cat it; else cd + ls
-      (async () => {
+    // pre-fetch the index so the first `ls` is instant; deep-link processing
+    // must wait on it so `cd` sees the populated index.
+    (async () => {
+      try { await listAll(); } catch {}
+      if (initialCwd && initialCwd !== "/") {
         const f = await readFile(initialCwd);
         if (f) {
           await execute(`cat ${initialCwd}`, "/", true);
@@ -129,8 +129,8 @@ export default function FsPage() {
           await execute(`cd ${initialCwd}`, "/", true);
           await execute(`ls`, initialCwd, true);
         }
-      })();
-    }
+      }
+    })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -259,6 +259,9 @@ export default function FsPage() {
           // reject if it's a file
           const f = await readFile(target);
           if (f) { push("err", `cd: not a directory: ${target}`); break; }
+          // your own home always exists once signed in, even if empty
+          const myHome = user && handle !== "guest" ? `/home/${handle}` : null;
+          if (target === myHome || target === "/home") { setCwd(target); break; }
           // does any path live under it?
           const all = await listAll();
           const prefix = target + "/";

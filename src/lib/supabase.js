@@ -10,6 +10,6 @@ export const ADMIN_GITHUB_USERNAME = "matteso1";
 
 export function isAdmin(user) {
   if (!user) return false;
-  const username = user.user_metadata?.user_name || user.user_metadata?.preferred_username;
+  const username = (user.user_metadata?.user_name || user.user_metadata?.preferred_username || "").toLowerCase();
   return username === ADMIN_GITHUB_USERNAME;
 }
