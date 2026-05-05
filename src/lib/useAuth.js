@@ -19,11 +19,12 @@ export function useAuth() {
     return () => sub.subscription.unsubscribe();
   }, []);
 
-  const signInWithGitHub = () => {
+  const signInWithGitHub = (redirectPath) => {
     if (!isSupabaseConfigured) return;
+    const back = redirectPath || (window.location.pathname + window.location.hash);
     return supabase.auth.signInWithOAuth({
       provider: "github",
-      options: { redirectTo: window.location.origin + "/writing/new" },
+      options: { redirectTo: window.location.origin + back },
     });
   };
 

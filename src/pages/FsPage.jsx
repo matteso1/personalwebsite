@@ -20,21 +20,12 @@ function relTime(iso) {
   return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
-const NICK_KEY = "nilsh:nick";
-function getNick() {
-  try { return localStorage.getItem(NICK_KEY) || ""; } catch { return ""; }
-}
-function setNickStored(n) {
-  try { n ? localStorage.setItem(NICK_KEY, n) : localStorage.removeItem(NICK_KEY); } catch {}
-}
-const NICK_RE = /^[a-z0-9_-]{1,32}$/;
-
-function resolvePath(cwd, arg, nick = "") {
+// resolvePath — `~` expands to the signed-in user's home (or /home if anon)
+export function resolvePath(cwd, arg, handle = "") {
   if (!arg) return cwd;
-  // ~ expands to /home/<nick> if set, else /home
-  if (arg === "~") return nick ? "/home/" + nick : "/home";
+  if (arg === "~") return handle ? "/home/" + handle : "/home";
   if (arg.startsWith("~/")) {
-    const base = nick ? "/home/" + nick + "/" : "/home/";
+    const base = handle ? "/home/" + handle + "/" : "/home/";
     return normalizePath(base + arg.slice(2));
   }
   let base = arg.startsWith("/") ? arg : (cwd === "/" ? "" : cwd) + "/" + arg;
@@ -51,14 +42,15 @@ function resolvePath(cwd, arg, nick = "") {
 const HELP = `nilsh — guestbook shell
 
 getting started
-  nick <name>            claim a handle (gives you /home/<name>/)
-  vim ~/hello.txt        open the editor in your home directory
+  signin                 sign in with github (one click)
+  vim ~/hello.txt        open the editor at /home/<your-gh-username>/hello.txt
   i                      enter insert mode, type stuff
-  esc                    leave insert mode
-  :wq                    write and quit — your file is now public
+  esc  →  :wq            write and quit — your file is now public
   ls /home               see everyone else's directories
 
 every command
+  signin | login         sign in with github
+  signout | logout       end your session
   ls [path]              list a directory
   cd <path>              change directory  ( .. / ~ work )
   pwd                    print working directory
@@ -69,7 +61,6 @@ every command
   tree                   list every file in the fs
   find <substr>          search paths
   graph                  open the obsidian-style file graph
-  nick [name]            show/set your handle  (stored locally)
   whoami                 print identity
   motd | readme          read /etc/motd or /etc/readme
   echo <text>            print text
@@ -86,7 +77,7 @@ keys: tab completes, ↑/↓ history, ctrl-l clear, ctrl-c cancel, ctrl-u clear 
 export default function FsPage() {
   const loc = useLocation();
   const nav = useNavigate();
-  const { user, isAdmin } = useAuth();
+  const { user, isAdmin, signInWithGitHub, signOut } = useAuth();
   const termRef = useRef(null);
   const inputRef = useRef(null);
   const idRef = useRef(0);
@@ -102,10 +93,9 @@ export default function FsPage() {
   const [input, setInput] = useState("");
   const [history, setHistory] = useState([]);
   const [hIdx, setHIdx] = useState(-1);
-  const [nick, setNick] = useState(() => getNick());
 
-  // signed-in github user always wins; otherwise use the stored nick (or "guest")
-  const handle = (user?.user_metadata?.user_name || nick || "guest").toLowerCase();
+  // your handle is your github handle — period. anonymous users are "guest" and can't write.
+  const handle = (user?.user_metadata?.user_name || "guest").toLowerCase();
 
   const push = (kind, content) => {
     setLines((ls) => [...ls, { id: ++idRef.current, kind, content }]);
@@ -115,9 +105,11 @@ export default function FsPage() {
   useEffect(() => {
     if (bootedRef.current) return;
     bootedRef.current = true;
-    push("ok", `nilsh v0.2 — guestbook shell · type \`help\` · \`graph\` for the file graph`);
-    if (!user && !nick) {
-      push("dim", "tip: claim a handle with  `nick <name>`  then  `vim ~/hello.txt`");
+    push("ok", `nilsh v0.3 — guestbook shell · type \`help\` · \`graph\` for the file graph`);
+    if (!user) {
+      push("dim", "tip: run  `signin`  to sign in with github — then  `vim ~/hello.txt`");
+    } else {
+      push("dim", `signed in as ${handle}${isAdmin ? " (admin)" : ""} — your home is /home/${handle}/`);
     }
     if (!isFsConfigured()) {
       push("err", "filesystem offline (supabase not configured).");
@@ -182,23 +174,23 @@ export default function FsPage() {
         case "clear": case "cls": setLines([]); break;
         case "pwd": push("out", curCwd); break;
         case "whoami": {
-          if (isAdmin) push("out", `${handle} (admin · github)`);
-          else if (user) push("out", `${handle} (github)`);
-          else if (nick) push("out", `${handle}  (claimed locally — clear with: nick -)`);
-          else push("out", `guest  (no nick claimed — try: nick yourname)`);
+          if (isAdmin) push("out", `${handle}  (admin · github)`);
+          else if (user) push("out", `${handle}  (github · home: /home/${handle}/)`);
+          else push("out", `guest  (not signed in — run: signin)`);
           break;
         }
 
-        case "nick": {
-          if (!arg) { push("out", nick ? `current nick: ${nick}` : "no nick set — try: nick yourname"); break; }
-          if (arg === "-" || arg === "off" || arg === "clear") {
-            setNick(""); setNickStored(""); push("dim", "nick cleared"); break;
-          }
-          if (user) { push("err", "you're signed in via github — your handle is locked to your github username"); break; }
-          const n = arg.toLowerCase();
-          if (!NICK_RE.test(n)) { push("err", "E: nick must match [a-z 0-9 _ -], 1..32 chars"); break; }
-          setNick(n); setNickStored(n);
-          push("ok", `nick set to "${n}" — try:  vim ~/hello.txt`);
+        case "signin": case "login": {
+          if (user) { push("dim", `already signed in as ${handle}`); break; }
+          push("dim", "redirecting to github…");
+          signInWithGitHub("/fs");
+          break;
+        }
+
+        case "signout": case "logout": {
+          if (!user) { push("dim", "not signed in"); break; }
+          push("dim", `signing out ${handle}…`);
+          await signOut();
           break;
         }
         case "date": push("out", new Date().toString()); break;
@@ -268,12 +260,17 @@ export default function FsPage() {
           if (!isFsConfigured()) { push("err", "filesystem offline"); break; }
           const target = resolvePath(curCwd, arg, handle);
           const existing = await readFile(target);
+          // brand-new buffer? require sign-in (writing won't work otherwise)
+          if (!existing && !user) {
+            push("err", `vim: sign in first to write files — run: signin`);
+            break;
+          }
           window.dispatchEvent(new CustomEvent("vim:open", {
             detail: {
               path: target,
               content: existing?.content || "",
               readonly: !!existing,
-              autoInsert: !existing,   // brand-new buffer? drop straight into INSERT
+              autoInsert: !existing,
             },
           }));
           push("dim", existing

@@ -114,25 +114,30 @@ export async function readFile(path) {
   return data || null;
 }
 
-export async function writeFile({ path, author, content }) {
+/**
+ * Write a file. Auth is required (RLS enforces it server-side).
+ * The DB trigger sets `author` from the JWT — we intentionally don't pass it.
+ * The path must match /home/<your-github-handle>/<filename>; admin can write anywhere.
+ */
+export async function writeFile({ path, content }) {
   if (!isSupabaseConfigured) throw new Error("filesystem offline");
   const p = normalizePath(path);
-  if (!isGuestPath(p)) {
-    throw new Error(`E: path must match /home/<handle>/<filename>`);
-  }
-  const handle = extractHandle(p);
-  const cleanAuthor = (author || handle || "").toLowerCase().replace(/[^a-z0-9_-]/g, "").slice(0, 32);
-  if (!cleanAuthor) throw new Error("E: missing author");
   if (!content || !content.trim()) throw new Error("E: empty buffer");
   if (content.length > 4096) throw new Error(`E: file too large (${content.length}/4096)`);
 
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("E: not signed in (run `signin` to write files)");
+
   const { data, error } = await supabase
     .from("fs_files")
-    .insert({ path: p, author: cleanAuthor, content })
+    .insert({ path: p, content })   // author set by trigger
     .select()
     .single();
   if (error) {
     if (error.code === "23505") throw new Error(`E: ${p} already exists`);
+    if (error.code === "42501" || /row-level security/i.test(error.message)) {
+      throw new Error(`E: write denied — your home is /home/${(user.user_metadata?.user_name || "").toLowerCase()}/`);
+    }
     throw new Error(error.message || "write failed");
   }
   invalidateIndex();
