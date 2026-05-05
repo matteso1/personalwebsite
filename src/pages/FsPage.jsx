@@ -20,10 +20,23 @@ function relTime(iso) {
   return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
-function resolvePath(cwd, arg) {
+const NICK_KEY = "nilsh:nick";
+function getNick() {
+  try { return localStorage.getItem(NICK_KEY) || ""; } catch { return ""; }
+}
+function setNickStored(n) {
+  try { n ? localStorage.setItem(NICK_KEY, n) : localStorage.removeItem(NICK_KEY); } catch {}
+}
+const NICK_RE = /^[a-z0-9_-]{1,32}$/;
+
+function resolvePath(cwd, arg, nick = "") {
   if (!arg) return cwd;
-  if (arg === "~") return "/home";
-  if (arg.startsWith("~/")) return normalizePath("/home/" + arg.slice(2));
+  // ~ expands to /home/<nick> if set, else /home
+  if (arg === "~") return nick ? "/home/" + nick : "/home";
+  if (arg.startsWith("~/")) {
+    const base = nick ? "/home/" + nick + "/" : "/home/";
+    return normalizePath(base + arg.slice(2));
+  }
   let base = arg.startsWith("/") ? arg : (cwd === "/" ? "" : cwd) + "/" + arg;
   const parts = base.split("/").filter(Boolean);
   const stack = [];
@@ -37,16 +50,26 @@ function resolvePath(cwd, arg) {
 
 const HELP = `nilsh — guestbook shell
 
+getting started
+  nick <name>            claim a handle (gives you /home/<name>/)
+  vim ~/hello.txt        open the editor in your home directory
+  i                      enter insert mode, type stuff
+  esc                    leave insert mode
+  :wq                    write and quit — your file is now public
+  ls /home               see everyone else's directories
+
+every command
   ls [path]              list a directory
   cd <path>              change directory  ( .. / ~ work )
   pwd                    print working directory
   cat <path>             print a file
-  vim <path>             open editor; press i to insert, esc, :wq to save+quit
+  vim <path>             open editor; i to insert, esc, :wq to save
   edit <path>            alias for vim
   rm <path>              remove a file (admin only)
   tree                   list every file in the fs
   find <substr>          search paths
   graph                  open the obsidian-style file graph
+  nick [name]            show/set your handle  (stored locally)
   whoami                 print identity
   motd | readme          read /etc/motd or /etc/readme
   echo <text>            print text
@@ -79,8 +102,10 @@ export default function FsPage() {
   const [input, setInput] = useState("");
   const [history, setHistory] = useState([]);
   const [hIdx, setHIdx] = useState(-1);
+  const [nick, setNick] = useState(() => getNick());
 
-  const handle = (user?.user_metadata?.user_name || "guest").toLowerCase();
+  // signed-in github user always wins; otherwise use the stored nick (or "guest")
+  const handle = (user?.user_metadata?.user_name || nick || "guest").toLowerCase();
 
   const push = (kind, content) => {
     setLines((ls) => [...ls, { id: ++idRef.current, kind, content }]);
@@ -91,6 +116,9 @@ export default function FsPage() {
     if (bootedRef.current) return;
     bootedRef.current = true;
     push("ok", `nilsh v0.2 — guestbook shell · type \`help\` · \`graph\` for the file graph`);
+    if (!user && !nick) {
+      push("dim", "tip: claim a handle with  `nick <name>`  then  `vim ~/hello.txt`");
+    }
     if (!isFsConfigured()) {
       push("err", "filesystem offline (supabase not configured).");
       return;
@@ -153,7 +181,26 @@ export default function FsPage() {
         case "help": case "?": push("out", HELP); break;
         case "clear": case "cls": setLines([]); break;
         case "pwd": push("out", curCwd); break;
-        case "whoami": push("out", isAdmin ? `${handle} (admin)` : handle); break;
+        case "whoami": {
+          if (isAdmin) push("out", `${handle} (admin · github)`);
+          else if (user) push("out", `${handle} (github)`);
+          else if (nick) push("out", `${handle}  (claimed locally — clear with: nick -)`);
+          else push("out", `guest  (no nick claimed — try: nick yourname)`);
+          break;
+        }
+
+        case "nick": {
+          if (!arg) { push("out", nick ? `current nick: ${nick}` : "no nick set — try: nick yourname"); break; }
+          if (arg === "-" || arg === "off" || arg === "clear") {
+            setNick(""); setNickStored(""); push("dim", "nick cleared"); break;
+          }
+          if (user) { push("err", "you're signed in via github — your handle is locked to your github username"); break; }
+          const n = arg.toLowerCase();
+          if (!NICK_RE.test(n)) { push("err", "E: nick must match [a-z 0-9 _ -], 1..32 chars"); break; }
+          setNick(n); setNickStored(n);
+          push("ok", `nick set to "${n}" — try:  vim ~/hello.txt`);
+          break;
+        }
         case "date": push("out", new Date().toString()); break;
         case "echo": push("out", arg); break;
         case "history": push("out", history.map((h, i) => `  ${String(i + 1).padStart(3)}  ${h}`).join("\n") || "(none)"); break;
@@ -169,7 +216,7 @@ export default function FsPage() {
 
         case "ls": case "dir": {
           if (!isFsConfigured()) { push("err", "filesystem offline"); break; }
-          const target = resolvePath(curCwd, arg);
+          const target = resolvePath(curCwd, arg, handle);
           // is target actually a file?
           const f = await readFile(target);
           if (f) {
@@ -192,7 +239,7 @@ export default function FsPage() {
         }
 
         case "cd": {
-          const target = resolvePath(curCwd, arg || "/");
+          const target = resolvePath(curCwd, arg || "/", handle);
           if (target === "/") { setCwd("/"); break; }
           // reject if it's a file
           const f = await readFile(target);
@@ -209,7 +256,7 @@ export default function FsPage() {
         case "cat": case "less": case "more": {
           if (!arg) { push("err", "usage: cat <path>"); break; }
           if (!isFsConfigured()) { push("err", "filesystem offline"); break; }
-          const target = resolvePath(curCwd, arg);
+          const target = resolvePath(curCwd, arg, handle);
           const f = await readFile(target);
           if (!f) { push("err", `cat: ${target}: No such file or directory`); break; }
           push("out", { type: "file", path: target, author: f.author, created_at: f.created_at, content: f.content });
@@ -219,25 +266,26 @@ export default function FsPage() {
         case "vim": case "vi": case "nano": case "edit": case "e": {
           if (!arg) { push("err", `usage: ${v} <path>`); break; }
           if (!isFsConfigured()) { push("err", "filesystem offline"); break; }
-          const target = resolvePath(curCwd, arg);
+          const target = resolvePath(curCwd, arg, handle);
           const existing = await readFile(target);
           window.dispatchEvent(new CustomEvent("vim:open", {
             detail: {
               path: target,
               content: existing?.content || "",
               readonly: !!existing,
+              autoInsert: !existing,   // brand-new buffer? drop straight into INSERT
             },
           }));
           push("dim", existing
             ? `${target}: opened readonly (files are immutable once written)`
-            : `${target}: new buffer`);
+            : `${target}: new buffer — type to insert, esc, :wq to save`);
           break;
         }
 
         case "rm": case "del": {
           if (!isAdmin) { push("err", "rm: permission denied"); break; }
           if (!arg) { push("err", "usage: rm <path>"); break; }
-          const target = resolvePath(curCwd, arg);
+          const target = resolvePath(curCwd, arg, handle);
           await rmFile(target);
           push("ok", `removed ${target}`);
           break;
@@ -292,7 +340,7 @@ export default function FsPage() {
     const partialDir = lastSlash >= 0 ? partial.slice(0, lastSlash + 1) : "";
     const partialBase = lastSlash >= 0 ? partial.slice(lastSlash + 1) : partial;
     const parentAbs = partialDir
-      ? resolvePath(cwd, partialDir)
+      ? resolvePath(cwd, partialDir, handle)
       : cwd;
     const t = await lsDir(parentAbs);
     const cands = [

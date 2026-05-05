@@ -35,10 +35,13 @@ export default function VimModal() {
       setContent(d.content || "");
       setReadonly(!!d.readonly);
       setDirty(false);
+      const startInsert = !!d.autoInsert && !d.readonly;
       setStatus(d.readonly
         ? "[readonly]  press : then q  (or just q) to quit"
-        : "press i to insert · : for commands · esc to leave a mode");
-      setMode("NORMAL");
+        : startInsert
+          ? "-- INSERT --  type away · esc to leave · :wq to save"
+          : "press i to insert · : for commands · esc to leave a mode");
+      setMode(startInsert ? "INSERT" : "NORMAL");
       setOpen(true);
     };
     window.addEventListener("vim:open", onOpen);
