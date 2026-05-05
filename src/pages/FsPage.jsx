@@ -86,8 +86,9 @@ export default function FsPage() {
   const initialCwd = useMemo(() => {
     const rawHash = loc.hash.slice(1);
     // supabase OAuth dumps `#access_token=...&...` on return — never a path.
+    // do NOT strip the hash here — supabase reads it asynchronously to establish
+    // the session, and will clean the URL itself once it's done.
     if (!rawHash || /(^|&)(access_token|error|provider_token|refresh_token)=/.test(rawHash)) {
-      if (rawHash) window.history.replaceState(null, "", window.location.pathname + window.location.search);
       return "/";
     }
     return normalizePath(decodeURIComponent(rawHash));
