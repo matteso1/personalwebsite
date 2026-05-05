@@ -48,14 +48,27 @@ export default function VimModal() {
     return () => window.removeEventListener("vim:open", onOpen);
   }, []);
 
-  // unified key handler — runs even when the textarea has focus,
-  // because in NORMAL the textarea is readOnly so ":" wouldn't insert anyway.
+  // mode + readonly mirrored to refs so the keydown closure always sees the
+  // live value without depending on effect re-registration (which would
+  // otherwise lag a render behind real keystrokes).
+  const modeRef = useRef("NORMAL");
+  const readonlyRef = useRef(false);
+  useEffect(() => { modeRef.current = mode; }, [mode]);
+  useEffect(() => { readonlyRef.current = readonly; }, [readonly]);
+
+  // unified key handler — capture phase + stopImmediatePropagation when we
+  // own a keystroke, so global listeners (e.g. CommandPalette's `:` trigger)
+  // can't double-handle the same event while the modal is up.
   useEffect(() => {
     if (!open) return;
     const onKey = (e) => {
+      const m = modeRef.current;
+      const ro = readonlyRef.current;
+
       if (e.key === "Escape") {
         e.preventDefault();
-        if (mode !== "NORMAL") {
+        e.stopImmediatePropagation();
+        if (m !== "NORMAL") {
           setMode("NORMAL");
           setCmd("");
           setStatus("");
@@ -68,31 +81,40 @@ export default function VimModal() {
       const tag = (e.target.tagName || "").toLowerCase();
       const inField = tag === "textarea" || tag === "input";
 
-      if (mode === "NORMAL") {
-        if (e.key === "i" && !readonly) {
+      if (m === "NORMAL") {
+        if (e.key === "i" && !ro) {
           e.preventDefault();
+          e.stopImmediatePropagation();
           setMode("INSERT");
           setStatus("-- INSERT --");
         } else if (e.key === ":") {
           e.preventDefault();
+          e.stopImmediatePropagation();
           setMode("COMMAND");
           setCmd("");
           setStatus("");
-        } else if (e.key === "q" && readonly) {
+        } else if (e.key === "q" && ro) {
           e.preventDefault();
+          e.stopImmediatePropagation();
           close();
-        } else if (e.key === "ZZ") {
-          // unreachable; placeholder for future Z Z mapping
+        } else if (e.key === "/" || e.key === "?") {
+          // swallow palette triggers while modal is open; we don't have search yet
+          e.preventDefault();
+          e.stopImmediatePropagation();
         }
         return;
       }
 
-      // INSERT / COMMAND — let the active field handle keystrokes
-      if (inField) return;
+      // INSERT / COMMAND — let the active field handle keystrokes, but block
+      // global hotkeys (CommandPalette, etc.) from racing it.
+      if (inField) {
+        e.stopPropagation();
+        return;
+      }
     };
     window.addEventListener("keydown", onKey, true);
     return () => window.removeEventListener("keydown", onKey, true);
-  }, [open, mode, readonly]);
+  }, [open]);
 
   // focus per-mode
   useEffect(() => {
