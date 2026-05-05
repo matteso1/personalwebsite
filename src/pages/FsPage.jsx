@@ -84,8 +84,13 @@ export default function FsPage() {
   const bootedRef = useRef(false);   // guards StrictMode double-fire on the bootstrap effect
 
   const initialCwd = useMemo(() => {
-    const raw = decodeURIComponent(loc.hash.slice(1) || "/");
-    return normalizePath(raw);
+    const rawHash = loc.hash.slice(1);
+    // supabase OAuth dumps `#access_token=...&...` on return — never a path.
+    if (!rawHash || /(^|&)(access_token|error|provider_token|refresh_token)=/.test(rawHash)) {
+      if (rawHash) window.history.replaceState(null, "", window.location.pathname + window.location.search);
+      return "/";
+    }
+    return normalizePath(decodeURIComponent(rawHash));
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const [cwd, setCwd] = useState("/");
