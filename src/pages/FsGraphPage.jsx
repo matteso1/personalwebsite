@@ -294,58 +294,86 @@ export default function FsGraphPage() {
       ctx.scale(zoom, zoom);
       ctx.translate(-camX, -camY);
 
-      // edges
-      ctx.lineWidth = 1 / zoom;
-      ctx.strokeStyle = "rgba(214,216,200,0.13)";
-      ctx.beginPath();
+      // focus subgraph (Obsidian-style): focal node + neighbors stay bright,
+      // everything else dims. read via refs so hover changes don't re-run the effect.
+      const hot = hoverRef.current?.id || selectedRef.current?.id;
+      const focalSet = new Set();
+      if (hot) {
+        focalSet.add(hot);
+        for (const nb of (adj.get(hot) || [])) focalSet.add(nb);
+      }
+
+      // edges — per-edge style based on focal proximity
       for (const e of graph.edges) {
         const a = positions.get(e.a), b = positions.get(e.b);
         if (!a || !b) continue;
+        const isHotEdge = hot && focalSet.has(e.a) && focalSet.has(e.b);
+        if (hot && !isHotEdge) {
+          ctx.strokeStyle = "rgba(214,216,200,0.05)";
+          ctx.lineWidth = 1 / zoom;
+        } else if (isHotEdge) {
+          ctx.strokeStyle = "rgba(95,209,147,0.6)";
+          ctx.lineWidth = 1.5 / zoom;
+        } else {
+          ctx.strokeStyle = "rgba(214,216,200,0.13)";
+          ctx.lineWidth = 1 / zoom;
+        }
+        ctx.beginPath();
         ctx.moveTo(a.x, a.y);
         ctx.lineTo(b.x, b.y);
-      }
-      ctx.stroke();
-
-      // highlighted edges to hovered/selected (read via ref so we never re-run the effect)
-      const hot = hoverRef.current?.id || selectedRef.current?.id;
-      if (hot) {
-        ctx.strokeStyle = "rgba(95,209,147,0.55)";
-        ctx.lineWidth = 1.2 / zoom;
-        ctx.beginPath();
-        for (const nb of (adj.get(hot) || [])) {
-          const a = positions.get(hot), b = positions.get(nb);
-          if (!a || !b) continue;
-          ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
-        }
         ctx.stroke();
+      }
+
+      // pulse halo around the focal node
+      if (hot) {
+        const fp = positions.get(hot);
+        if (fp) {
+          const t = (Date.now() % 1800) / 1800;
+          const pulseR = fp.node.r + 6 + Math.sin(t * Math.PI * 2) * 3;
+          ctx.strokeStyle = "rgba(95,209,147,0.32)";
+          ctx.lineWidth = 1.2 / zoom;
+          ctx.beginPath();
+          ctx.arc(fp.x, fp.y, pulseR, 0, Math.PI * 2);
+          ctx.stroke();
+        }
       }
 
       // nodes
       for (const p of positions.values()) {
         const n = p.node;
         const isHot = n.id === hot;
+        const inFocus = !hot || focalSet.has(n.id);
         const r = n.r * (isHot ? 1.35 : 1);
         const fill = n.kind === "root" ? "#d4b462"
           : n.kind === "author" ? (n.color || "#5fd193")
           : n.kind === "file" ? (n.color || "#6cc1d9")
           : "#8a9088";
 
+        ctx.globalAlpha = inFocus ? 1 : 0.22;
         ctx.shadowColor = fill;
-        ctx.shadowBlur = isHot ? 18 : 8;
+        ctx.shadowBlur = isHot ? 22 : (inFocus ? 8 : 0);
         ctx.fillStyle = fill;
         ctx.beginPath();
         ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
         ctx.fill();
         ctx.shadowBlur = 0;
 
-        // label for big nodes always; small nodes only on hover
-        if (n.kind === "root" || n.kind === "author" || isHot) {
+        // root renders its glyph centered inside the disc — keeps the label
+        // from hanging off the bottom looking like a stray tick mark.
+        if (n.kind === "root") {
+          ctx.fillStyle = "rgba(6,8,7,0.9)";
+          ctx.font = `${14 / zoom}px 'JetBrains Mono', ui-monospace, monospace`;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText("/", p.x, p.y);
+        } else if (n.kind === "author" || isHot) {
           ctx.fillStyle = isHot ? "#d6d8c8" : "rgba(214,216,200,0.78)";
           ctx.font = `${(n.kind === "file" ? 11 : 12) / zoom}px 'JetBrains Mono', ui-monospace, monospace`;
           ctx.textAlign = "center";
           ctx.textBaseline = "top";
           ctx.fillText(n.label, p.x, p.y + r + 4);
         }
+        ctx.globalAlpha = 1;
       }
 
       ctx.restore();
@@ -354,8 +382,10 @@ export default function FsGraphPage() {
     let raf = 0;
     const loop = () => {
       if (!running) return;
-      step();
-      draw();
+      if (!document.hidden) {
+        step();
+        draw();
+      }
       raf = requestAnimationFrame(loop);
     };
     raf = requestAnimationFrame(loop);
