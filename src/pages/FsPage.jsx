@@ -77,11 +77,12 @@ keys: tab completes, ↑/↓ history, ctrl-l clear, ctrl-c cancel, ctrl-u clear 
 export default function FsPage() {
   const loc = useLocation();
   const nav = useNavigate();
-  const { user, isAdmin, signInWithGitHub, signOut } = useAuth();
+  const { user, loading, isAdmin, signInWithGitHub, signOut } = useAuth();
   const termRef = useRef(null);
   const inputRef = useRef(null);
   const idRef = useRef(0);
-  const bootedRef = useRef(false);   // guards StrictMode double-fire on the bootstrap effect
+  const bootedRef = useRef(false);     // guards StrictMode double-fire on the cold-boot effect
+  const authTipShownRef = useRef(false); // ensures the auth-status line prints exactly once
 
   const initialCwd = useMemo(() => {
     const rawHash = loc.hash.slice(1);
@@ -107,16 +108,11 @@ export default function FsPage() {
     setLines((ls) => [...ls, { id: ++idRef.current, kind, content }]);
   };
 
-  // banner + warm cache + handle deep-link
+  // banner + warm cache + handle deep-link (runs once on mount)
   useEffect(() => {
     if (bootedRef.current) return;
     bootedRef.current = true;
     push("ok", `nilsh v0.3 — guestbook shell · type \`help\` · \`graph\` for the file graph`);
-    if (!user) {
-      push("dim", "tip: run  `signin`  to sign in with github — then  `vim ~/hello.txt`");
-    } else {
-      push("dim", `signed in as ${handle}${isAdmin ? " (admin)" : ""} — your home is /home/${handle}/`);
-    }
     if (!isFsConfigured()) {
       push("err", "filesystem offline (supabase not configured).");
       return;
@@ -137,6 +133,18 @@ export default function FsPage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // print the auth-status tip once useAuth has resolved the session
+  useEffect(() => {
+    if (loading || authTipShownRef.current) return;
+    authTipShownRef.current = true;
+    if (user) {
+      push("dim", `signed in as ${handle}${isAdmin ? " (admin)" : ""} — your home is /home/${handle}/`);
+    } else {
+      push("dim", "tip: run  `signin`  to sign in with github — then  `vim ~/hello.txt`");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading, user]);
 
   // refresh index if vim wrote — next ls reflects it
   useEffect(() => {
