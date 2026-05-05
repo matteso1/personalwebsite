@@ -1,20 +1,16 @@
 import React from "react";
 import AsciiField from "./AsciiField";
-import { SIGIL } from "../lib/ascii";
 
+/* Quiet ambient — the ASCII field, monochrome, very faint, on light paper. */
 export default function Ambient() {
   return (
     <div className="ambient" aria-hidden="true">
-      <div className="ambient-heatmap" />
-      <div className="ambient-grid" />
       <AsciiField
-        color="var(--paper-mid)"
-        accent="var(--paper)"
-        opacity={0.2}
+        color="#d6d8c8"
+        accent="#5fd193"
+        opacity={0.07}
+        fontSize={14}
       />
-      <pre className="ambient-sigil">{SIGIL}</pre>
-      <div className="ambient-noise" />
-      <div className="ambient-scan" />
     </div>
   );
 }
