@@ -20,7 +20,7 @@ export function useAuth() {
   }, []);
 
   const signInWithGitHub = (redirectPath) => {
-    if (!isSupabaseConfigured) return;
+    if (!isSupabaseConfigured) return Promise.resolve({ data: null, error: { message: "supabase not configured" } });
     const back = redirectPath || (window.location.pathname + window.location.hash);
     return supabase.auth.signInWithOAuth({
       provider: "github",
