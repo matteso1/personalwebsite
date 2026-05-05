@@ -188,7 +188,16 @@ export default function FsPage() {
         case "signin": case "login": {
           if (user) { push("dim", `already signed in as ${handle}`); break; }
           push("dim", "redirecting to github…");
-          signInWithGitHub("/fs");
+          try {
+            const res = await signInWithGitHub("/fs");
+            if (res?.error) {
+              push("err", `signin failed: ${res.error.message}`);
+            } else if (res?.data?.url) {
+              window.location.assign(res.data.url);
+            }
+          } catch (e) {
+            push("err", `signin failed: ${e.message || e}`);
+          }
           break;
         }
 
