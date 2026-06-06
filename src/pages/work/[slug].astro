@@ -1,0 +1,35 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../components/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const items = await getCollection('work');
+  return items.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+const meta = [d.role, d.year].filter(Boolean).join('  ·  ');
+---
+
+<BaseLayout
+  title={d.title}
+  description={d.description}
+  mdPath={`/work/${entry.id}.md`}
+  ogType="article"
+>
+  <article class="prose">
+    <h1>{d.title}</h1>
+    {meta && <p class="post-meta">{meta}</p>}
+    <Content />
+    {d.links && (
+      <p class="post-links">
+        {Object.entries(d.links).map(([k, v]) => (
+          <a href={v}>{k}</a>
+        ))}
+      </p>
+    )}
+    <p><a href="/work">Back to work</a></p>
+  </article>
+</BaseLayout>

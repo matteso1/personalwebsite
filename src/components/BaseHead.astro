@@ -1,0 +1,98 @@
+---
+import { SITE, personJsonLd, PERSON_ID } from '../lib/site';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** path to the raw markdown twin, e.g. "/work/thaw.md" */
+  mdPath?: string;
+  ogType?: 'website' | 'article' | 'profile';
+  image?: string;
+  isHome?: boolean;
+  article?: { date?: string; modified?: string; tags?: string[] };
+}
+
+const {
+  title,
+  description = SITE.description,
+  mdPath,
+  ogType = 'website',
+  image = SITE.ogImage,
+  isHome = false,
+  article,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL(image, Astro.site).href;
+const fullTitle = isHome
+  ? `${SITE.title}, Systems and ML Infrastructure Engineer`
+  : `${title} · ${SITE.name}`;
+
+// Build the JSON-LD @graph: Person sitewide, WebSite on home, Article on posts.
+const graph: any[] = [personJsonLd()];
+if (isHome) {
+  graph.push({
+    '@type': 'WebSite',
+    '@id': `${SITE.url}/#website`,
+    url: `${SITE.url}/`,
+    name: SITE.name,
+    description: SITE.description,
+    publisher: { '@id': PERSON_ID },
+  });
+}
+if (ogType === 'article' && article) {
+  graph.push({
+    '@type': 'BlogPosting',
+    headline: title,
+    description,
+    datePublished: article.date,
+    dateModified: article.modified ?? article.date,
+    keywords: article.tags?.join(', '),
+    author: { '@id': PERSON_ID },
+    mainEntityOfPage: canonical,
+    url: canonical,
+  });
+}
+const jsonLd = JSON.stringify({ '@context': 'https://schema.org', '@graph': graph });
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="generator" content={Astro.generator} />
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+<meta name="robots" content="index,follow,max-image-preview:large" />
+<meta name="author" content={SITE.name} />
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="alternate" type="application/rss+xml" title={SITE.name} href="/rss.xml" />
+{mdPath && (
+  <link
+    rel="alternate"
+    type="text/markdown"
+    href={new URL(mdPath, Astro.site).href}
+    title="Markdown source"
+  />
+)}
+
+<meta property="og:type" content={ogType} />
+<meta property="og:site_name" content={SITE.name} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={`${SITE.name}: ${SITE.tagline}`} />
+{ogType === 'article' && article?.date && (
+  <meta property="article:published_time" content={article.date} />
+)}
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+
+<script type="application/ld+json" set:html={jsonLd} />

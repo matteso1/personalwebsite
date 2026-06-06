@@ -1,0 +1,54 @@
+---
+// Temporary route used only to render /og.png at build/screenshot time.
+import '@fontsource-variable/source-serif-4';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/500.css';
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex" />
+    <style is:global>
+      * { margin: 0; box-sizing: border-box; }
+      html, body { background: #fafaf7; }
+      .card {
+        width: 1200px;
+        height: 630px;
+        background: #fafaf7;
+        color: #1a1a1a;
+        padding: 84px 88px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        font-family: 'Source Serif 4 Variable', Georgia, serif;
+        font-feature-settings: 'onum' 1, 'pnum' 1;
+      }
+      .name { font-size: 92px; font-weight: 600; letter-spacing: -0.015em; line-height: 1; }
+      .rule { width: 72px; height: 3px; background: #1d4ed8; margin: 30px 0 24px; }
+      .role { font-size: 33px; color: #4b4b4b; line-height: 1.35; max-width: 880px; }
+      .foot {
+        display: flex; justify-content: space-between; align-items: baseline;
+        font-family: 'IBM Plex Mono', monospace; font-size: 22px; color: #6e6e6e;
+        font-variant-numeric: tabular-nums lining-nums;
+      }
+      .foot b { color: #1a1a1a; font-weight: 500; }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div>
+        <div class="name">Nils Matteson</div>
+        <div class="rule"></div>
+        <div class="role">
+          Engineer on the systems layer of AI: GPU/CUDA inference, distributed
+          systems, and applied ML. Founder of thaw.
+        </div>
+      </div>
+      <div class="foot">
+        <span>nilsmatteson.com</span>
+        <span><b>0.88s</b> live vLLM fork vs <b>~340s</b> cold boot</span>
+      </div>
+    </div>
+  </body>
+</html>

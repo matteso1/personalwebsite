@@ -1,0 +1,38 @@
+---
+import '@fontsource-variable/source-serif-4';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/500.css';
+import '../styles/global.css';
+import BaseHead from './BaseHead.astro';
+import SiteHeader from './SiteHeader.astro';
+import SiteFooter from './SiteFooter.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  mdPath?: string;
+  ogType?: 'website' | 'article' | 'profile';
+  isHome?: boolean;
+  showHeader?: boolean;
+  article?: { date?: string; modified?: string; tags?: string[] };
+}
+
+const { showHeader = true, ...head } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead {...head} />
+  </head>
+  <body class={showHeader ? 'with-header' : 'home'}>
+    <a href="#main" class="skip">Skip to content</a>
+    {showHeader && <SiteHeader />}
+    <main id="main">
+      <div class="column">
+        <slot />
+      </div>
+    </main>
+    <SiteFooter />
+  </body>
+</html>
