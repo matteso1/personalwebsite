@@ -17,17 +17,29 @@ interface Props {
   article?: { date?: string; modified?: string; tags?: string[] };
 }
 
-const { showHeader = true, ...head } = Astro.props;
+const { showHeader = true, isHome = false, ...rest } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <BaseHead {...head} />
+    <script is:inline>
+      // Set the theme before first paint so there is no flash.
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.dataset.theme = t;
+        } catch (e) {}
+      })();
+    </script>
+    <BaseHead isHome={isHome} {...rest} />
   </head>
-  <body class={showHeader ? 'with-header' : 'home'}>
+  <body>
     <a href="#main" class="skip">Skip to content</a>
-    {showHeader && <SiteHeader />}
+    {showHeader && <SiteHeader minimal={isHome} />}
     <main id="main">
       <div class="column">
         <slot />
