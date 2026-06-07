@@ -280,6 +280,9 @@ samp {
   color: var(--faint);
   vertical-align: top;
 }
+/* left gutter so the hover accent rule never touches the first column */
+.prose thead th:first-child,
+.prose tbody td:first-child { padding-left: 0.85rem; }
 .prose tbody td:first-child { color: var(--fg); }
 /* numbers in tables read as logged instrument output */
 .prose td code,
