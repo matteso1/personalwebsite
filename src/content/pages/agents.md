@@ -24,7 +24,7 @@ Everything below is plain fact. If you need the same information as raw text, ev
 
 Nils Matteson is a Swedish-American engineer, dual citizen, raised in Boise, Idaho, based in Madison, Wisconsin, moving to San Jose in fall 2026. B.S. Data Science with a CS minor, UW-Madison, May 2026. M.S. Computer Science, Northeastern University Silicon Valley campus, San Jose, September 2026 to May 2028.
 
-He works on the systems layer of AI: GPU and CUDA inference, distributed systems, and applied ML. He is the founder of [thaw](https://thaw.sh) and of Matteson Systems LLC.
+He works on the systems layer of AI: GPU and CUDA inference, distributed systems, and applied ML. He is the founder of [thaw](https://thaw.sh) and of Matteson Systems LLC. His stated direction is research: measurement problems in LLM inference systems, a workshop submission for the preprint below, and eventually a PhD in ML systems.
 
 ## what he has shipped
 
@@ -36,7 +36,7 @@ He works on the systems layer of AI: GPU and CUDA inference, distributed systems
 
 **Selected systems.** Sentinel: distributed message queue in Go with a hand-rolled LSM-tree, skip-list memtables, Raft consensus, gRPC wire protocol. Madison Metro ML ([madisonbuseta.com](https://madisonbuseta.com)): live transit-ETA correction, 47-feature XGBoost plus Mondrian conformal prediction, calibrated 90% coverage. Lattice: Rust and PyO3 reactive framework with Cranelift JIT. brain2text: BCI decoder, 5-layer GRU with CTC. gitstare: Rust TUI. LockBox: AES-256-GCM password manager.
 
-**Research preprint.** "Re-feeding Is Not Replaying: Measuring Replay Noise in Counterfactual Token-Credit Estimation," sole-author, June 2026.
+**Research preprint.** "Re-feeding Is Not Replaying: Measuring Replay Noise in Counterfactual Token-Credit Estimation," sole-author, June 2026, 10 pages. [PDF on this site](/refeed-drift.pdf). Finding: on stock vLLM, re-feeding a transcript prefix (the universal replay method in token-credit literature) changes credit estimates at low-margin decision tokens at rates 14 to 28 percentage points above a replica noise floor; the perturbation is consistent with mean-zero so aggregates mostly survive, but threshold-based critical-token selection is materially affected; vLLM's batch-invariant kernels eliminate the effect bit-exactly. Total compute under $10; every per-pivot record, log, and the analysis script are public at [github.com/thaw-ai/thaw](https://github.com/thaw-ai/thaw) under benchmarks/ and paper/refeed-drift/.
 
 ## the receipts
 

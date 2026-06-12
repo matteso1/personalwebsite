@@ -39,7 +39,9 @@ const entry = await getEntry('pages', 'index');
       </div>
       <div class="window-body doc">
         <h1>Nils Matteson</h1>
-        <p>Systems engineer. GPU + CUDA inference, distributed systems, applied ML. B.S. Data Science, CS minor, UW-Madison (May 2026). M.S. CS, Northeastern Silicon Valley, San Jose (Sep 2026 - May 2028).</p>
+        <p>I build systems for LLM inference: GPU and CUDA, distributed systems, applied ML. I like problems where the deliverable is a number someone else can re-run.</p>
+        <p>The thing I keep pulling on: a transformer mid-generation is a multi-gigabyte data structure that the entire ecosystem treats as disposable. Treating it as a first-class artifact instead got me thaw (below), an open PR against vLLM core, and a sole-author research preprint measuring what the standard replay shortcut actually does to token-level credit estimates (also below).</p>
+        <p>B.S. Data Science, CS minor, UW-Madison, May 2026. M.S. CS, Northeastern Silicon Valley, San Jose, starting September 2026. The longer plan is research: measurement problems in ML systems, then a PhD.</p>
         <p>Open to SWE/MLE internship Summer 2027, full-time 2028. GPU inference, distributed systems, ML infrastructure.</p>
         <p>
           mail <a href="mailto:nils@thaw.sh">nils@thaw.sh</a> &nbsp;&middot;&nbsp;
@@ -103,7 +105,43 @@ const entry = await getEntry('pages', 'index');
 
     <div style="height:18px;"></div>
 
-    <!-- Window 3: File Explorer -->
+    <!-- Window 3: the paper -->
+    <div class="window bevel-out">
+      <div class="titlebar">
+        <span class="titlebar-title">Re-feeding Is Not Replaying.pdf - Acrobat Reader</span>
+        <div class="titlebar-btns">
+          <span class="tbtn" aria-hidden="true">_</span>
+          <span class="tbtn" aria-hidden="true" style="font-size:8px;">&#9633;</span>
+          <a href="/" class="tbtn" title="close (go home)" aria-label="Close">&#x2715;</a>
+        </div>
+      </div>
+      <div class="window-body">
+        <p>
+          <strong>Re-feeding Is Not Replaying: Measuring Replay Noise in Counterfactual Token-Credit Estimation</strong><br>
+          <span style="color:#808080;">sole author &middot; June 2026 &middot; 10 pages &middot; total compute under $10</span>
+        </p>
+        <p>
+          Every published method that asks "which token caused the model's answer" rebuilds the model's
+          state by re-feeding the transcript as a fresh prompt, and assumes that is the same state. I
+          measured the assumption on stock vLLM with a three-pass design: continuations resumed from the
+          exact decode-time KV state, an identical second exact pass as a replica noise floor, and the
+          re-feed. At low-margin decision tokens, re-feeding changes the credit estimate at rates 14 to 28
+          points above the floor. The perturbation is consistent with mean-zero, so averaged quantities
+          mostly survive; threshold-based critical-token selection does not. Rerunning under vLLM's
+          batch-invariant kernels makes every pass bit-identical, which closes the causal attribution and
+          validates the instrument in one move.
+        </p>
+        <p style="color:#808080;">Headed to arXiv (cs.LG). Every per-pivot record, run log, and the analysis script that emits each number are public in the repo.</p>
+        <div class="btn-row">
+          <a href="/refeed-drift.pdf" class="btn">Read the paper (PDF)</a>
+          <a href="https://github.com/thaw-ai/thaw/tree/main/paper/refeed-drift" class="btn">Data + harness</a>
+        </div>
+      </div>
+    </div>
+
+    <div style="height:18px;"></div>
+
+    <!-- Window 4: File Explorer -->
     <div class="window bevel-out">
       <div class="titlebar">
         <span class="titlebar-title">Exploring - C:\nils</span>
@@ -195,6 +233,15 @@ const entry = await getEntry('pages', 'index');
             </tr>
             <tr>
               <td class="name-cell">
+                <a href="/refeed-drift.pdf">
+                  <span class="icon-file" aria-hidden="true"></span>refeed-drift.pdf
+                </a>
+              </td>
+              <td>Adobe Acrobat Document</td>
+              <td>the preprint, 10 pages, reproduces for under $10</td>
+            </tr>
+            <tr>
+              <td class="name-cell">
                 <a href="/agents">
                   <span class="icon-file" aria-hidden="true"></span>agents.txt
                 </a>
@@ -205,7 +252,7 @@ const entry = await getEntry('pages', 'index');
           </tbody>
         </table>
         <div class="statusbar">
-          <span class="statusbar-panel">8 object(s)</span>
+          <span class="statusbar-panel">9 object(s)</span>
         </div>
       </div>
     </div>
@@ -228,6 +275,7 @@ const entry = await getEntry('pages', 'index');
           <p><strong>System:</strong> M.S. CS, Northeastern Silicon Valley (Sep 2026 - May 2028)</p>
           <p><strong>Registered to:</strong> Nils Matteson, Madison WI -&gt; San Jose CA</p>
           <p><strong>Status:</strong> seeking Summer 2027 SWE/MLE internship</p>
+          <p><strong>Scheduled upgrade:</strong> Ph.D., ML systems (pending)</p>
         </div>
         <div class="btn-row">
           <a href="mailto:nils@thaw.sh" class="btn">OK</a>
