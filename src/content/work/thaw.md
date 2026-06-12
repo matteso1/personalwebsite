@@ -13,29 +13,52 @@ links:
   pypi: https://pypi.org/project/thaw-vllm/
   rfc: https://github.com/vllm-project/vllm/issues/34303
   pr: https://github.com/vllm-project/vllm/pull/44074
+manpage: true
 ---
+
+<div class="man-header">THAW(1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;User Commands&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;THAW(1)</div>
+
+## NAME
+
+thaw - git for live LLM agent sessions
+
+## SYNOPSIS
+
+```
+thaw checkpoint | branch | diff | checkout | log [session]
+```
+
+## DESCRIPTION
 
 Booting a vLLM worker cold takes roughly 340 seconds on an H100: load weights, warm the allocator, run prefill to rebuild the KV cache. If your workload is one long-lived server, you pay that once. If it is thousands of short divergent rollouts, that cold start is the whole problem.
 
 thaw treats a running agent session the way git treats a working tree. It turns live inference state (weights, KV cache, scheduler, prefix-hash table) into a file you can `checkpoint`, `branch`, `diff`, `checkout`, and `log`. A new worker forks from a checkpoint in 0.88s median instead of booting from scratch. Inspection verbs (`inspect`, `diff`, `log`) need no GPU, so the everyday loop runs on a laptop. Open source on PyPI as `thaw-vllm` (16 releases, currently 0.6.0, Apache-2.0), built in Rust, CUDA, and Python.
 
-## how it works
+### DMA pipeline
 
-The restore path is a memory-movement problem dressed as an inference one.
+Restoring tens of gigabytes from disk to GPU is bounded by how well you overlap three stages: reading from disk, copying over PCIe, and verifying what arrived. A double-buffered `O_DIRECT` pipeline reads the next chunk while the current chunk is in flight over PCIe, with the page cache bypassed. That overlap gets weight restore to 14.3 GB/s and a 70B load to 3.4x faster than cold.
 
-**DMA pipeline.** Restoring tens of gigabytes from disk to GPU is bounded by how well you overlap three stages: reading from disk, copying over PCIe, and verifying what arrived. A double-buffered `O_DIRECT` pipeline reads the next chunk while the current chunk is in flight over PCIe, with the page cache bypassed. That overlap gets weight restore to 14.3 GB/s and a 70B load to 3.4x faster than cold.
+### Verifier
 
-**Verifier.** A fork is worthless if the restore is silently corrupt. A serial CRC32C pass is correct but slow enough to eat the throughput gain. 8 shards run in parallel; the sharded result matches the serial pass exactly, so verification rides along with the transfer rather than gating it. Output is bit-identical across 8 tested models.
+A fork is worthless if the restore is silently corrupt. A serial CRC32C pass is correct but slow enough to eat the throughput gain. 8 shards run in parallel; the sharded result matches the serial pass exactly, so verification rides along with the transfer rather than gating it. Output is bit-identical across 8 tested models.
 
-**KV cache.** vLLM stores the cache as thousands of small per-block allocations. Snapshotting them one block at a time meant roughly 16,000 tiny DMAs, each with its own setup cost. Coalescing the scattered blocks into a single contiguous gather, moving it once, then unpacking on the far side removed a 60x bottleneck.
+### KV cache
 
-**Prefix-cache reconstruction.** Restoring the KV bytes is not enough if vLLM does not know what is in them. Rebuilding the prefix-cache hash table on restore means a forked worker gets cache hits on any shared prefix and skips prefill. That is the point of forking a warm session rather than booting a fresh one.
+vLLM stores the cache as thousands of small per-block allocations. Snapshotting them one block at a time meant roughly 16,000 tiny DMAs, each with its own setup cost. Coalescing the scattered blocks into a single contiguous gather, moving it once, then unpacking on the far side removed a 60x bottleneck.
 
-**Testing GPU code without a GPU.** The `CudaBackend` trait puts a mock backend and the real CUDA backend behind one contract. Pipeline ordering, shard math, snapshot bookkeeping: all of it runs and gets tested without a GPU. 388 tests in CI (155 Rust, 233 Python) run on macOS and Linux with no CUDA installed.
+### Prefix-cache reconstruction
 
-**Rewind.** `thaw rewind` captures N sampled continuations from a shared trunk with per-token logprobs, finds the exact divergence token, and names the branch the model was most confident in, all on a laptop. Validated end-to-end on an A100 with Qwen2.5-7B best-of-8. The same question, what does re-feeding a transcript actually cost versus resuming exact KV state, became a sole-author research preprint: "Re-feeding Is Not Replaying: Measuring Replay Noise in Counterfactual Token-Credit Estimation" (June 2026).
+Restoring the KV bytes is not enough if vLLM does not know what is in them. Rebuilding the prefix-cache hash table on restore means a forked worker gets cache hits on any shared prefix and skips prefill. That is the point of forking a warm session rather than booting a fresh one.
 
-## numbers
+### CudaBackend
+
+The `CudaBackend` trait puts a mock backend and the real CUDA backend behind one contract. Pipeline ordering, shard math, snapshot bookkeeping: all of it runs and gets tested without a GPU. 388 tests in CI (155 Rust, 233 Python) run on macOS and Linux with no CUDA installed.
+
+### Rewind
+
+`thaw rewind` captures N sampled continuations from a shared trunk with per-token logprobs, finds the exact divergence token, and names the branch the model was most confident in, all on a laptop. Validated end-to-end on an A100 with Qwen2.5-7B best-of-8. That question (what does re-feeding a transcript actually cost versus resuming exact KV state?) became a sole-author research preprint: "Re-feeding Is Not Replaying: Measuring Replay Noise in Counterfactual Token-Credit Estimation" (June 2026).
+
+## BENCHMARKS
 
 | metric | what it measures | technique | proof |
 |---|---|---|---|
@@ -47,10 +70,17 @@ The restore path is a memory-movement problem dressed as an inference one.
 | 8-shard == serial | `CRC32C` verifier correctness | parallel shards proven equal to a serial pass | [repo](https://github.com/thaw-ai/thaw) |
 | `60x` removed | KV-snapshot bottleneck | `~16K` per-block DMAs coalesced into one gather | [repo](https://github.com/thaw-ai/thaw) |
 | 388 tests in CI | 155 Rust + 233 Python, no GPU required | `CudaBackend` trait, mock and real behind one contract | [repo](https://github.com/thaw-ai/thaw) |
-| `0.66x` baseline | Gorgon speculative-decoding, ended slower than baseline | tree attention + Medusa draft heads, four bugs found | [writeup](/writing/project-gorgon) |
 
-The last row is a negative result from a separate project. It stays.
+## BUGS
 
-## status
+For an honest negative result from a sibling project, see [project-gorgon](/writing/project-gorgon): speculative decoding that ended at 0.66x of baseline.
+
+## STATUS
 
 thaw is open source under Apache-2.0, on PyPI as [`thaw-vllm`](https://pypi.org/project/thaw-vllm/), 16 releases in, currently 0.6.0. I am an active participant in vLLM [RFC #34303](https://github.com/vllm-project/vllm/issues/34303) (CUDA Checkpoint/Restore for Near-Zero Cold Starts); RFC author elizabetht asked five thread participants, including me, for input on direction. Out of that thread I opened [PR #44074](https://github.com/vllm-project/vllm/pull/44074), a pluggable sleep-mode backend abstraction, with receipted 70B sleep/wake integration on 2xH100. The research side became a sole-author preprint: "Re-feeding Is Not Replaying" (June 2026). I applied to YC for S26; the application was rejected but placed in the top 10%, YC encouraged a reapply, I am reapplying.
+
+## SEE ALSO
+
+[thaw.sh](https://thaw.sh) &middot; [repo](https://github.com/thaw-ai/thaw) &middot; [pypi](https://pypi.org/project/thaw-vllm/) &middot; [RFC #34303](https://github.com/vllm-project/vllm/issues/34303) &middot; [PR #44074](https://github.com/vllm-project/vllm/pull/44074)
+
+<div class="man-footer">thaw 0.6.0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;June 2026&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;THAW(1)</div>
