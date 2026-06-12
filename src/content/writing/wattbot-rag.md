@@ -1,84 +1,58 @@
 ---
 title: "Deploying RAG in AWS Bedrock: Benchmarking 9 LLMs on the WattBot Challenge"
-description: "Ensemble majority voting beat every individual model. The highest-citation model finished last. A serverless RAG pipeline on Bedrock with full cost tracking."
+description: "Ensemble majority voting scored 0.840 and beat every individual model. The highest-citation model finished last. A serverless RAG pipeline on Bedrock with full cost tracking."
 date: 2026-02-17
 tags: ["RAG", "AWS Bedrock", "LLM eval"]
 ---
 
-## The Project
+KohakuRAG was the #1 solution to the [2025 WSDM WattBot Challenge](https://www.kaggle.com/competitions/WattBot2025/overview): RAG systems answering sustainability questions about AI workloads by citing academic papers. We deployed it two ways: a fully serverless pipeline on AWS Bedrock (my focus) and a local open-source deployment. I built the Bedrock integration, the evaluation framework, and the cost tracking infrastructure.
 
-KohakuRAG was the #1 solution to the [2025 WSDM WattBot Challenge](https://www.kaggle.com/competitions/WattBot2025/overview), a competition where teams built retrieval-augmented generation (RAG) systems that answer sustainability questions about AI workloads by citing academic papers. The task: given a question, retrieve relevant passages from a corpus of papers and generate a citation-backed answer. If the evidence is insufficient, the system should abstain rather than hallucinate.
+Presented at the [ML+X community meeting](https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2026-02-17.html) at UW-Madison, February 17, 2026.
 
-Our team took KohakuRAG and deployed it two ways: a fully serverless pipeline on AWS Bedrock (my focus), and a local open-source deployment (Blaise's focus). I built the Bedrock integration, the evaluation framework, and the cost tracking infrastructure. Then we benchmarked everything.
+## the pipeline
 
-I presented this work at the [ML+X community meeting](https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2026-02-17.html) at UW-Madison on February 17, 2026.
+Standard RAG: chunk academic papers, embed queries, cosine similarity retrieval, LLM generates a citation-backed answer. The hard part is abstention. A model that always answers will hallucinate when retrieved context is insufficient. A model that abstains too aggressively leaves easy questions unanswered.
 
-## The RAG Pipeline
+## bedrock integration
 
-The system follows a standard RAG architecture with a few important design decisions:
+`boto3` calls to `bedrock-runtime`. The operational details matter:
 
-1. **Retrieval.** The corpus is chunked academic papers. Queries are embedded and matched against chunk embeddings using cosine similarity. The top-k chunks become the LLM's context window.
+**Cost tracking.** Each model has different per-token pricing. I logged input tokens, output tokens, and total cost per question per model across 9 models and 282 questions. This feeds directly into the production decision: if two models have similar accuracy, pick the cheaper one.
 
-2. **Generation.** The LLM receives the retrieved chunks plus the question and produces an answer with citations. The prompt instructs the model to cite specific passages and to abstain if the evidence does not support an answer.
+**Latency measurement.** End-to-end per question including retrieval and generation. Some models are 3x faster than others at similar quality.
 
-3. **Abstention.** This is the hard part. A model that always answers will hallucinate when the retrieved context is insufficient. A model that abstains too aggressively leaves easy questions unanswered. The right balance depends on the model's confidence calibration and the quality of retrieval.
+**Error handling.** Bedrock has rate limits. Retries with exponential backoff, throttle events logged.
 
-## AWS Bedrock Integration
+## results
 
-Bedrock gives you a unified API to call models from Anthropic, Meta, Mistral, Amazon, and others without managing infrastructure. The integration is straightforward, `boto3` calls to `bedrock-runtime`, but the operational details matter:
+Ensemble majority voting scored `0.840` and outperformed every individual model. Three-model ensembles: each model independently answers, majority vote selects the final answer. The ensemble's accuracy exceeded the best individual model. This is the standard result: models make different mistakes, voting filters them out.
 
-**Cost tracking.** Each model has different per-token pricing. I built a cost tracker that logs input tokens, output tokens, and total cost per question per model. Across 282 questions and 9 models, costs ranged from pennies (Llama models) to dollars (Claude 3.5 Sonnet). This data feeds directly into the production decision: if two models have similar accuracy, you pick the cheaper one.
+Ensembling does not always help. Ensembles of similar models (e.g., all Qwen variants) barely improve over the best individual. Ensembling only pays when models have genuinely different reasoning patterns.
 
-**Latency measurement.** End-to-end latency per question, including retrieval and generation. Some models are 3x faster than others at similar quality. For a user-facing application, this matters as much as accuracy.
+Llama-4 Maverick reached `98%` of the top score at a fraction of the cost and latency. For most production deployments this is the right choice.
 
-**Error handling and retries.** Bedrock has rate limits and occasional throttling. The framework handles retries with exponential backoff and logs throttle events so you can right-size your provisioned throughput.
+The highest-citation model finished last overall. It aggressively cited passages for every answer but refused to abstain on unanswerable questions, fabricating citations to passages that did not support its claims. High citation count without citation accuracy is worse than no citations at all.
 
-## Benchmarking 9 LLMs
+Text-only embeddings create a ceiling on figure-based questions. Key data in figures and tables is invisible to the retriever; no LLM quality can fix a retrieval gap.
 
-We ran 282 questions from the WattBot evaluation set through 9 models available on Bedrock:
+## evaluation framework
 
-The evaluation framework scores each answer on:
-- **Accuracy**, does the answer correctly address the question?
-- **Citation quality**, are citations grounded in the retrieved passages?
-- **Abstention appropriateness**, does the model correctly abstain on unanswerable questions?
-- **Overall score**, weighted combination
+Building the evaluation framework took more time than the Bedrock integration.
 
-## Results That Stood Out
+**Reproducibility.** Random seeds, temperature 0 where possible, deterministic retrieval ordering.
 
-**Ensemble majority voting (0.840) outperformed every individual model.** We ran 3-model ensembles where each model independently answers the question, then a majority vote selects the final answer. The ensemble's accuracy exceeded the best individual model. This is the "wisdom of the crowd" effect, models make different mistakes, and voting filters out individual errors.
+**Comparability.** Models return different formats: structured JSON, free text with inline citations. The evaluation parser normalizes all formats.
 
-**But ensembles are not always worth it.** When we tested ensembles of similar models (e.g., all Qwen variants), the ensemble barely improved over the best individual. Ensembling only helps when models have genuinely different reasoning patterns. Otherwise you are paying 3x the cost and latency for the same answer.
+**Cost attribution.** Cost per question per model. Cost-per-correct-answer is the metric that matters for budgeting.
 
-**Llama 4 Maverick delivered 98% of the top score at a fraction of the cost and latency.** For most production deployments, this is the answer. The absolute best model might score 2% higher, but if it costs 10x more and takes 3x longer, the tradeoff is not worth it.
+## what I learned
 
-**The highest-citation model finished last overall.** One model aggressively cited passages for every answer, which sounds good until you realize it also refused to abstain on genuinely unanswerable questions, instead fabricating citations to passages that did not support its claims. High citation count without citation accuracy is worse than no citations at all. This was the clearest example of why you cannot optimize a single metric in isolation.
+Evaluation infrastructure is the real deliverable. The Bedrock wrapper took a day. The framework took weeks. Being able to add a new model and get a full comparative benchmark in minutes is what makes the system useful.
 
-**Text-only embeddings create a ceiling on figure-based questions.** Many academic papers contain key data in figures and tables. Our retrieval pipeline used text-only embeddings, which means figure-based information was invisible to the retriever. No matter how good the LLM is, if the relevant evidence is in a chart that was never retrieved, it cannot answer correctly. This is a retrieval problem, not a generation problem, and it sets a hard ceiling on system performance for certain question types.
+Model failure modes matter more than aggregate accuracy. The highest-citation model finishing last was the most important finding. In production, you care about how it fails, not just its average success rate.
 
-## The Evaluation Framework
-
-Building the evaluation framework was more work than building the Bedrock integration. The challenge:
-
-**Reproducibility.** Every run must produce identical results given the same inputs. Random seeds, model temperature (set to 0 where possible), and deterministic retrieval ordering.
-
-**Comparability.** Models have different output formats. Some return structured JSON, others return free text with inline citations. The evaluation parser handles all formats and extracts answers and citations into a normalized schema.
-
-**Cost attribution.** Each question's cost is tracked per model. Aggregate cost reports show cost-per-correct-answer, which is the metric that actually matters for budgeting. A cheap model that gets 60% right costs more per correct answer than an expensive model that gets 95% right.
-
-## What I Learned
-
-**Evaluation infrastructure is the real deliverable.** The Bedrock wrapper took a day. The evaluation framework took weeks. Being able to add a new model and get a full comparative benchmark in minutes is what makes the system useful beyond this one competition. When Bedrock adds a new model, we can evaluate it against our full benchmark in a single command.
-
-**Model behavior > raw accuracy.** The highest-citation model finishing last was the most important finding. In production, you care about the failure modes, not just the success rate. A model that confidently hallucinates is more dangerous than one that occasionally abstains.
-
-**Cost and latency are first-class metrics.** Academic benchmarks report accuracy. Production systems optimize accuracy per dollar per second. The evaluation framework tracks all three because the deployment decision depends on all three.
-
-**Retrieval quality bounds generation quality.** The text-only embedding ceiling demonstrates that RAG system performance is fundamentally limited by retrieval. Investing in better retrieval (multimodal embeddings, figure extraction, table parsing) would improve every model's performance, while switching to a better LLM only helps on questions where retrieval already works.
-
-## Acknowledgments
-
-Thank you to [Christopher Endemann](https://hub.datascience.wisc.edu/communities/mlx/) for the mentorship and for bringing me onto this project. I learned more about applied ML infrastructure in a few months than in any course. Thank you to Blaise Manga Enuh for the collaboration on the local deployment pipeline.
+Retrieval quality bounds generation quality. Investing in better retrieval (multimodal embeddings, figure extraction) would improve every model's performance; switching to a better LLM only helps on questions where retrieval already works.
 
 ---
 
-*The full presentation is available on [ML+X Nexus](https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2026-02-17.html). Source code at [github.com/matteso1/KohakuRAG_UI](https://github.com/matteso1/KohakuRAG_UI).*
+Full presentation at [ML+X Nexus](https://uw-madison-datascience.github.io/ML-X-Nexus/Applications/Videos/Forums/mlx_2026-02-17.html). Source at [github.com/matteso1/KohakuRAG_UI](https://github.com/matteso1/KohakuRAG_UI).

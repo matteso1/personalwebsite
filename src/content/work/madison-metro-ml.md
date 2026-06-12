@@ -11,28 +11,28 @@ links:
 receipt: "Calibrated 90% coverage, stratified by route x day-type x horizon. 200+ live vehicles at 60fps."
 ---
 
-The official Madison Metro API gives you a predicted arrival time, and it is often wrong by ten or fifteen minutes. The prediction underneath is close to a linear extrapolation: vehicle speed times remaining distance. It does not know that Route 80 runs chronically late on Friday afternoons, that a stop near a highway on-ramp has high variance, or that a snowstorm does not just slow buses down, it makes their slowdown unpredictable.
+The Madison Metro API gives predicted arrival times. They are often wrong by 10-15 minutes. The underlying prediction is close to linear extrapolation: vehicle speed times remaining distance. It ignores route-level reliability patterns, stop-level variance, and weather.
 
-Madison Metro ML does not replace that prediction. It learns the error in it. The transit feed is already a decent baseline, so the model predicts the signed correction instead of the arrival time from scratch. If the API says eight minutes and the model says plus three, the corrected ETA is eleven. That framing is easier to learn and easier to be honest about, because the systematic biases (route, stop, hour, weather) are exactly what a tree model picks up.
+Madison Metro ML learns the error in the API's prediction, not the arrival time from scratch. If the API says 8 minutes and the model says +3, the corrected ETA is 11. The systematic biases (route, stop, hour, weather) are what a tree model picks up.
 
-## The model
+## the model
 
-The point estimate is a 47-feature XGBoost regressor. The features that earn their place are the ones the API ignores: horizon terms (a bus two minutes out is far more predictable than one thirty minutes out, and the relationship is nonlinear, so the model gets the raw horizon, its square, its log, and a bucketed flag), cyclical sine and cosine encodings of hour, day, and month so 11pm sits next to midnight, rolling route-level and stop-level error histories with shrinkage toward the route mean for thin stops, live vehicle dynamics, and Madison weather pulled from Open-Meteo. Feature engineering does most of the work here. The model itself is unremarkable on purpose: a few hundred shallow trees.
+47-feature XGBoost regressor. The features that matter: horizon terms (raw, squared, log, bucketed, long-horizon flag), cyclical sine/cosine encodings of hour, day, and month, rolling route-level and stop-level error histories with shrinkage toward the route mean for thin stops, live vehicle dynamics, and Madison weather from Open-Meteo. Feature engineering does most of the work; the model is a few hundred shallow trees.
 
-## Honest uncertainty
+## honest uncertainty
 
-A point estimate is not enough. "Your bus arrives in eight minutes" is less useful than "six to ten minutes, ninety percent of the time," and it is worse than useless if that interval does not actually hold ninety percent of the time.
+Intervals come from Mondrian conformal prediction, calibrated to 90% coverage, stratified by route, day-type, and horizon bucket. A single global interval would be too wide on easy short-horizon weekday trips and too narrow on long-horizon Friday-night runs on unreliable routes. Conditioning calibration on those groups means each cell gets the interval earned from its own residuals, and the coverage guarantee holds per cell.
 
-So the intervals come from Mondrian conformal prediction, calibrated to 90% coverage and stratified by route, day-type, and horizon bucket. The stratification is the point. A single global interval would be too wide on an easy short-horizon weekday trip and too narrow on a long-horizon Friday-night run on an unreliable route. Conditioning the calibration on those groups means each cell gets the interval it has earned from its own residuals, and the coverage guarantee holds per cell rather than only on average. On the map this reads as a confidence band: wide when the model is genuinely unsure, narrow when it is not, never a fixed cosmetic margin.
+## retraining behind a gate
 
-## Retraining behind a gate
+The model retrains every night through GitHub Actions: pull recent outcomes, temporal split, fit, evaluate. It deploys only if the new model clears a hard gate: at least 2s MAE improvement over the model in production, on a test set large enough to trust. Most nights nothing deploys. That is the correct outcome.
 
-The model retrains every night through GitHub Actions. The pipeline pulls the recent window of prediction outcomes, does a strict temporal split so no future leaks into training, fits the model, and evaluates on the held-out tail. Then it refuses to ship unless the new model clears a hard gate: at least a two-second MAE improvement over the model currently in production, on a test set large enough to trust.
+## what broke
 
-The gate exists because a confidently wrong correction is worse than the raw API number a rider already half-distrusts. A model that has not actually improved does not get to displace the one that has. Most nights nothing deploys, which is the correct outcome.
+The nightly pipeline was updated to save models in XGBoost's native `.ubj` format, but the backend loader still looked for `.pkl` files. Model load failed silently; the backend's fallback returned the raw API prediction, so the system appeared to work. I caught it when diagnostics showed zero ML predictions. Fix: track format in the model registry, try `.ubj` first. Lesson: fallback behavior hides failures. Monitoring needs to check that the model is actually being used, not just that the endpoint returns 200.
 
-## The map
+## the map
 
-The frontend is React with a DeckGL layer on MapLibre. Every live bus in Madison renders as a WebGL point rather than a DOM marker, which is what keeps 200+ vehicles moving at 60fps without the browser falling over. Tap a route to filter, tap a stop to see arriving buses with their corrected ETAs and confidence bands, or track a single bus and watch it close on you in real time. The desktop view leans toward analytics (route reliability, error by horizon, model diagnostics); the mobile view is one full-screen map and a draggable sheet, built for someone walking to a stop in gloves who needs one answer in three seconds.
+React, DeckGL, MapLibre. 200+ live buses as WebGL points, not DOM markers, which is what keeps them moving at 60fps. Tap a stop for arriving buses with corrected ETAs and confidence bands. Mobile view is one full-screen map and a draggable sheet built for someone walking to a stop in gloves.
 
-Live at [madisonbuseta.com](https://madisonbuseta.com), source at [github.com/matteso1/madison-bus-eta](https://github.com/matteso1/madison-bus-eta).
+Live at [madisonbuseta.com](https://madisonbuseta.com).

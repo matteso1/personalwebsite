@@ -1,27 +1,13 @@
 ---
-import { SITE, NAV } from '../lib/site';
-import ThemeToggle from './ThemeToggle.astro';
-
-const { minimal = false } = Astro.props;
-const path = Astro.url.pathname;
-const isActive = (href: string) =>
-  href === '/' ? path === '/' : path === href || path.startsWith(href + '/');
+import { NAV } from '../lib/site';
 ---
 
-<header class:list={['site-header', 'column', { minimal }]}>
-  {!minimal && (
-    <a href="/" class="brand">{SITE.name}</a>
-  )}
-  <div class="header-right">
-    {!minimal && (
-      <nav class="site-nav" aria-label="Primary">
-        {NAV.map((item) => (
-          <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
-            {item.label}
-          </a>
-        ))}
-      </nav>
-    )}
-    <ThemeToggle />
-  </div>
-</header>
+<div class="topbar" role="banner">
+  <a href="/" class="brand">nilsmatteson.com</a>
+  <nav aria-label="Primary">
+    {NAV.map((item) => (
+      <a class="navlink" href={item.href}>{item.label.toLowerCase()}</a>
+    ))}
+    <a class="navlink" href="/resume.pdf">resume</a>
+  </nav>
+</div>
