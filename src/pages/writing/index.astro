@@ -1,0 +1,36 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../components/BaseLayout.astro';
+
+const posts = (await getCollection('writing', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+const fmt = (d: Date) => d.toISOString().slice(0, 10);
+---
+
+<BaseLayout
+  title="Writing"
+  description="Engineering notes: a speculative-decoding engine from scratch, conformal prediction for transit ETAs, and benchmarking 9 LLMs on AWS Bedrock."
+>
+  <article class="prose">
+    <h1>Writing</h1>
+    <p>
+      Engineering notes, mostly about systems and applied ML. I try to name what broke,
+      not only what worked.
+    </p>
+    <div class="entry-list">
+      {posts.map((p) => (
+        <a class="entry" href={`/writing/${p.id}`}>
+          <span class="entry-row">
+            <span class="entry-title">{p.data.title}</span>
+            <time class="entry-date" datetime={fmt(p.data.date)}>{fmt(p.data.date)}</time>
+          </span>
+          {p.data.description && <span class="entry-summary">{p.data.description}</span>}
+          {p.data.tags?.length ? (
+            <span class="entry-tags">{p.data.tags.join('   ')}</span>
+          ) : null}
+        </a>
+      ))}
+    </div>
+  </article>
+</BaseLayout>

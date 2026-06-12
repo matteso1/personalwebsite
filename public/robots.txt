@@ -1,0 +1,36 @@
+# This site is meant to be read, by people and by machines.
+# Curated index: /llms.txt   Full text: /llms-full.txt
+# Every page has a Markdown twin at <path>.md
+
+User-agent: *
+Allow: /
+
+# Reputable AI crawlers are explicitly welcome.
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+Sitemap: https://nilsmatteson.com/sitemap-index.xml
