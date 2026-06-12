@@ -25,14 +25,16 @@ const human = d.date.toLocaleDateString('en-US', {
   mdPath={`/writing/${entry.id}.md`}
   ogType="article"
   article={{ date: iso, tags: d.tags }}
+  winTitle={`${entry.id}.md - Notepad`}
+  winDoc={true}
 >
   <article class="prose">
     <h1>{d.title}</h1>
     <p class="post-meta">
       <time datetime={iso}>{human}</time>
-      {d.tags?.length ? <span class="post-tags">{d.tags.join('   ')}</span> : null}
+      {d.tags?.length ? <span style="margin-left:8px;">{d.tags.join('   ')}</span> : null}
     </p>
     <Content />
-    <p><a href="/writing">Back to writing</a></p>
+    <p style="margin-top:12px;"><a href="/writing">&larr; Back to writing</a></p>
   </article>
 </BaseLayout>

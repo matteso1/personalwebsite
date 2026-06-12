@@ -1,6 +1,7 @@
 ---
 import { getEntry } from 'astro:content';
 import BaseLayout from '../components/BaseLayout.astro';
+import Marquee from '../components/Marquee.astro';
 
 const entry = await getEntry('pages', 'index');
 ---
@@ -10,71 +11,252 @@ const entry = await getEntry('pages', 'index');
   description={entry!.data.description}
   mdPath="/index.md"
   isHome
+  noWrap
 >
-  <article>
 
-    <pre class="banner" aria-hidden="true"> _   _  ___  _      ____
-| \ | ||_ _|| |    / ___|
-|  \| | | | | |    \___ \
-| |\  | | | | |___  ___) |
-|_| \_||___||_____||____/</pre>
+  <div style="max-width:920px;margin:0 auto;padding:16px 12px;">
 
-    <h1 class="visually-hidden">Nils Matteson</h1>
-    <p class="dim" style="margin:0 0 1rem 0;">matteson &middot; systems / gpu inference &middot; madison &rarr; san jose</p>
+    <!-- Marquee strip -->
+    <Marquee />
 
-    <p class="dim">Last login: Thu Jun 11 2026 on ttys001 from madison.wi.us</p>
+    <div style="height:18px;"></div>
 
-    <p class="prompt">nils@thaw:~ $ whoami</p>
-    <p>systems engineer. GPU + CUDA inference, distributed systems, applied ML. B.S. data science, CS minor, UW-Madison (May 2026). M.S. CS, Northeastern Silicon Valley, San Jose (Sep 2026 - May 2028).</p>
+    <!-- Window 1: README.txt -->
+    <div class="window bevel-out">
+      <div class="titlebar">
+        <span class="titlebar-title">README.txt - Notepad</span>
+        <div class="titlebar-btns">
+          <span class="tbtn" aria-hidden="true">_</span>
+          <span class="tbtn" aria-hidden="true" style="font-size:8px;">&#9633;</span>
+          <a href="/" class="tbtn" title="close (go home)" aria-label="Close">&#x2715;</a>
+        </div>
+      </div>
+      <div class="menubar" aria-hidden="true">
+        <span class="menubar-item">File</span>
+        <span class="menubar-item">Edit</span>
+        <span class="menubar-item">Search</span>
+        <span class="menubar-item">Help</span>
+      </div>
+      <div class="window-body doc">
+        <h1>Nils Matteson</h1>
+        <p>Systems engineer. GPU + CUDA inference, distributed systems, applied ML. B.S. Data Science, CS minor, UW-Madison (May 2026). M.S. CS, Northeastern Silicon Valley, San Jose (Sep 2026 - May 2028).</p>
+        <p>Open to SWE/MLE internship Summer 2027, full-time 2028. GPU inference, distributed systems, ML infrastructure.</p>
+        <p>
+          mail <a href="mailto:nils@thaw.sh">nils@thaw.sh</a> &nbsp;&middot;&nbsp;
+          code <a href="https://github.com/matteso1">github.com/matteso1</a> &nbsp;&middot;&nbsp;
+          <a href="/resume.pdf">resume.pdf</a>
+        </p>
+      </div>
+    </div>
 
-    <p class="prompt">nils@thaw:~ $ cat projects/thaw/SUMMARY</p>
-    <p>
-      git for live LLM agent sessions. checkpoints, branches, diffs, and restores live vLLM/SGLang inference state
-      (weights, KV cache, prefix-hash table, scheduler). a session forks in 0.88s median on an H100 instead of a ~340s
-      cold boot, about 400x amortized. 16 releases on PyPI as thaw-vllm, currently 0.6.0, Apache-2.0. opened
-      <a href="https://github.com/vllm-project/vllm/pull/44074">PR #44074</a> in vLLM (pluggable sleep-mode backend),
-      following participation in <a href="https://github.com/vllm-project/vllm/issues/34303">RFC #34303</a>. sole-author
-      preprint: "Re-feeding Is Not Replaying" (June 2026).
-    </p>
-    <p>
-      -&gt; <a href="/work/thaw">/work/thaw</a> &middot; <a href="https://thaw.sh">thaw.sh</a> &middot; <a href="https://github.com/thaw-ai/thaw">repo</a>
-    </p>
+    <div style="height:18px;"></div>
 
-    <p class="prompt">nils@thaw:~ $ ls work/</p>
-    <pre class="ls-listing">drwxr-xr-x  <a href="/work/thaw">thaw/</a>              0.88s fork vs ~340s cold boot
-drwxr-xr-x  <a href="/work/matteson-systems">matteson-systems/</a>  10,500 businesses scored at ~$0.03
-drwxr-xr-x  <a href="/work/sentinel">sentinel/</a>          Go log engine, LSM + Raft
-drwxr-xr-x  <a href="/work/madison-metro-ml">madison-metro-ml/</a>  conformal ETAs, calibrated 90% coverage
-drwxr-xr-x  <a href="/work">doit-bedrock/</a>       9 models, 282 questions, ensemble 0.840</pre>
+    <!-- Window 2: thaw v0.6.0 -->
+    <div class="window bevel-out">
+      <div class="titlebar">
+        <span class="titlebar-title">thaw v0.6.0</span>
+        <div class="titlebar-btns">
+          <span class="tbtn" aria-hidden="true">_</span>
+          <span class="tbtn" aria-hidden="true" style="font-size:8px;">&#9633;</span>
+          <a href="/" class="tbtn" title="close (go home)" aria-label="Close">&#x2715;</a>
+        </div>
+      </div>
+      <div class="window-body">
+        <p>
+          git for live LLM agent sessions. checkpoints, branches, diffs, and restores live vLLM/SGLang inference
+          state (weights, KV cache, prefix-hash table, scheduler). a session forks in 0.88s median on an H100
+          instead of a ~340s cold boot, about 400x amortized. 16 releases on PyPI as thaw-vllm, currently 0.6.0,
+          Apache-2.0. opened <a href="https://github.com/vllm-project/vllm/pull/44074">PR #44074</a> in vLLM
+          (pluggable sleep-mode backend), following participation in
+          <a href="https://github.com/vllm-project/vllm/issues/34303">RFC #34303</a>. sole-author preprint:
+          "Re-feeding Is Not Replaying" (June 2026).
+        </p>
+        <div class="field" style="padding:8px 10px;margin-bottom:10px;">
+          <table class="numbers-table" style="width:100%;border-collapse:collapse;">
+            <tbody>
+              <tr>
+                <td style="padding:2px 10px 2px 2px;font-weight:bold;font-family:'Courier New',monospace;white-space:nowrap;border:none;">0.88s fork</td>
+                <td style="padding:2px 6px;border:none;color:#808080;">vs ~340s cold boot (H100)</td>
+              </tr>
+              <tr>
+                <td style="padding:2px 10px 2px 2px;font-weight:bold;font-family:'Courier New',monospace;white-space:nowrap;border:none;">14.3 GB/s restore</td>
+                <td style="padding:2px 6px;border:none;color:#808080;">weight restore, disk to GPU</td>
+              </tr>
+              <tr>
+                <td style="padding:2px 10px 2px 2px;font-weight:bold;font-family:'Courier New',monospace;white-space:nowrap;border:none;">0.29s / 55 GB/s hot-swap</td>
+                <td style="padding:2px 6px;border:none;color:#808080;">8B model reload after one-time pin</td>
+              </tr>
+              <tr>
+                <td style="padding:2px 10px 2px 2px;font-weight:bold;font-family:'Courier New',monospace;white-space:nowrap;border:none;">388 tests in CI</td>
+                <td style="padding:2px 6px;border:none;color:#808080;">155 Rust + 233 Python, no GPU required</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="btn-row">
+          <a href="/work/thaw" class="btn">Read the write-up</a>
+          <a href="https://pypi.org/project/thaw-vllm/" class="btn">PyPI</a>
+          <a href="https://github.com/thaw-ai/thaw" class="btn">Source</a>
+        </div>
+      </div>
+    </div>
 
-    <p class="prompt">nils@thaw:~ $ ls writing/</p>
-    <pre class="ls-listing">-rw-r--r--  <a href="/writing/project-gorgon">project-gorgon.md</a>   speculative decoding at 0.66x of baseline. negative result.
--rw-r--r--  <a href="/writing/madison-bus-eta">madison-bus-eta.md</a>  the transit-ETA writeup
--rw-r--r--  <a href="/writing/wattbot-rag">wattbot-rag.md</a>      RAG benchmarks, 282 questions</pre>
+    <div style="height:18px;"></div>
 
-    <p class="prompt">nils@thaw:~ $ cat .plan</p>
-    <p>open to SWE/MLE internship Summer 2027, full-time 2028. GPU inference, distributed systems, ML infrastructure.</p>
-    <p>
-      mail <a href="mailto:nils@thaw.sh">nils@thaw.sh</a> &middot;
-      code <a href="https://github.com/matteso1">github.com/matteso1</a> &middot;
-      <a href="/resume.pdf">resume.pdf</a>
-    </p>
+    <!-- Window 3: File Explorer -->
+    <div class="window bevel-out">
+      <div class="titlebar">
+        <span class="titlebar-title">Exploring - C:\nils</span>
+        <div class="titlebar-btns">
+          <span class="tbtn" aria-hidden="true">_</span>
+          <span class="tbtn" aria-hidden="true" style="font-size:8px;">&#9633;</span>
+          <a href="/" class="tbtn" title="close (go home)" aria-label="Close">&#x2715;</a>
+        </div>
+      </div>
+      <div class="menubar" aria-hidden="true">
+        <span class="menubar-item">File</span>
+        <span class="menubar-item">Edit</span>
+        <span class="menubar-item">View</span>
+        <span class="menubar-item">Go</span>
+        <span class="menubar-item">Help</span>
+      </div>
+      <div class="window-body doc" style="padding:0;">
+        <table class="explorer-table">
+          <thead>
+            <tr>
+              <th style="width:42%;">Name</th>
+              <th style="width:18%;">Type</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="name-cell">
+                <a href="/work/thaw">
+                  <span class="icon-folder" aria-hidden="true"></span>work\thaw
+                </a>
+              </td>
+              <td>File Folder</td>
+              <td>0.88s fork vs ~340s cold boot</td>
+            </tr>
+            <tr>
+              <td class="name-cell">
+                <a href="/work/matteson-systems">
+                  <span class="icon-folder" aria-hidden="true"></span>work\matteson-systems
+                </a>
+              </td>
+              <td>File Folder</td>
+              <td>10,500 businesses scored at ~$0.03</td>
+            </tr>
+            <tr>
+              <td class="name-cell">
+                <a href="/work/sentinel">
+                  <span class="icon-folder" aria-hidden="true"></span>work\sentinel
+                </a>
+              </td>
+              <td>File Folder</td>
+              <td>Go log engine, LSM + Raft</td>
+            </tr>
+            <tr>
+              <td class="name-cell">
+                <a href="/work/madison-metro-ml">
+                  <span class="icon-folder" aria-hidden="true"></span>work\madison-metro-ml
+                </a>
+              </td>
+              <td>File Folder</td>
+              <td>conformal ETAs, calibrated 90% coverage</td>
+            </tr>
+            <tr>
+              <td class="name-cell">
+                <a href="/writing/project-gorgon">
+                  <span class="icon-file" aria-hidden="true"></span>writing\project-gorgon.md
+                </a>
+              </td>
+              <td>Markdown</td>
+              <td>speculative decoding at 0.66x of baseline, negative result</td>
+            </tr>
+            <tr>
+              <td class="name-cell">
+                <a href="/writing/madison-bus-eta">
+                  <span class="icon-file" aria-hidden="true"></span>writing\madison-bus-eta.md
+                </a>
+              </td>
+              <td>Markdown</td>
+              <td>the transit-ETA writeup</td>
+            </tr>
+            <tr>
+              <td class="name-cell">
+                <a href="/writing/wattbot-rag">
+                  <span class="icon-file" aria-hidden="true"></span>writing\wattbot-rag.md
+                </a>
+              </td>
+              <td>Markdown</td>
+              <td>RAG benchmarks, 282 questions</td>
+            </tr>
+            <tr>
+              <td class="name-cell">
+                <a href="/agents">
+                  <span class="icon-file" aria-hidden="true"></span>agents.txt
+                </a>
+              </td>
+              <td>Text Document</td>
+              <td>facts for LLMs</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="statusbar">
+          <span class="statusbar-panel">8 object(s)</span>
+        </div>
+      </div>
+    </div>
 
-    <p class="prompt">nils@thaw:~ $ <span class="cursor"></span></p>
+    <div style="height:18px;"></div>
 
-  </article>
+    <!-- Window 4: System Properties (narrow) -->
+    <div class="window bevel-out window-narrow">
+      <div class="titlebar">
+        <span class="titlebar-title">System Properties</span>
+        <div class="titlebar-btns">
+          <span class="tbtn" aria-hidden="true">_</span>
+          <span class="tbtn" aria-hidden="true" style="font-size:8px;">&#9633;</span>
+          <a href="/" class="tbtn" title="close (go home)" aria-label="Close">&#x2715;</a>
+        </div>
+      </div>
+      <div class="window-body">
+        <div class="field sysprop-field">
+          <p><strong>System:</strong> B.S. Data Science, UW-Madison (May 2026)</p>
+          <p><strong>System:</strong> M.S. CS, Northeastern Silicon Valley (Sep 2026 - May 2028)</p>
+          <p><strong>Registered to:</strong> Nils Matteson, Madison WI -&gt; San Jose CA</p>
+          <p><strong>Status:</strong> seeking Summer 2027 SWE/MLE internship</p>
+        </div>
+        <div class="btn-row">
+          <a href="mailto:nils@thaw.sh" class="btn">OK</a>
+          <a href="/" class="btn" title="you can't escape">Cancel</a>
+        </div>
+      </div>
+    </div>
+
+    <div style="height:18px;"></div>
+
+    <!-- Counter + badges strip (on teal, no window) -->
+    <div class="counter-strip">
+      <span class="counter-label">you are visitor</span>
+      <div class="counter-well">
+        <span class="counter-digits">016,384</span>
+      </div>
+      <span class="counter-caption">(counter is static. no js, no tracking.)</span>
+      <div class="badges">
+        <span class="badge88" style="background:#7a2a1f;color:#ffd9cf;">RUST INSIDE</span>
+        <span class="badge88" style="background:#0b3d0b;color:#aaffaa;">CUDA 12+</span>
+        <a href="https://github.com/vllm-project/vllm/pull/44074" class="badge88" style="background:#001a4d;color:#9fc3ff;text-decoration:none;">vLLM</a>
+        <span class="badge88" style="background:#3d2b00;color:#ffe08a;">APACHE-2.0</span>
+        <span class="badge88" style="background:#000;color:#00ff00;">Y2K COMPLIANT</span>
+        <span class="badge88" style="background:#1a1a4d;color:#cfcfff;font-size:9px;">BEST VIEWED IN NETSCAPE 4.0</span>
+      </div>
+    </div>
+
+    <div style="height:8px;"></div>
+
+  </div>
+
 </BaseLayout>
-
-<style>
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0,0,0,0);
-  white-space: nowrap;
-  border: 0;
-}
-</style>

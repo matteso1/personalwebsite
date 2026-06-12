@@ -1,17 +1,31 @@
 ---
+const path = Astro.url.pathname;
+const is = (p: string) => {
+  if (p === '/') return path === '/';
+  return path === p || path.startsWith(p + '/') || path.startsWith(p + '.');
+};
 ---
 
-<header role="banner" style="background:#0c140c; border-bottom:1px solid var(--border); position:relative; z-index:10;">
-  <nav
-    aria-label="Primary"
-    style="display:flex; flex-wrap:wrap; align-items:center; gap:1.25rem; max-width:86ch; margin:0 auto; padding:6px 1.5rem;"
-  >
-    <span class="dim" style="white-space:nowrap;">nils@thaw:~</span>
-    <a href="/" style="color:var(--bright); text-decoration:none; white-space:nowrap;">[~]</a>
-    <a href="/work" style="color:var(--bright); text-decoration:none; white-space:nowrap;">[work]</a>
-    <a href="/writing" style="color:var(--bright); text-decoration:none; white-space:nowrap;">[writing]</a>
-    <a href="/about" style="color:var(--bright); text-decoration:none; white-space:nowrap;">[about]</a>
-    <a href="/agents" style="color:var(--bright); text-decoration:none; white-space:nowrap;">[agents]</a>
-    <a href="/resume.pdf" style="color:var(--bright); text-decoration:none; white-space:nowrap;">[resume.pdf]</a>
-  </nav>
-</header>
+<nav class="taskbar" aria-label="Site navigation">
+  <a href="/" class="taskbar-start" aria-label="Home">
+    <span class="win-flag" aria-hidden="true">
+      <span></span><span></span><span></span><span></span>
+    </span>
+    Start
+  </a>
+  <div class="taskbar-divider" aria-hidden="true"></div>
+  <div class="taskbar-tasks">
+    <a href="/" class:list={['task-btn', is('/') ? 'active' : '']}>README.txt</a>
+    <a href="/work" class:list={['task-btn', is('/work') ? 'active' : '']}>work</a>
+    <a href="/writing" class:list={['task-btn', is('/writing') ? 'active' : '']}>writing</a>
+    <a href="/about" class:list={['task-btn', is('/about') ? 'active' : '']}>about</a>
+    <a href="/agents" class:list={['task-btn', is('/agents') ? 'active' : '']}>agents</a>
+    <a href="/resume.pdf" class:list={['task-btn', path === '/resume.pdf' ? 'active' : '']}>resume.pdf</a>
+  </div>
+  <div class="taskbar-divider" aria-hidden="true"></div>
+  <div class="tray" aria-label="System tray">
+    <span>no JS</span>
+    <span aria-hidden="true">&#8201;</span>
+    <time datetime="2026-06-11">2026-06-11</time>
+  </div>
+</nav>

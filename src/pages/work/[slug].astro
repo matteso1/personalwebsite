@@ -18,18 +18,20 @@ const meta = [d.role, d.year].filter(Boolean).join('  ·  ');
   description={d.description}
   mdPath={`/work/${entry.id}.md`}
   ogType="article"
+  winTitle={`${entry.id}.md - Notepad`}
+  winDoc={true}
 >
   <article class="prose">
     <h1>{d.title}</h1>
     {meta && <p class="post-meta">{meta}</p>}
     <Content />
     {d.links && (
-      <p class="post-links">
+      <div class="post-links">
         {Object.entries(d.links).map(([k, v]) => (
-          <a href={v}>{k}</a>
+          <a href={v} class="btn">{k}</a>
         ))}
-      </p>
+      </div>
     )}
-    <p><a href="/work">Back to work</a></p>
+    <p style="margin-top:12px;"><a href="/work">&larr; Back to work</a></p>
   </article>
 </BaseLayout>

@@ -6,7 +6,13 @@ const entry = await getEntry('pages', 'about');
 const { Content } = await render(entry!);
 ---
 
-<BaseLayout title={entry!.data.title} description={entry!.data.description} mdPath="/about.md">
+<BaseLayout
+  title={entry!.data.title}
+  description={entry!.data.description}
+  mdPath="/about.md"
+  winTitle="about.txt - Notepad"
+  winDoc={true}
+>
   <article class="prose">
     <h1>{entry!.data.title}</h1>
     <Content />

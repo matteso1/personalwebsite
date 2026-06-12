@@ -3,8 +3,6 @@ title: Work
 description: What I have built, with numbers. thaw first, then Matteson Systems, the DoIT research role, and selected projects.
 ---
 
-<p class="prompt">nils@thaw:~ $ ls -la work/</p>
-
 ## thaw
 
 `thaw` is git for live LLM agent sessions: checkpoints, branches, diffs, and restores live inference state (weights, KV cache, prefix-hash table, scheduler). A running vLLM or SGLang session forks in `0.88s` median instead of a `~340s` cold boot on an H100. The core is a double-buffered O_DIRECT DMA pipeline overlapping disk reads with PCIe transfer, plus an 8-shard parallel CRC32C verifier proven equal to a serial pass. Open source, 16 releases on PyPI as `thaw-vllm`, Apache-2.0. Full engineering writeup, receipts, and the honest negative result on its own page.
