@@ -5,11 +5,6 @@ const is = (p: string) => {
   return path === p || path.startsWith(p + '/') || path.startsWith(p + '.');
 };
 
-// Hidden-service mirrors. Empty string => shown as "(not yet live)".
-// Fill these in after running scripts/onion-setup.sh on the VPS.
-const ONION = 'iymyzmzwmsfg2zah6ecb64rsw63agex4zsnh3j4xqx6mq52ucpfxfvad.onion';
-const EEPSITE = '64tue5hr36bf67bryxjyium2gzi7bbobvdutfsjylqowwcv3po3q.b32.i2p';
-
 // Stamped at build time (Pacific), so it tracks the last deploy instead of
 // going stale — and stays correct regardless of the build server's timezone.
 const buildDate = new Intl.DateTimeFormat('en-CA', {
@@ -35,26 +30,6 @@ const buildDate = new Intl.DateTimeFormat('en-CA', {
   </div>
   <div class="taskbar-divider" aria-hidden="true"></div>
   <div class="tray" aria-label="System tray">
-    <span class="tray-net" tabindex="0" aria-label="Also reachable on Tor and I2P">
-      <svg class="onion-ico" viewBox="0 0 8 8" width="14" height="14" aria-hidden="true" shape-rendering="crispEdges">
-        <path fill="#7d4fb0" d="M3 0h2v1H3zM2 1h1v1H2zM5 1h1v1H5zM1 2h1v4H1zM6 2h1v4H6zM0 3h1v3H0zM7 3h1v3H7zM2 6h1v1H2zM5 6h1v1H5zM3 7h2v1H3z"/>
-        <path fill="#b07fe0" d="M3 1h2v5H3zM2 2h1v4H2zM5 2h1v4H5z"/>
-        <path fill="#4a2d6b" d="M3 2h1v3H3z"/>
-      </svg>
-      <span class="onion-label">.onion</span>
-      <span class="net-popup bevel-out" role="tooltip">
-        <strong>also reachable via:</strong>
-        <span class="net-row">
-          <span class="net-tag">TOR&nbsp;</span>
-          {ONION ? <code>{ONION}</code> : <em>(not yet live)</em>}
-        </span>
-        <span class="net-row">
-          <span class="net-tag">I2P&nbsp;</span>
-          {EEPSITE ? <code>{EEPSITE}</code> : <em>(not yet live)</em>}
-        </span>
-      </span>
-    </span>
-    <span class="tray-sep" aria-hidden="true"></span>
     <span>no JS</span>
     <span aria-hidden="true">&#8201;</span>
     <time datetime={buildDate}>{buildDate}</time>

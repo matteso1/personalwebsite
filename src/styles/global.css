@@ -736,90 +736,11 @@ td {
   gap: 4px;
 }
 
-/* ---------- tray onion (Tor / I2P easter egg) ---------- */
-.tray-net {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  padding: 1px 3px;
-  cursor: help;
-  outline: none;
-}
-.tray-net:focus-visible {
-  outline: 1px dotted #000;
-  outline-offset: 1px;
-}
-.onion-ico {
-  display: block;
-  image-rendering: pixelated;
-}
-.onion-label {
-  font-size: 11px;
-  letter-spacing: 0.02em;
-}
-.tray-sep {
-  width: 0;
-  height: 14px;
-  border-left: 1px solid #808080;
-  border-right: 1px solid #fff;
-  margin: 0 2px;
-}
-
-.net-popup {
-  position: absolute;
-  bottom: calc(100% + 6px);
-  right: -4px;
-  display: none;
-  flex-direction: column;
-  gap: 3px;
-  padding: 6px 8px;
-  width: max-content;
-  max-width: 78vw;
-  font-size: 11px;
-  line-height: 1.4;
-  color: #000;
-  text-align: left;
-  z-index: 50;
-}
-.net-popup strong {
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #000080;
-}
-.net-row {
-  display: flex;
-  align-items: baseline;
-  gap: 4px;
-}
-.net-tag {
-  font-weight: bold;
-  color: #7d4fb0;
-}
-.net-popup code {
-  font-family: inherit;
-  word-break: break-all;
-  user-select: all;
-}
-.net-popup em {
-  color: #808080;
-  font-style: italic;
-}
-/* reveal on hover OR keyboard focus — no JS */
-.tray-net:hover .net-popup,
-.tray-net:focus-within .net-popup,
-.tray-net:focus .net-popup {
-  display: flex;
-}
-
 @media (max-width: 640px) {
   .taskbar {
     overflow-x: auto;
     flex-wrap: nowrap;
   }
-  .onion-label { display: none; }
-  .net-popup { right: auto; left: -4px; }
 }
 
 /* ---------- subpage window (full-width, content wrapper) ---------- */
