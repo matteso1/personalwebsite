@@ -9,6 +9,12 @@ const is = (p: string) => {
 // Fill these in after running scripts/onion-setup.sh on the VPS.
 const ONION = 'iymyzmzwmsfg2zah6ecb64rsw63agex4zsnh3j4xqx6mq52ucpfxfvad.onion';
 const EEPSITE = '64tue5hr36bf67bryxjyium2gzi7bbobvdutfsjylqowwcv3po3q.b32.i2p';
+
+// Stamped at build time (Pacific), so it tracks the last deploy instead of
+// going stale — and stays correct regardless of the build server's timezone.
+const buildDate = new Intl.DateTimeFormat('en-CA', {
+  timeZone: 'America/Los_Angeles',
+}).format(new Date());
 ---
 
 <nav class="taskbar" aria-label="Site navigation">
@@ -51,6 +57,6 @@ const EEPSITE = '64tue5hr36bf67bryxjyium2gzi7bbobvdutfsjylqowwcv3po3q.b32.i2p';
     <span class="tray-sep" aria-hidden="true"></span>
     <span>no JS</span>
     <span aria-hidden="true">&#8201;</span>
-    <time datetime="2026-06-11">2026-06-11</time>
+    <time datetime={buildDate}>{buildDate}</time>
   </div>
 </nav>

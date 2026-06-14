@@ -530,6 +530,26 @@ td {
     inset 2px 2px #dfdfdf;
 }
 .badge88:hover { text-decoration: none; }
+.badge88-logo {
+  gap: 5px;
+  cursor: help;
+}
+.badge88-logo svg {
+  display: block;
+  flex: 0 0 auto;
+  image-rendering: pixelated;
+}
+.badge88-logo .b88-txt {
+  text-align: left;
+  line-height: 1.05;
+  font-size: 11px;
+}
+.badge88-logo small {
+  font-size: 7px;
+  font-weight: normal;
+  opacity: 0.8;
+  letter-spacing: 0.02em;
+}
 
 /* ---------- system properties .field content ---------- */
 .sysprop-field {
