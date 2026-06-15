@@ -259,29 +259,83 @@ const entry = await getEntry('pages', 'index');
 
     <div style="height:18px;"></div>
 
-    <!-- Window 4: System Properties (narrow) -->
-    <div class="window bevel-out window-narrow">
-      <div class="titlebar">
-        <span class="titlebar-title">System Properties</span>
-        <div class="titlebar-btns">
-          <span class="tbtn" aria-hidden="true">_</span>
-          <span class="tbtn" aria-hidden="true" style="font-size:8px;">&#9633;</span>
-          <a href="/" class="tbtn" title="close (go home)" aria-label="Close">&#x2715;</a>
+    <!-- Window 5+6: System Properties + New Message, side by side -->
+    <div class="window-row">
+
+      <!-- System Properties (narrow) -->
+      <div class="window bevel-out window-narrow">
+        <div class="titlebar">
+          <span class="titlebar-title">System Properties</span>
+          <div class="titlebar-btns">
+            <span class="tbtn" aria-hidden="true">_</span>
+            <span class="tbtn" aria-hidden="true" style="font-size:8px;">&#9633;</span>
+            <a href="/" class="tbtn" title="close (go home)" aria-label="Close">&#x2715;</a>
+          </div>
+        </div>
+        <div class="window-body">
+          <div class="field sysprop-field">
+            <p><strong>System:</strong> B.S. Data Science, UW-Madison (May 2026)</p>
+            <p><strong>System:</strong> M.S. CS, Northeastern Silicon Valley (Sep 2026 - May 2028)</p>
+            <p><strong>Registered to:</strong> Nils Matteson, Madison WI -&gt; San Jose CA</p>
+            <p><strong>Status:</strong> seeking Summer 2027 SWE/MLE internship</p>
+            <p><strong>Scheduled upgrade:</strong> Ph.D., ML systems (pending)</p>
+          </div>
+          <div class="btn-row">
+            <a href="mailto:nils@thaw.sh" class="btn">OK</a>
+            <a href="/" class="btn" title="you can't escape">Cancel</a>
+          </div>
         </div>
       </div>
-      <div class="window-body">
-        <div class="field sysprop-field">
-          <p><strong>System:</strong> B.S. Data Science, UW-Madison (May 2026)</p>
-          <p><strong>System:</strong> M.S. CS, Northeastern Silicon Valley (Sep 2026 - May 2028)</p>
-          <p><strong>Registered to:</strong> Nils Matteson, Madison WI -&gt; San Jose CA</p>
-          <p><strong>Status:</strong> seeking Summer 2027 SWE/MLE internship</p>
-          <p><strong>Scheduled upgrade:</strong> Ph.D., ML systems (pending)</p>
+
+      <!-- New Message (mail) -->
+      <div class="window bevel-out window-narrow mailwin">
+        <div class="titlebar">
+          <span class="titlebar-title">New Message - Outlook Express</span>
+          <div class="titlebar-btns">
+            <span class="tbtn" aria-hidden="true">_</span>
+            <span class="tbtn" aria-hidden="true" style="font-size:8px;">&#9633;</span>
+            <a href="/" class="tbtn" title="close (go home)" aria-label="Close">&#x2715;</a>
+          </div>
         </div>
-        <div class="btn-row">
-          <a href="mailto:nils@thaw.sh" class="btn">OK</a>
-          <a href="/" class="btn" title="you can't escape">Cancel</a>
+        <div class="menubar" aria-hidden="true">
+          <span class="menubar-item">File</span>
+          <span class="menubar-item">Edit</span>
+          <span class="menubar-item">Insert</span>
+          <span class="menubar-item">Help</span>
+        </div>
+        <div class="window-body">
+          <div class="mail-toolbar">
+            <a
+              href="mailto:nils@thaw.sh,nilsmatteson@icloud.com,matteson.ni@northeastern.edu?subject=shoot%20you%20an%20electronic%20message%20on%20the%20net"
+              class="btn mail-send"
+              title="Send mail (to all of them, obviously)"
+            >
+              <span class="mail-send-ico" aria-hidden="true"></span>Send
+            </a>
+          </div>
+          <div class="field mail-headers">
+            <div class="mail-hrow">
+              <span class="mail-hlabel">To:</span>
+              <span class="mail-hval">
+                <a href="mailto:nils@thaw.sh">nils@thaw.sh</a>;
+                <a href="mailto:nilsmatteson@icloud.com">nilsmatteson@icloud.com</a>;
+                <a href="mailto:matteson.ni@northeastern.edu">matteson.ni@northeastern.edu</a>
+                <span class="mail-pickone">(pick one lol)</span>
+              </span>
+            </div>
+            <div class="mail-hrow">
+              <span class="mail-hlabel">Subject:</span>
+              <span class="mail-hval">shoot you an electronic message on the net</span>
+            </div>
+          </div>
+          <div class="field mail-compose">
+            <p>hey Nils &mdash; saw the site. wanted to send you an electronic message on the net.</p>
+            <p>[ &nbsp;GPU inference&nbsp; / &nbsp;ML systems&nbsp; / &nbsp;weird measurement problems&nbsp; / &nbsp;just saying hi&nbsp; ]</p>
+            <p class="mail-sig">&mdash; <span class="mail-caret">_</span></p>
+          </div>
         </div>
       </div>
+
     </div>
 
     <div style="height:18px;"></div>

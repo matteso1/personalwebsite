@@ -561,6 +561,99 @@ td {
   font-size: 13px;
 }
 
+/* ---------- side-by-side window row ---------- */
+.window-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  align-items: flex-start;
+}
+.window-row > .window {
+  flex: 1 1 380px;
+  min-width: 0;
+  /* override window-narrow cap so each column fills its half of the row */
+  max-width: none;
+}
+
+/* ---------- New Message (mail) window ---------- */
+.mail-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #808080;
+  box-shadow: 0 1px 0 #fff;
+}
+.mail-send {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: bold;
+}
+.mail-send-ico {
+  display: inline-block;
+  width: 16px;
+  height: 11px;
+  /* tiny paper-airplane / envelope glyph drawn with borders */
+  background: #fff;
+  box-shadow: inset 0 0 0 1px #000;
+  position: relative;
+}
+.mail-send-ico::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* envelope flap */
+  background:
+    linear-gradient(135deg, transparent 49%, #000 49%, #000 51%, transparent 51%),
+    linear-gradient(45deg, transparent 49%, #000 49%, #000 51%, transparent 51%);
+}
+.mail-headers {
+  padding: 0;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+.mail-hrow {
+  display: flex;
+  gap: 6px;
+  padding: 3px 6px;
+  border-bottom: 1px solid #c0c0c0;
+}
+.mail-hrow:last-child { border-bottom: none; }
+.mail-hlabel {
+  flex: 0 0 56px;
+  color: #404040;
+  font-weight: bold;
+  text-align: right;
+}
+.mail-hval { min-width: 0; word-break: break-word; }
+.mail-pickone {
+  color: #808080;
+  font-style: italic;
+  white-space: nowrap;
+}
+.mail-compose {
+  padding: 8px 10px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #000;
+}
+.mail-compose p { margin: 0 0 8px 0; }
+.mail-compose p:last-child { margin-bottom: 0; }
+.mail-sig { color: #404040; }
+.mail-caret {
+  font-weight: bold;
+  /* steady blinking caret, but respect reduced motion */
+  animation: mail-blink 1.06s step-end infinite;
+}
+@keyframes mail-blink {
+  50% { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mail-caret { animation: none; }
+}
+
 /* ---------- marquee strip ---------- */
 .marquee-strip {
   box-shadow:
