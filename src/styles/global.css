@@ -645,6 +645,18 @@ td {
   padding: 1px 2px;
   max-width: 100%;
 }
+.mail-compose {
+  padding: 8px 10px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #000;
+}
+.mail-compose p { margin: 0 0 10px 0; }
+.mail-compose p:last-child { margin-bottom: 0; }
+.mail-sig {
+  color: #808080;
+  font-style: italic;
+}
 
 /* ---------- marquee strip ---------- */
 .marquee-strip {
