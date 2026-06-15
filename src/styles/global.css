@@ -628,30 +628,22 @@ td {
   text-align: right;
 }
 .mail-hval { min-width: 0; word-break: break-word; }
-.mail-pickone {
-  color: #808080;
-  font-style: italic;
-  white-space: nowrap;
-}
-.mail-compose {
-  padding: 8px 10px;
+
+/* Win98 inset dropdown for the To: field */
+.mail-select {
+  font-family: Tahoma, Verdana, "MS Sans Serif", sans-serif;
   font-size: 13px;
-  line-height: 1.45;
   color: #000;
-}
-.mail-compose p { margin: 0 0 8px 0; }
-.mail-compose p:last-child { margin-bottom: 0; }
-.mail-sig { color: #404040; }
-.mail-caret {
-  font-weight: bold;
-  /* steady blinking caret, but respect reduced motion */
-  animation: mail-blink 1.06s step-end infinite;
-}
-@keyframes mail-blink {
-  50% { opacity: 0; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .mail-caret { animation: none; }
+  background: #fff;
+  border: none;
+  border-radius: 0;
+  box-shadow:
+    inset -1px -1px #fff,
+    inset 1px 1px #808080,
+    inset -2px -2px #c0c0c0,
+    inset 2px 2px #0a0a0a;
+  padding: 1px 2px;
+  max-width: 100%;
 }
 
 /* ---------- marquee strip ---------- */

@@ -306,9 +306,10 @@ const entry = await getEntry('pages', 'index');
         <div class="window-body">
           <div class="mail-toolbar">
             <a
-              href="mailto:nils@thaw.sh,nilsmatteson@icloud.com,matteson.ni@northeastern.edu?subject=shoot%20you%20an%20electronic%20message%20on%20the%20net"
+              id="mail-send"
+              href="mailto:nils@thaw.sh?subject=shoot%20you%20an%20electronic%20message%20on%20the%20net"
               class="btn mail-send"
-              title="Send mail (to all of them, obviously)"
+              title="Send mail"
             >
               <span class="mail-send-ico" aria-hidden="true"></span>Send
             </a>
@@ -317,10 +318,11 @@ const entry = await getEntry('pages', 'index');
             <div class="mail-hrow">
               <span class="mail-hlabel">To:</span>
               <span class="mail-hval">
-                <a href="mailto:nils@thaw.sh">nils@thaw.sh</a>;
-                <a href="mailto:nilsmatteson@icloud.com">nilsmatteson@icloud.com</a>;
-                <a href="mailto:matteson.ni@northeastern.edu">matteson.ni@northeastern.edu</a>
-                <span class="mail-pickone">(pick one lol)</span>
+                <select id="mail-to" class="mail-select" aria-label="Recipient address">
+                  <option value="nils@thaw.sh">nils@thaw.sh</option>
+                  <option value="nilsmatteson@icloud.com">nilsmatteson@icloud.com</option>
+                  <option value="matteson.ni@northeastern.edu">matteson.ni@northeastern.edu</option>
+                </select>
               </span>
             </div>
             <div class="mail-hrow">
@@ -328,12 +330,15 @@ const entry = await getEntry('pages', 'index');
               <span class="mail-hval">shoot you an electronic message on the net</span>
             </div>
           </div>
-          <div class="field mail-compose">
-            <p>hey Nils &mdash; saw the site. wanted to send you an electronic message on the net.</p>
-            <p>[ &nbsp;GPU inference&nbsp; / &nbsp;ML systems&nbsp; / &nbsp;weird measurement problems&nbsp; / &nbsp;just saying hi&nbsp; ]</p>
-            <p class="mail-sig">&mdash; <span class="mail-caret">_</span></p>
-          </div>
         </div>
+        <script>
+          const mailSel = document.getElementById('mail-to');
+          const mailSend = document.getElementById('mail-send');
+          const mailSubject = 'shoot%20you%20an%20electronic%20message%20on%20the%20net';
+          mailSel?.addEventListener('change', () => {
+            mailSend.setAttribute('href', `mailto:${mailSel.value}?subject=${mailSubject}`);
+          });
+        </script>
       </div>
 
     </div>
