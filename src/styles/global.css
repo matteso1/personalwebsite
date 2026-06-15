@@ -653,9 +653,15 @@ td {
 }
 .mail-compose p { margin: 0 0 10px 0; }
 .mail-compose p:last-child { margin-bottom: 0; }
+.mail-quote { color: #000; }
 .mail-sig {
-  color: #808080;
+  color: #404040;
   font-style: italic;
+}
+.mail-wink {
+  margin-top: 12px !important;
+  font-size: 11px;
+  color: #808080;
 }
 
 /* ---------- marquee strip ---------- */
