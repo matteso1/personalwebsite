@@ -70,8 +70,8 @@ const entry = await getEntry('pages', 'index');
           instead of a ~340s cold boot, about 400x amortized. 16 releases on PyPI as thaw-vllm, currently 0.6.0,
           Apache-2.0. opened <a href="https://github.com/vllm-project/vllm/pull/44074">PR #44074</a> in vLLM
           (pluggable sleep-mode backend), following participation in
-          <a href="https://github.com/vllm-project/vllm/issues/34303">RFC #34303</a>. sole-author preprint:
-          "Re-feeding Is Not Replaying" (June 2026).
+          <a href="https://github.com/vllm-project/vllm/issues/34303">RFC #34303</a>. sole-author paper on arXiv:
+          <a href="https://arxiv.org/abs/2606.15621">"Re-feeding Is Not Replaying"</a> (June 2026).
         </p>
         <div class="field" style="padding:8px 10px;margin-bottom:10px;">
           <table class="numbers-table" style="width:100%;border-collapse:collapse;">
@@ -118,7 +118,7 @@ const entry = await getEntry('pages', 'index');
       <div class="window-body">
         <p>
           <strong>Re-feeding Is Not Replaying: Measuring Replay Noise in Counterfactual Token-Credit Estimation</strong><br>
-          <span style="color:#808080;">sole author &middot; June 2026 &middot; 10 pages &middot; total compute under $10</span>
+          <span style="color:#808080;">sole author &middot; <a href="https://arxiv.org/abs/2606.15621">arXiv:2606.15621</a> (cs.LG) &middot; 10 pages &middot; total compute under $10</span>
         </p>
         <p>
           Every published method that asks "which token caused the model's answer" rebuilds the model's
@@ -131,9 +131,10 @@ const entry = await getEntry('pages', 'index');
           batch-invariant kernels makes every pass bit-identical, which closes the causal attribution and
           validates the instrument in one move.
         </p>
-        <p style="color:#808080;">Headed to arXiv (cs.LG). Every per-pivot record, run log, and the analysis script that emits each number are public in the repo.</p>
+        <p style="color:#808080;">Published on arXiv (cs.LG), arXiv:2606.15621. Every per-pivot record, run log, and the analysis script that emits each number are public in the repo.</p>
         <div class="btn-row">
-          <a href="/refeed-drift.pdf" class="btn">Read the paper (PDF)</a>
+          <a href="https://arxiv.org/abs/2606.15621" class="btn">Read on arXiv</a>
+          <a href="/refeed-drift.pdf" class="btn">PDF</a>
           <a href="https://github.com/thaw-ai/thaw/tree/main/paper/refeed-drift" class="btn">Data + harness</a>
         </div>
       </div>

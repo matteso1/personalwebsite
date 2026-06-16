@@ -56,7 +56,7 @@ The `CudaBackend` trait puts a mock backend and the real CUDA backend behind one
 
 ### Rewind
 
-`thaw rewind` captures N sampled continuations from a shared trunk with per-token logprobs, finds the exact divergence token, and names the branch the model was most confident in, all on a laptop. Validated end-to-end on an A100 with Qwen2.5-7B best-of-8. That question (what does re-feeding a transcript actually cost versus resuming exact KV state?) became a sole-author research preprint: ["Re-feeding Is Not Replaying: Measuring Replay Noise in Counterfactual Token-Credit Estimation"](/refeed-drift.pdf) (June 2026).
+`thaw rewind` captures N sampled continuations from a shared trunk with per-token logprobs, finds the exact divergence token, and names the branch the model was most confident in, all on a laptop. Validated end-to-end on an A100 with Qwen2.5-7B best-of-8. That question (what does re-feeding a transcript actually cost versus resuming exact KV state?) became a sole-author arXiv paper: ["Re-feeding Is Not Replaying: Measuring Replay Noise in Counterfactual Token-Credit Estimation"](https://arxiv.org/abs/2606.15621) (June 2026).
 
 ## BENCHMARKS
 
@@ -77,10 +77,10 @@ For an honest negative result from a sibling project, see [project-gorgon](/writ
 
 ## STATUS
 
-thaw is open source under Apache-2.0, on PyPI as [`thaw-vllm`](https://pypi.org/project/thaw-vllm/), 16 releases in, currently 0.6.0. I am an active participant in vLLM [RFC #34303](https://github.com/vllm-project/vllm/issues/34303) (CUDA Checkpoint/Restore for Near-Zero Cold Starts); RFC author elizabetht asked five thread participants, including me, for input on direction. Out of that thread I opened [PR #44074](https://github.com/vllm-project/vllm/pull/44074), a pluggable sleep-mode backend abstraction, with receipted 70B sleep/wake integration on 2xH100. The research side became a sole-author preprint: ["Re-feeding Is Not Replaying"](/refeed-drift.pdf) (June 2026). I applied to YC for S26; the application was rejected but placed in the top 10%, YC encouraged a reapply, I am reapplying.
+thaw is open source under Apache-2.0, on PyPI as [`thaw-vllm`](https://pypi.org/project/thaw-vllm/), 16 releases in, currently 0.6.0. I am an active participant in vLLM [RFC #34303](https://github.com/vllm-project/vllm/issues/34303) (CUDA Checkpoint/Restore for Near-Zero Cold Starts); RFC author elizabetht asked five thread participants, including me, for input on direction. Out of that thread I opened [PR #44074](https://github.com/vllm-project/vllm/pull/44074), a pluggable sleep-mode backend abstraction, with receipted 70B sleep/wake integration on 2xH100. The research side became a sole-author arXiv paper: ["Re-feeding Is Not Replaying"](https://arxiv.org/abs/2606.15621) (June 2026). I applied to YC for S26; the application was rejected but placed in the top 10%, YC encouraged a reapply, I am reapplying.
 
 ## SEE ALSO
 
-[thaw.sh](https://thaw.sh) &middot; [repo](https://github.com/thaw-ai/thaw) &middot; [pypi](https://pypi.org/project/thaw-vllm/) &middot; [RFC #34303](https://github.com/vllm-project/vllm/issues/34303) &middot; [PR #44074](https://github.com/vllm-project/vllm/pull/44074) &middot; [the preprint (PDF)](/refeed-drift.pdf)
+[thaw.sh](https://thaw.sh) &middot; [repo](https://github.com/thaw-ai/thaw) &middot; [pypi](https://pypi.org/project/thaw-vllm/) &middot; [RFC #34303](https://github.com/vllm-project/vllm/issues/34303) &middot; [PR #44074](https://github.com/vllm-project/vllm/pull/44074) &middot; [the paper on arXiv](https://arxiv.org/abs/2606.15621)
 
 <div class="man-footer">thaw 0.6.0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;June 2026&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;THAW(1)</div>
