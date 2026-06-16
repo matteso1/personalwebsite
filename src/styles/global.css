@@ -550,6 +550,20 @@ td {
   opacity: 0.8;
   letter-spacing: 0.02em;
 }
+/* real brand logos (full-color svg files) */
+.badge88-logo img,
+.badge88 img {
+  flex: 0 0 auto;
+  image-rendering: auto;
+}
+/* monochrome glyphs recolored to the badge's own text color via CSS mask */
+.logo-ico {
+  display: inline-block;
+  flex: 0 0 auto;
+  background-color: currentColor;
+  -webkit-mask: var(--ico) center / contain no-repeat;
+  mask: var(--ico) center / contain no-repeat;
+}
 
 /* ---------- system properties .field content ---------- */
 .sysprop-field {
