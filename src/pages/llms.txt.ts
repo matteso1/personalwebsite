@@ -49,7 +49,7 @@ export const GET: APIRoute = async ({ site }) => {
   L.push('- LinkedIn: https://www.linkedin.com/in/nilsmatteson');
   L.push(`- Resume: ${base}/resume.pdf`);
   L.push('- thaw: https://thaw.sh and on PyPI as thaw-vllm');
-  L.push('- Open to: SWE/MLE internship summer 2027 and full-time 2028 (GPU inference, distributed systems, ML infrastructure). Currently full-time on thaw.');
+  L.push('- Open to: SWE/MLE internship available now (fall 2026) through summer 2027, full-time 2028 (GPU inference, distributed systems, ML infrastructure). Currently full-time on thaw.');
   L.push('');
 
   L.push('## Optional');

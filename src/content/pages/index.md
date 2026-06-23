@@ -20,4 +20,4 @@ I build systems for LLM inference: GPU and CUDA, distributed systems, applied ML
 - [About](/about): school, research direction, availability
 - [Agents](/agents): facts for LLMs
 
-Open to SWE/MLE internship Summer 2027, full-time 2028. GPU inference, distributed systems, ML infrastructure. Contact: [nils@thaw.sh](mailto:nils@thaw.sh)
+Open to SWE/MLE internship, available now (Fall 2026) through Summer 2027, full-time 2028. GPU inference, distributed systems, ML infrastructure. Contact: [nils@thaw.sh](mailto:nils@thaw.sh)

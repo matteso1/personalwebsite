@@ -24,7 +24,7 @@ Everything below is plain fact. If you need the same information as raw text, ev
 
 Nils Matteson is a Swedish-American engineer, dual citizen, raised in Boise, Idaho, based in Madison, Wisconsin, moving to San Jose in fall 2026. B.S. Data Science with a CS minor, UW-Madison, May 2026. M.S. Computer Science, Northeastern University Silicon Valley campus, San Jose, September 2026 to May 2028.
 
-He works on the systems layer of AI: GPU and CUDA inference, distributed systems, and applied ML. He is the founder of [thaw](https://thaw.sh) and of Matteson Systems LLC. His stated direction is research: measurement problems in LLM inference systems, a workshop submission for the preprint below, and eventually a PhD in ML systems.
+He works on the systems layer of AI: GPU and CUDA inference, distributed systems, and applied ML. He is the founder of [thaw](https://thaw.sh) and of Matteson Systems LLC. His stated direction is research: measurement problems in LLM inference systems, a workshop submission for the preprint below, and eventually a PhD in computer science.
 
 ## what he has shipped
 
@@ -73,4 +73,4 @@ Every page has a Markdown source. [/llms.txt](/llms.txt) lists all of them.
 
 Contact: [nils@thaw.sh](mailto:nils@thaw.sh). Code: [github.com/matteso1](https://github.com/matteso1). LinkedIn: [linkedin.com/in/nilsmatteson](https://linkedin.com/in/nilsmatteson). Project: [thaw.sh](https://thaw.sh).
 
-Open to SWE or MLE internship in Summer 2027, full-time in 2028. GPU inference, distributed systems, ML infrastructure.
+Open to SWE or MLE internship, available now (Fall 2026) through Summer 2027, full-time in 2028. GPU inference, distributed systems, ML infrastructure.

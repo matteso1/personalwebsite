@@ -247,6 +247,13 @@ a:hover, a:focus {
 p { margin: 0 0 10px 0; }
 ul, ol { margin: 0 0 10px 0; padding-left: 1.6em; }
 li { margin-bottom: 4px; }
+.window-body.doc img,
+.prose img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 14px auto;
+}
 blockquote {
   margin: 0 0 10px 1em;
   padding-left: 0.8em;
@@ -858,6 +865,14 @@ td {
     overflow-x: auto;
     flex-wrap: nowrap;
   }
+  /* File explorer: drop the expendable Type column and let names/notes fit a phone */
+  .explorer-table { font-size: 12px; table-layout: auto; }
+  .explorer-table th { width: auto !important; }
+  .explorer-table th,
+  .explorer-table td { padding: 2px 5px; }
+  .explorer-table th:nth-child(2),
+  .explorer-table td:nth-child(2) { display: none; }
+  .explorer-table td:last-child { white-space: normal; word-break: break-word; }
 }
 
 /* ---------- subpage window (full-width, content wrapper) ---------- */
