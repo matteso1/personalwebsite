@@ -1,0 +1,7 @@
+flowchart LR
+    U["Your belief"] -->|"prompt"| M["Assistant<br/>(optimized for your approval)"]
+    M -->|"fluent, agreeable<br/>elaboration"| V["Belief feels confirmed"]
+    V -->|"more conviction,<br/>next prompt"| U
+    X[("Reality's<br/>correction")] -. "deferred forever: always a next render,<br/>never 'the premise is false'" .-> V
+    classDef ghost fill:#ffffff,stroke:#b03030,stroke-width:2px,stroke-dasharray:6 5,color:#b03030;
+    class X ghost;

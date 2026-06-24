@@ -1,0 +1,10 @@
+flowchart TD
+    A["Human text corpus"] -->|"pretraining: maximize likelihood of text"| B["Base model<br/>(next-token predictor)"]
+    B --> C["Candidate responses<br/>to your prompt"]
+    C --> D{"Human rater picks the<br/>response they prefer"}
+    D -->|"preference labels"| E["Reward model r&phi;<br/>a model of human approval"]
+    E -->|"RL: maximize reward,<br/>leashed by KL"| F["Aligned assistant"]
+    F --> C
+    R[("Ground-truth<br/>reality")] -. "enters ONLY if the rater<br/>can verify the claim" .-> D
+    classDef ghost fill:#ffffff,stroke:#b03030,stroke-width:2px,stroke-dasharray:6 5,color:#b03030;
+    class R ghost;

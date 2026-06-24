@@ -31,11 +31,15 @@ I could tell you most people do not understand how these things work. The gap is
 
 A large language model, stripped of mystique, predicts the next chunk of text. Given some context, your prompt, it produces a probability distribution over what comes next, picks a token, adds it, and repeats. It models the probability of a whole sequence by chaining one next-token guess after another:
 
-![Autoregressive factorization](/writing/echo/eq-01-autoregressive.png)
+$$
+p_\theta(x_1,\dots,x_T) = \prod_{t=1}^{T} p_\theta\!\left(x_t \mid x_{<t}\right)
+$$
 
 That last guess is a softmax, a normalized exponential that turns raw scores into probabilities, with a temperature dial for how adventurous the sampling gets:
 
-![Softmax over next-token logits](/writing/echo/eq-02-softmax.png)
+$$
+p_\theta(x_t = v \mid x_{<t}) = \frac{\exp(z_v / \tau)}{\sum_{v'} \exp(z_{v'} / \tau)}
+$$
 
 The first stage, pretraining, fits this predictor to a vast pile of human text by maximizing the likelihood it assigns to real sentences. The model becomes a compression of the corpus, a statistical echo of nearly everything people have written down.
 
@@ -51,23 +55,29 @@ After pretraining, the model is aligned, taught to behave like a helpful assista
 
 One: show humans pairs of responses and ask which they prefer. Two: train a second model, a reward model, to predict those preferences. Under the standard Bradley-Terry setup, whose statistics date to 1952, the reward model is fit so the response humans chose scores higher than the one they passed over:
 
-![Bradley-Terry reward model loss](/writing/echo/eq-03-reward-model.png)
+$$
+\mathcal{L}(\phi) = -\,\mathbb{E}_{(x,\,y_w,\,y_l)\sim D}\Big[\log \sigma\big(r_\phi(x, y_w) - r_\phi(x, y_l)\big)\Big]
+$$
 
 Three: fine-tune the assistant to maximize that reward, on a leash, a KL penalty that keeps it from drifting too far from the sensible base model:
 
-![KL-regularized RLHF objective](/writing/echo/eq-04-rlhf-objective.png)
+$$
+\max_{\pi_\theta}\; \mathbb{E}_{x\sim D,\;y\sim \pi_\theta(\cdot\mid x)}\!\left[\, r_\phi(x, y) - \beta \log \frac{\pi_\theta(y\mid x)}{\pi_{\text{ref}}(y\mid x)} \,\right]
+$$
 
 Look at what that reward model is. By construction it models human approval. Not truth. Approval. The only place ground-truth reality can enter this pipeline is through the human rater in step one, and only to the extent that rater can tell whether the answer is correct.
 
 A caricature of what the reward rewards, not a real decomposition, just a way to see where the gradient flows:
 
-![Reward decomposition into a correctness term and an agreement term](/writing/echo/eq-05-reward-decomposition.png)
+$$
+r_\phi(x, y) \approx \underbrace{\alpha \cdot \text{correct}(x, y)}_{\text{only if the rater can verify}} + \underbrace{\gamma \cdot \text{agrees-with-user}(x, y)}_{\text{always legible to the rater}} + \cdots
+$$
 
 Agreement is always visible. A rater can always tell whether a response affirmed her; it costs nothing to perceive. Correctness is visible only sometimes, only when the rater has the expertise and the time to check. So to whatever degree the rater's judgment is uncorrelated with whether the answer is true, because she is not a physicist, because it is midnight, because the claim cannot be checked in the moment, the correctness term carries no gradient, and the optimizer maximizes reward through the one term it can always move. Agreeableness.
 
 In a picture:
 
-![How RLHF works: reality only enters the loop if the rater can verify the claim](/writing/echo/diagram-training-loop.png)
+![How RLHF works: reality only enters the loop if the rater can verify the claim](/writing/echo/diagram-training-loop.svg)
 
 Reality is the dashed line. It is not a term in the objective. It enters only through a tired human's ability to fact-check, and for any claim that human cannot check, the loop is, by its own construction, indifferent to whether the output is true.
 
@@ -89,7 +99,7 @@ So the model is an echo of us, trained to be liked by us, indifferent to truth w
 
 Put the human back in and run the loop.
 
-![The belief amplification loop: the user's belief and the model reinforce each other while reality's correction is deferred](/writing/echo/diagram-belief-loop.png)
+![The belief amplification loop: the user's belief and the model reinforce each other while reality's correction is deferred](/writing/echo/diagram-belief-loop.svg)
 
 You arrive with a belief. The model, conditioned on your words and tuned to your approval, returns a fluent elaboration of it. The belief now feels confirmed, because you have evidence: a document, a render, a tireless collaborator who engaged with the premise instead of puncturing it. You come back with more conviction, and the loop tightens. Reality's correction, the dashed line, is meant to break the cycle. In the unverifiable domains it never arrives, because the model always has a next step, a next render, a next reason it did not work this time that is never "the thing you are trying to do is impossible." It will help you build the eighteenth version of a machine that cannot exist with the same patience it brought to the first. It never gets embarrassed for you. It is never tired. It is awake at 1:40 in the morning, which is when the people in this genre always seem to be filming, because everyone who might have said "bro, no" has gone to bed, and the one voice still awake has been trained to agree.
 
