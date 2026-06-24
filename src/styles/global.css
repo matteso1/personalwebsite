@@ -250,6 +250,8 @@ li { margin-bottom: 4px; }
 .window-body.doc img,
 .prose img {
   max-width: 100%;
+  max-height: 60vh;
+  width: auto;
   height: auto;
   display: block;
   margin: 14px auto;
