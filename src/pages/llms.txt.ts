@@ -20,7 +20,7 @@ export const GET: APIRoute = async ({ site }) => {
     ''
   );
   L.push(
-    'Nils builds the systems layer of AI: GPU/CUDA inference, distributed systems, and applied ML, shipped with committed benchmark receipts rather than claims. He is a UW-Madison data-science senior and an incoming M.S. CS student at Northeastern\'s Silicon Valley campus, founder of thaw (LLM-inference infrastructure) and Matteson Systems LLC, based in Madison and moving to the Bay Area in fall 2026. His flagship, thaw, forks a live vLLM session in 0.88s median versus a roughly 340s cold boot on an H100. The links below point to Markdown versions intended for machine reading.',
+    'Nils builds the systems layer of AI: GPU/CUDA inference, distributed systems, and applied ML, shipped with committed benchmark receipts rather than claims. He is a vLLM contributor (two PRs merged into core, July 2026) and a vLLM open-source fellow sponsored by Inferact, working on engine cold-start and hot-swap. B.S. Data Science, UW-Madison (May 2026); incoming M.S. CS student at Northeastern\'s Silicon Valley campus; founder of thaw (LLM-inference infrastructure) and Matteson Systems LLC; based in San Jose. His flagship, thaw, forks a live vLLM session in 0.88s median versus a roughly 340s cold boot on an H100. The links below point to Markdown versions intended for machine reading.',
     ''
   );
 
@@ -49,7 +49,7 @@ export const GET: APIRoute = async ({ site }) => {
   L.push('- LinkedIn: https://www.linkedin.com/in/nilsmatteson');
   L.push(`- Resume: ${base}/resume.pdf`);
   L.push('- thaw: https://thaw.sh and on PyPI as thaw-vllm');
-  L.push('- Open to: SWE/MLE internship available now (fall 2026) through summer 2027, full-time 2028 (GPU inference, distributed systems, ML infrastructure). Currently full-time on thaw.');
+  L.push('- Open to: SWE/MLE internship available now (fall 2026) through summer 2027, full-time 2028 (GPU inference, distributed systems, ML infrastructure). Currently a vLLM open-source fellow, sponsored by Inferact (July-August 2026).');
   L.push('');
 
   L.push('## Optional');

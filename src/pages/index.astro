@@ -40,7 +40,7 @@ const entry = await getEntry('pages', 'index');
       <div class="window-body doc">
         <h1>Nils Matteson</h1>
         <p>I build systems for LLM inference: GPU and CUDA, distributed systems, applied ML. I like problems where the deliverable is a number someone else can re-run.</p>
-        <p>The thing I keep pulling on: a transformer mid-generation is a multi-gigabyte data structure that the entire ecosystem treats as disposable. Treating it as a first-class artifact instead got me thaw (below), an open PR against vLLM core, and a sole-author research preprint measuring what the standard replay shortcut actually does to token-level credit estimates (also below).</p>
+        <p>The thing I keep pulling on: a transformer mid-generation is a multi-gigabyte data structure that the entire ecosystem treats as disposable. Treating it as a first-class artifact instead got me thaw (below), two merged PRs in vLLM core, a vLLM open-source fellowship sponsored by Inferact (engine cold-start, then hot-swap), and a sole-author research preprint measuring what the standard replay shortcut actually does to token-level credit estimates (also below).</p>
         <p>B.S. Data Science, CS minor, UW-Madison, May 2026. M.S. CS, Northeastern Silicon Valley, San Jose, starting September 2026. The longer plan is research: measurement problems in ML systems, then a PhD.</p>
         <p>Open to SWE/MLE internship, available now (Fall 2026) through Summer 2027, full-time 2028. GPU inference, distributed systems, ML infrastructure.</p>
         <p>
@@ -68,9 +68,11 @@ const entry = await getEntry('pages', 'index');
           git for live LLM agent sessions. checkpoints, branches, diffs, and restores live vLLM/SGLang inference
           state (weights, KV cache, prefix-hash table, scheduler). a session forks in 0.88s median on an H100
           instead of a ~340s cold boot, about 400x amortized. 16 releases on PyPI as thaw-vllm, currently 0.6.0,
-          Apache-2.0. opened <a href="https://github.com/vllm-project/vllm/pull/44074">PR #44074</a> in vLLM
-          (pluggable sleep-mode backend), following participation in
-          <a href="https://github.com/vllm-project/vllm/issues/34303">RFC #34303</a>. sole-author paper on arXiv:
+          Apache-2.0. out of <a href="https://github.com/vllm-project/vllm/issues/34303">RFC #34303</a> came
+          <a href="https://github.com/vllm-project/vllm/pull/44074">PR #44074</a> (pluggable sleep-mode backend),
+          merged into vLLM core July 2026, follow-up <a href="https://github.com/vllm-project/vllm/pull/47243">#47243</a>
+          merged the same day. that work became a vLLM open-source fellowship, sponsored by Inferact: engine
+          cold-start (july), model hot-swap (august). sole-author paper on arXiv:
           <a href="https://arxiv.org/abs/2606.15621">"Re-feeding Is Not Replaying"</a> (June 2026).
         </p>
         <div class="field" style="padding:8px 10px;margin-bottom:10px;">
@@ -287,6 +289,7 @@ const entry = await getEntry('pages', 'index');
             <p><strong>System:</strong> B.S. Data Science, UW-Madison (May 2026)</p>
             <p><strong>System:</strong> M.S. CS, Northeastern Silicon Valley (Sep 2026 - May 2028)</p>
             <p><strong>Registered to:</strong> Nils Matteson, Madison WI -&gt; San Jose CA</p>
+            <p><strong>Running:</strong> vLLM open-source fellowship, sponsored by Inferact (Jul-Aug 2026): engine cold-start, then hot-swap</p>
             <p><strong>Status:</strong> seeking SWE/MLE internship, available now (Fall 2026 onward). Put me to work.</p>
             <p><strong>Scheduled upgrade:</strong> Ph.D., Computer Science (pending)</p>
           </div>
@@ -372,7 +375,7 @@ const entry = await getEntry('pages', 'index');
           <i class="logo-ico" style="width:16px;height:16px;--ico:url(/logos/rust.svg)"></i>RUST INSIDE
         </span>
         <span class="badge88" style="background:#0b3d0b;color:#aaffaa;">CUDA 12+</span>
-        <a href="https://github.com/vllm-project/vllm/pull/44074" class="badge88" style="background:#001a4d;color:#9fc3ff;text-decoration:none;">vLLM PR #44074</a>
+        <a href="https://github.com/vllm-project/vllm/pull/44074" class="badge88" style="background:#001a4d;color:#9fc3ff;text-decoration:none;" title="PR #44074 + #47243 merged into vLLM core, July 2026">vLLM 2x MERGED</a>
         <a href="https://arxiv.org/abs/2606.15621" class="badge88 badge88-logo" style="background:#fff;text-decoration:none;gap:3px;" title="Re-feeding Is Not Replaying — arXiv:2606.15621 (cs.LG)">
           <img src="/logos/arxiv.svg" alt="arXiv" style="height:13px;" />
           <small style="font-family:'Courier New',monospace;color:#b31b1b;font-size:8px;">.15621</small>

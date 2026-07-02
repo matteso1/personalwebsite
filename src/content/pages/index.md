@@ -1,13 +1,13 @@
 ---
 title: Nils Matteson
-description: Systems and ML infrastructure engineer. Builds GPU inference tooling. thaw forks a live vLLM session in 0.88s vs ~340s cold boot. Sole-author preprint on replay noise in token-credit estimation.
+description: Systems and ML infrastructure engineer. vLLM contributor (two merged core PRs) and Inferact-sponsored vLLM fellow. thaw forks a live vLLM session in 0.88s vs ~340s cold boot. Sole-author preprint on replay noise in token-credit estimation.
 ---
 
 I build systems for LLM inference: GPU and CUDA, distributed systems, applied ML. I like problems where the deliverable is a number someone else can re-run. B.S. Data Science, CS minor, UW-Madison (May 2026). M.S. CS, Northeastern Silicon Valley, San Jose (Sep 2026). The longer plan is research: measurement problems in ML systems, then a PhD.
 
 ## thaw
 
-[thaw](https://thaw.sh) is git for live LLM agent sessions. It checkpoints, branches, diffs, and restores live vLLM/SGLang inference state (weights, KV cache, prefix-hash table, scheduler). A session forks in 0.88s median on an H100 instead of a ~340s cold boot, about 400x amortized. 16 releases on PyPI as [thaw-vllm](https://pypi.org/project/thaw-vllm/), currently 0.6.0, Apache-2.0. I opened [PR #44074](https://github.com/vllm-project/vllm/pull/44074) in vLLM (pluggable sleep-mode backend), following participation in [RFC #34303](https://github.com/vllm-project/vllm/issues/34303). Full writeup: [/work/thaw](/work/thaw).
+[thaw](https://thaw.sh) is git for live LLM agent sessions. It checkpoints, branches, diffs, and restores live vLLM/SGLang inference state (weights, KV cache, prefix-hash table, scheduler). A session forks in 0.88s median on an H100 instead of a ~340s cold boot, about 400x amortized. 16 releases on PyPI as [thaw-vllm](https://pypi.org/project/thaw-vllm/), currently 0.6.0, Apache-2.0. Out of [RFC #34303](https://github.com/vllm-project/vllm/issues/34303) came [PR #44074](https://github.com/vllm-project/vllm/pull/44074) (pluggable sleep-mode backend abstraction), merged into vLLM core in July 2026, with follow-up [#47243](https://github.com/vllm-project/vllm/pull/47243) merged the same day. That work became a vLLM open-source fellowship, sponsored by Inferact: engine cold-start (July), model hot-swap (August). Full writeup: [/work/thaw](/work/thaw).
 
 ## the paper
 
