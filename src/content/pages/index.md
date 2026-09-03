@@ -1,6 +1,6 @@
 ---
 title: Nils Matteson
-description: Systems and ML infrastructure engineer. vLLM contributor (two merged core PRs) and Inferact-sponsored vLLM fellow. thaw forks a live vLLM session in 0.88s vs ~340s cold boot. Sole-author preprint on replay noise in token-credit estimation.
+description: Systems and ML infrastructure engineer. vLLM contributor (8 upstream vLLM PRs merged) and Inferact-sponsored vLLM fellow. thaw forks a live vLLM session in 0.88s vs ~340s cold boot. Sole-author preprint on replay noise in token-credit estimation.
 ---
 
 I build systems for LLM inference: GPU and CUDA, distributed systems, applied ML. I like problems where the deliverable is a number someone else can re-run. B.S. Data Science, CS minor, UW-Madison (May 2026). M.S. CS, Northeastern Silicon Valley, San Jose (Sep 2026). The longer plan is research: measurement problems in ML systems, then a PhD.
@@ -20,4 +20,4 @@ I build systems for LLM inference: GPU and CUDA, distributed systems, applied ML
 - [About](/about): school, research direction, availability
 - [Agents](/agents): facts for LLMs
 
-Open to SWE/MLE internship, available now (Fall 2026) through Summer 2027, full-time 2028. GPU inference, distributed systems, ML infrastructure. Contact: [nils@thaw.sh](mailto:nils@thaw.sh)
+Open to full-time inference-runtime engineering roles in San Francisco or remote in the US. Contact: [nils@thaw.sh](mailto:nils@thaw.sh)

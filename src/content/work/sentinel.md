@@ -5,7 +5,7 @@ year: 2025
 role: "Solo"
 order: 3
 stack: ["Go", "gRPC", "LSM-tree", "Raft", "Distributed Systems"]
-receipt: "3.9M reads/s on the memtable, 45 tests"
+receipt: "LSM-tree storage, Raft replication, and deterministic partition testing"
 links:
   repo: "https://github.com/matteso1/sentinel"
 ---
@@ -14,7 +14,7 @@ A distributed message queue written from scratch in Go to understand how a syste
 
 ## what it is
 
-At the bottom is an LSM-tree. Writes land in an in-memory skip-list memtable (3.9M reads/s in benchmarks). When a memtable fills it flushes to an immutable SSTable on disk. Every record is CRC32-checksummed so a flipped bit gets caught on read. A write-ahead log fronts the memtable for durability: process death mid-flush replays cleanly. Leveled compaction keeps read amplification bounded.
+At the bottom is an LSM-tree. Writes land in an in-memory skip-list memtable. When a memtable fills it flushes to an immutable SSTable on disk. Every record is CRC32-checksummed so a flipped bit gets caught on read. A write-ahead log fronts the memtable for durability: process death mid-flush replays cleanly. Leveled compaction keeps read amplification bounded.
 
 On top sits a gRPC wire protocol with Kafka-style primitives: topics, partitions, consumer groups that track offsets.
 
@@ -26,4 +26,4 @@ Consensus bugs only show up under specific interleavings of delays and drops you
 
 ## status
 
-Learning project, not running production traffic. 45 tests. Code at [GitHub](https://github.com/matteso1/sentinel).
+Learning project, not running production traffic. Code at [GitHub](https://github.com/matteso1/sentinel).

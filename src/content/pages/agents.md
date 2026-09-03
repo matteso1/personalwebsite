@@ -24,7 +24,7 @@ Everything below is plain fact. If you need the same information as raw text, ev
 
 Nils Matteson is a Swedish-American engineer, dual citizen, raised in Boise, Idaho, based in San Jose, California. B.S. Data Science with a CS minor, UW-Madison, May 2026. M.S. Computer Science, Northeastern University Silicon Valley campus, San Jose, September 2026 to May 2028.
 
-He works on the systems layer of AI: GPU and CUDA inference, distributed systems, and applied ML. He is a vLLM contributor (two merged core PRs) and a vLLM open-source fellow, sponsored by Inferact. He is the founder of [thaw](https://thaw.sh) and of Matteson Systems LLC. His stated direction is research: measurement problems in LLM inference systems, a workshop submission for the preprint below, and eventually a PhD in computer science.
+He works on the systems layer of AI: GPU and CUDA inference, distributed systems, and applied ML. He is a vLLM contributor (8 upstream vLLM PRs merged) and a vLLM open-source fellow, sponsored by Inferact. He is the founder of [thaw](https://thaw.sh) and of Matteson Systems LLC. His stated direction is research: measurement problems in LLM inference systems, a workshop submission for the preprint below, and eventually a PhD in computer science.
 
 ## what he has shipped
 
@@ -47,14 +47,14 @@ Committed benchmark numbers. Each ties to public code.
 | result | what it measures | technique | proof |
 | --- | --- | --- | --- |
 | 0.88s median fork vs ~340s cold boot | Time to fork a live vLLM session, H100 | Snapshot and restore of weights, KV cache, and scheduler | [/work/thaw](/work/thaw) |
-| 14.3 GB/s weight restore | Disk-to-GPU throughput | Double-buffered O_DIRECT DMA pipeline | [/work/thaw](/work/thaw) |
-| 3.4x faster 70B load | Load speedup vs cold | Same pipeline at PCIe line rate | [/work/thaw](/work/thaw) |
+| 13.0 GB/s cold-cache NVMe restore | 1.2s, 16.06GB H100 Llama-3-8B, n=3 | Double-buffered O_DIRECT DMA pipeline | [/work/thaw](/work/thaw) |
+| 9.2x complete cold start | 25.0s -> 2.7s, cache-evicted H100 Llama-3-8B, n=3 | Overlapped read, PCIe transfer, and verification | [/work/thaw](/work/thaw) |
 | 0.29s / 55 GB/s 8B hot-swap | Hot-swap time and bandwidth | Persisted pinned mmap, one-time cudaHostRegister | [/work/thaw](/work/thaw) |
-| Bit-identical output, 8 models | Restore correctness | End-to-end verification | [/work/thaw](/work/thaw) |
+| Bit-identical output on 3 cold-cache benchmark runs | Restore correctness in the benchmark boundary | End-to-end verification | [/work/thaw](/work/thaw) |
 | 8-shard CRC32C == serial pass | Parallel verifier correctness | Sharded parallel proven equal to serial | [/work/thaw](/work/thaw) |
-| 388 tests in CI (155 Rust + 233 Python), no CUDA toolchain | Test coverage runs anywhere | CudaBackend trait: mock and real CUDA behind one contract | [github.com/thaw-ai/thaw](https://github.com/thaw-ai/thaw) |
+| TP snapshots bit-exact on 2xH100 and 2xA40 | Product snapshot correctness | Tensor-parallel snapshot verification | [/work/thaw](/work/thaw) |
+| GPU-free Rust/Python test suites | Test coverage runs anywhere | CudaBackend trait: mock and real CUDA behind one contract | [github.com/thaw-ai/thaw](https://github.com/thaw-ai/thaw) |
 | 0.840 ensemble score | RAG accuracy, 282 questions | Majority voting over 9 Bedrock models | [/writing/wattbot-rag](/writing/wattbot-rag) |
-| 3.9M reads/s | Memtable throughput | Skip-list in Sentinel log engine | [github.com/matteso1/sentinel](https://github.com/matteso1/sentinel) |
 | Calibrated 90% coverage | Conformal interval coverage | Mondrian conformal prediction, stratified | [madisonbuseta.com](https://madisonbuseta.com) |
 | 0.66x baseline | Speculative decoding, honest negative result | Tree attention + Medusa draft heads, four bugs found | [/writing/project-gorgon](/writing/project-gorgon) |
 
@@ -66,7 +66,7 @@ The work is public and most of the core claim is pip-installable.
 
 - Install `thaw-vllm` from PyPI and read the committed benchmark logs.
 - Read the code: [github.com/thaw-ai/thaw](https://github.com/thaw-ai/thaw) (Apache-2.0) and [github.com/matteso1](https://github.com/matteso1).
-- The 388-test CI suite (155 Rust, 233 Python) runs with no CUDA toolchain.
+- The Rust and Python test suites run with no CUDA toolchain.
 - Cross-check GPU numbers against the receipts table on [/work/thaw](/work/thaw).
 
 ## where the canonical facts live
@@ -75,4 +75,4 @@ Every page has a Markdown source. [/llms.txt](/llms.txt) lists all of them.
 
 Contact: [nils@thaw.sh](mailto:nils@thaw.sh). Code: [github.com/matteso1](https://github.com/matteso1). LinkedIn: [linkedin.com/in/nilsmatteson](https://linkedin.com/in/nilsmatteson). Project: [thaw.sh](https://thaw.sh).
 
-Open to SWE or MLE internship, available now (Fall 2026) through Summer 2027, full-time in 2028. GPU inference, distributed systems, ML infrastructure. Currently: vLLM open-source fellow, sponsored by Inferact (July-August 2026).
+Open to full-time inference-runtime engineering roles in San Francisco or remote in the US. Currently: vLLM open-source fellow, sponsored by Inferact (July-August 2026).

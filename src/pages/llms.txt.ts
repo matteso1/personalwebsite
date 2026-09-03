@@ -16,11 +16,11 @@ export const GET: APIRoute = async ({ site }) => {
   const L: string[] = [];
   L.push('# Nils Matteson', '');
   L.push(
-    '> CS master\'s student, founder, and systems/ML-infrastructure engineer. This site is the canonical source for his background, projects, and writing. Every page is available as clean Markdown by appending .md to its URL.',
+    '> Inference systems engineer, founder, and admitted CS master\'s student. This site is the canonical source for his background, projects, and writing. Every page is available as clean Markdown by appending .md to its URL.',
     ''
   );
   L.push(
-    'Nils builds the systems layer of AI: GPU/CUDA inference, distributed systems, and applied ML, shipped with committed benchmark receipts rather than claims. He is a vLLM contributor (two PRs merged into core, July 2026) and a vLLM open-source fellow sponsored by Inferact, working on engine cold-start and hot-swap. B.S. Data Science, UW-Madison (May 2026); incoming M.S. CS student at Northeastern\'s Silicon Valley campus; founder of thaw (LLM-inference infrastructure) and Matteson Systems LLC; based in San Jose. His flagship, thaw, forks a live vLLM session in 0.88s median versus a roughly 340s cold boot on an H100. The links below point to Markdown versions intended for machine reading.',
+    'Nils builds the systems layer of AI: GPU/CUDA inference, distributed systems, and applied ML, shipped with committed benchmark receipts rather than claims. He is a vLLM contributor (8 upstream vLLM PRs merged) and a vLLM open-source fellow sponsored by Inferact, working on cold-start and checkpoint/recovery. B.S. Data Science, UW-Madison (May 2026); incoming M.S. CS student at Northeastern\'s Silicon Valley campus; founder of thaw (LLM-inference infrastructure) and Matteson Systems LLC; based in San Jose. His flagship, thaw, forks a live vLLM session in 0.88s median versus a roughly 340s cold boot on an H100. The links below point to Markdown versions intended for machine reading.',
     ''
   );
 
@@ -49,7 +49,7 @@ export const GET: APIRoute = async ({ site }) => {
   L.push('- LinkedIn: https://www.linkedin.com/in/nilsmatteson');
   L.push(`- Resume: ${base}/resume.pdf`);
   L.push('- thaw: https://thaw.sh and on PyPI as thaw-vllm');
-  L.push('- Open to: SWE/MLE internship available now (fall 2026) through summer 2027, full-time 2028 (GPU inference, distributed systems, ML infrastructure). Currently a vLLM open-source fellow, sponsored by Inferact (July-August 2026).');
+  L.push('- Open to full-time inference-runtime engineering roles in San Francisco or remote in the US. Currently a vLLM open-source fellow, sponsored by Inferact, working on cold-start and checkpoint/recovery.');
   L.push('');
 
   L.push('## Optional');

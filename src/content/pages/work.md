@@ -5,7 +5,7 @@ description: What I have built, with numbers. vLLM upstream and the fellowship, 
 
 ## vLLM (upstream + fellowship)
 
-Two PRs merged into vLLM core in July 2026: [#44074](https://github.com/vllm-project/vllm/pull/44074), a pluggable sleep-mode backend abstraction out of [RFC #34303](https://github.com/vllm-project/vllm/issues/34303), with review engagement from NVIDIA Dynamo and Alibaba Cloud engineers, and follow-up [#47243](https://github.com/vllm-project/vllm/pull/47243) (communicator-agnostic capability flags), merged the same day. A third, [#47356](https://github.com/vllm-project/vllm/pull/47356), fixes a bug I found while measuring: the documented fast-boot flag silently invalidates the torch.compile cache, costing `+21-27s` to save `~2s`. That work became a vLLM open-source fellowship, sponsored by Inferact: engine cold-start (July), model hot-swap (August), starting from a measured H100 phase ledger of where boot time actually goes.
+8 upstream vLLM PRs have merged. The first two July 2026 core changes were [#44074](https://github.com/vllm-project/vllm/pull/44074), a pluggable sleep-mode backend abstraction out of [RFC #34303](https://github.com/vllm-project/vllm/issues/34303), with review engagement from NVIDIA Dynamo and Alibaba Cloud engineers, and follow-up [#47243](https://github.com/vllm-project/vllm/pull/47243) (communicator-agnostic capability flags), merged the same day. Another, [#47356](https://github.com/vllm-project/vllm/pull/47356), fixes a bug I found while measuring: the documented fast-boot flag silently invalidates the torch.compile cache, costing `+21-27s` to save `~2s`. That work became a vLLM open-source fellowship, sponsored by Inferact: engine cold-start (July), model hot-swap (August), starting from a measured H100 phase ledger of where boot time actually goes.
 
 ## thaw
 
@@ -25,7 +25,7 @@ AI Workflows Research Assistant, January to April 2026. LLM evaluation and cost-
 
 ## Selected projects
 
-**Sentinel.** Distributed message queue in Go, Kafka-inspired, built from scratch: custom LSM-tree storage engine, skip-list memtables at `3.9M reads/s`, SSTables with CRC32, write-ahead log, leveled compaction, gRPC wire protocol with topic and partition consumer groups. Raft consensus hand-rolled: leader election, log replication, split-brain prevention, tested against a deterministic in-memory network simulator. 45 tests. [Read the writeup](/work/sentinel) / [repo](https://github.com/matteso1/sentinel)
+**Sentinel.** Distributed message queue in Go, Kafka-inspired, built from scratch: custom LSM-tree storage engine, skip-list memtables, SSTables with CRC32, write-ahead log, leveled compaction, gRPC wire protocol with topic and partition consumer groups. Raft consensus hand-rolled: leader election, log replication, split-brain prevention, tested against a deterministic in-memory network simulator. [Read the writeup](/work/sentinel) / [repo](https://github.com/matteso1/sentinel)
 
 **Madison Metro ML.** Live ML that corrects the transit API's ETAs. 47-feature XGBoost model plus Mondrian conformal prediction, calibrated `90%` coverage interval stratified by route, day-type, and horizon. Retrains nightly through GitHub Actions behind a hard deploy gate (at least 2s MAE gain required). React, DeckGL, and MapLibre frontend renders 200+ live vehicles at 60fps. [Read the writeup](/work/madison-metro-ml) / [madisonbuseta.com](https://madisonbuseta.com)
 

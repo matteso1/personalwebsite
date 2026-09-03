@@ -8,7 +8,7 @@ export const SITE = {
   title: 'Nils Matteson',
   tagline: 'Systems and ML infrastructure engineer. Builds GPU inference tooling.',
   description:
-    'Nils Matteson builds the systems layer of AI: GPU/CUDA inference, distributed systems, and applied ML. vLLM contributor (two merged core PRs) and Inferact-sponsored vLLM fellow. thaw forks a live vLLM session in 0.88s vs ~340s cold boot.',
+    'Nils Matteson builds the systems layer of AI: GPU/CUDA inference, distributed systems, and applied ML. vLLM contributor (8 upstream vLLM PRs merged) and Inferact-sponsored vLLM fellow. thaw forks a live vLLM session in 0.88s vs ~340s cold boot.',
   email: 'nils@thaw.sh',
   ogImage: '/og.png',
 } as const;
@@ -74,8 +74,8 @@ export function personJsonLd() {
     ],
     address: {
       '@type': 'PostalAddress',
-      addressLocality: 'Madison',
-      addressRegion: 'WI',
+      addressLocality: 'San Jose',
+      addressRegion: 'CA',
       addressCountry: 'US',
     },
     sameAs: [

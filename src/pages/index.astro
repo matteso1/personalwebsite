@@ -40,9 +40,9 @@ const entry = await getEntry('pages', 'index');
       <div class="window-body doc">
         <h1>Nils Matteson</h1>
         <p>I build systems for LLM inference: GPU and CUDA, distributed systems, applied ML. I like problems where the deliverable is a number someone else can re-run.</p>
-        <p>The thing I keep pulling on: a transformer mid-generation is a multi-gigabyte data structure that the entire ecosystem treats as disposable. Treating it as a first-class artifact instead got me thaw (below), two merged PRs in vLLM core, a vLLM open-source fellowship sponsored by Inferact (engine cold-start, then hot-swap), and a sole-author research preprint measuring what the standard replay shortcut actually does to token-level credit estimates (also below).</p>
+        <p>The thing I keep pulling on: a transformer mid-generation is a multi-gigabyte data structure that the entire ecosystem treats as disposable. Treating it as a first-class artifact instead got me thaw (below), 8 upstream vLLM PRs merged, a vLLM open-source fellowship sponsored by Inferact (engine cold-start, then hot-swap), and a sole-author research preprint measuring what the standard replay shortcut actually does to token-level credit estimates (also below).</p>
         <p>B.S. Data Science, CS minor, UW-Madison, May 2026. M.S. CS, Northeastern Silicon Valley, San Jose, starting September 2026. The longer plan is research: measurement problems in ML systems, then a PhD.</p>
-        <p>Open to SWE/MLE internship, available now (Fall 2026) through Summer 2027, full-time 2028. GPU inference, distributed systems, ML infrastructure.</p>
+        <p>Open to full-time inference-runtime engineering roles in San Francisco or remote in the US.</p>
         <p>
           mail <a href="mailto:nils@thaw.sh">nils@thaw.sh</a> &nbsp;&middot;&nbsp;
           code <a href="https://github.com/matteso1">github.com/matteso1</a> &nbsp;&middot;&nbsp;
@@ -83,16 +83,20 @@ const entry = await getEntry('pages', 'index');
                 <td style="padding:2px 6px;border:none;color:#808080;">vs ~340s cold boot (H100)</td>
               </tr>
               <tr>
-                <td style="padding:2px 10px 2px 2px;font-weight:bold;font-family:'Courier New',monospace;white-space:nowrap;border:none;">14.3 GB/s restore</td>
-                <td style="padding:2px 6px;border:none;color:#808080;">weight restore, disk to GPU</td>
+                <td style="padding:2px 10px 2px 2px;font-weight:bold;font-family:'Courier New',monospace;white-space:nowrap;border:none;">13.0 GB/s cold-cache restore</td>
+                <td style="padding:2px 6px;border:none;color:#808080;">1.2s, 16.06GB H100 Llama-3-8B, n=3</td>
+              </tr>
+              <tr>
+                <td style="padding:2px 10px 2px 2px;font-weight:bold;font-family:'Courier New',monospace;white-space:nowrap;border:none;">9.2x cold start</td>
+                <td style="padding:2px 6px;border:none;color:#808080;">25.0s -> 2.7s, cache-evicted, H100 Llama-3-8B, n=3</td>
               </tr>
               <tr>
                 <td style="padding:2px 10px 2px 2px;font-weight:bold;font-family:'Courier New',monospace;white-space:nowrap;border:none;">0.29s / 55 GB/s hot-swap</td>
                 <td style="padding:2px 6px;border:none;color:#808080;">8B model reload after one-time pin</td>
               </tr>
               <tr>
-                <td style="padding:2px 10px 2px 2px;font-weight:bold;font-family:'Courier New',monospace;white-space:nowrap;border:none;">388 tests in CI</td>
-                <td style="padding:2px 6px;border:none;color:#808080;">155 Rust + 233 Python, no GPU required</td>
+                <td style="padding:2px 10px 2px 2px;font-weight:bold;font-family:'Courier New',monospace;white-space:nowrap;border:none;">GPU-free test suites</td>
+                <td style="padding:2px 6px;border:none;color:#808080;">Rust + Python, no CUDA toolchain</td>
               </tr>
             </tbody>
           </table>
@@ -290,7 +294,7 @@ const entry = await getEntry('pages', 'index');
             <p><strong>System:</strong> M.S. CS, Northeastern Silicon Valley (Sep 2026 - May 2028)</p>
             <p><strong>Registered to:</strong> Nils Matteson, Madison WI -&gt; San Jose CA</p>
             <p><strong>Running:</strong> vLLM open-source fellowship, sponsored by Inferact (Jul-Aug 2026): engine cold-start, then hot-swap</p>
-            <p><strong>Status:</strong> seeking SWE/MLE internship, available now (Fall 2026 onward). Put me to work.</p>
+            <p><strong>Status:</strong> open to full-time inference-runtime engineering roles in San Francisco or remote in the US.</p>
             <p><strong>Scheduled upgrade:</strong> Ph.D., Computer Science (pending)</p>
           </div>
           <div class="btn-row">

@@ -36,15 +36,15 @@ thaw treats a running agent session the way git treats a working tree. It turns 
 
 ### DMA pipeline
 
-Restoring tens of gigabytes from disk to GPU is bounded by how well you overlap three stages: reading from disk, copying over PCIe, and verifying what arrived. A double-buffered `O_DIRECT` pipeline reads the next chunk while the current chunk is in flight over PCIe, with the page cache bypassed. That overlap gets weight restore to 14.3 GB/s and a 70B load to 3.4x faster than cold.
+Restoring tens of gigabytes from disk to GPU is bounded by how well you overlap three stages: reading from disk, copying over PCIe, and verifying what arrived. A double-buffered `O_DIRECT` pipeline reads the next chunk while the current chunk is in flight over PCIe, with the page cache bypassed. On H100 with Llama-3-8B, a cache-evicted cold-cache benchmark restored 16.06 GB in 1.2s at 13.0 GB/s over NVMe (n=3). The complete cold start fell from 25.0s to 2.7s, or 9.2x, under that same boundary; these are not universal restore or 70B figures.
 
 ### Verifier
 
-A fork is worthless if the restore is silently corrupt. A serial CRC32C pass is correct but slow enough to eat the throughput gain. 8 shards run in parallel; the sharded result matches the serial pass exactly, so verification rides along with the transfer rather than gating it. Output is bit-identical across 8 tested models.
+A fork is worthless if the restore is silently corrupt. A serial CRC32C pass is correct but slow enough to eat the throughput gain. 8 shards run in parallel; the sharded result matches the serial pass exactly, so verification rides along with the transfer rather than gating it. Output was bit-identical on all 3 cold-cache benchmark runs.
 
 ### KV cache
 
-vLLM stores the cache as thousands of small per-block allocations. Snapshotting them one block at a time meant roughly 16,000 tiny DMAs, each with its own setup cost. Coalescing the scattered blocks into a single contiguous gather, moving it once, then unpacking on the far side removed a 60x bottleneck.
+vLLM stores the cache as thousands of small per-block allocations. Snapshotting them one block at a time meant roughly 16,000 tiny DMAs, each with its own setup cost. Coalescing the scattered blocks into a single contiguous gather, moving it once, then unpacking on the far side removes that per-block DMA overhead.
 
 ### Prefix-cache reconstruction
 
@@ -52,7 +52,7 @@ Restoring the KV bytes is not enough if vLLM does not know what is in them. Rebu
 
 ### CudaBackend
 
-The `CudaBackend` trait puts a mock backend and the real CUDA backend behind one contract. Pipeline ordering, shard math, snapshot bookkeeping: all of it runs and gets tested without a GPU. 388 tests in CI (155 Rust, 233 Python) run on macOS and Linux with no CUDA installed.
+The `CudaBackend` trait puts a mock backend and the real CUDA backend behind one contract. Pipeline ordering, shard math, snapshot bookkeeping: all of it runs and gets tested without a GPU. The GPU-free Rust and Python test suites run on macOS and Linux with no CUDA installed.
 
 ### Rewind
 
@@ -63,13 +63,14 @@ The `CudaBackend` trait puts a mock backend and the real CUDA backend behind one
 | metric | what it measures | technique | proof |
 |---|---|---|---|
 | `0.88s` median fork | wall time vs `~340s` cold boot (H100) | snapshot and restore of live inference state | [repo](https://github.com/thaw-ai/thaw) |
-| `14.3 GB/s` | weight restore, disk to GPU | double-buffered `O_DIRECT` DMA pipeline | [repo](https://github.com/thaw-ai/thaw) |
-| `3.4x` | faster 70B load vs cold | overlapped read and PCIe transfer | [repo](https://github.com/thaw-ai/thaw) |
+| `13.0 GB/s` cold-cache NVMe restore | 1.2s for 16.06GB, H100 Llama-3-8B, n=3 | double-buffered `O_DIRECT` DMA pipeline | [repo](https://github.com/thaw-ai/thaw) |
+| `9.2x` complete cold start | 25.0s -> 2.7s, H100 Llama-3-8B, cache-evicted, n=3 | overlapped read, PCIe transfer, and verification | [repo](https://github.com/thaw-ai/thaw) |
 | `0.29s` / `55 GB/s` | 8B hot-swap, 86% of PCIe Gen5 line rate | persisted pinned mmap, one-time `cudaHostRegister` | [repo](https://github.com/thaw-ai/thaw) |
-| bit-identical | restored output across 8 models | end-to-end restore verification | [repo](https://github.com/thaw-ai/thaw) |
+| bit-identical on 3 runs | restored output in the cold-cache benchmark | end-to-end restore verification | [repo](https://github.com/thaw-ai/thaw) |
+| TP snapshots bit-exact | 2xH100 and 2xA40 | tensor-parallel snapshot correctness | [repo](https://github.com/thaw-ai/thaw) |
 | 8-shard == serial | `CRC32C` verifier correctness | parallel shards proven equal to a serial pass | [repo](https://github.com/thaw-ai/thaw) |
-| `60x` removed | KV-snapshot bottleneck | `~16K` per-block DMAs coalesced into one gather | [repo](https://github.com/thaw-ai/thaw) |
-| 388 tests in CI | 155 Rust + 233 Python, no GPU required | `CudaBackend` trait, mock and real behind one contract | [repo](https://github.com/thaw-ai/thaw) |
+| DMA coalescing | KV-snapshot per-block overhead | `~16K` per-block DMAs coalesced into one gather | [repo](https://github.com/thaw-ai/thaw) |
+| GPU-free Rust/Python suites | Test coverage runs without a GPU | `CudaBackend` trait, mock and real behind one contract | [repo](https://github.com/thaw-ai/thaw) |
 
 ## BUGS
 
