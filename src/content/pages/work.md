@@ -5,7 +5,17 @@ description: What I have built, with numbers. vLLM upstream and the fellowship, 
 
 ## vLLM (upstream + fellowship)
 
-8 upstream vLLM PRs have merged. The first two July 2026 core changes were [#44074](https://github.com/vllm-project/vllm/pull/44074), a pluggable sleep-mode backend abstraction out of [RFC #34303](https://github.com/vllm-project/vllm/issues/34303), with review engagement from NVIDIA Dynamo and Alibaba Cloud engineers, and follow-up [#47243](https://github.com/vllm-project/vllm/pull/47243) (communicator-agnostic capability flags), merged the same day. Another, [#47356](https://github.com/vllm-project/vllm/pull/47356), fixes a bug I found while measuring: the documented fast-boot flag silently invalidates the torch.compile cache, costing `+21-27s` to save `~2s`. That work became a vLLM open-source fellowship, sponsored by Inferact: engine cold-start (July), model hot-swap (August), starting from a measured H100 phase ledger of where boot time actually goes.
+[10 upstream vLLM PRs have merged](https://github.com/vllm-project/vllm/pulls?q=is%3Apr+is%3Amerged+author%3Amatteso1). I work with Simon Mo as an Inferact-sponsored open-source fellow, measuring startup costs and moving reusable preparation out of the path to a working server.
+
+**Reusable initialized-engine snapshots, merged September 21 ([#51360](https://github.com/vllm-project/vllm/pull/51360)).** Designed and implemented `vllm snapshot create`, `inspect` and `restore`, including environment compatibility checks, restored-output validation and process cleanup. This is an opt-in experimental path for a compatible same-host Linux x86-64, single-GPU TP1 deployment. Final lifecycle validation on H200 covered create, restore, container restart and a second restore, with output matching the captured oracle.
+
+An earlier controlled benchmark reduced command-launch-to-first-correct-response from **54.7 s to 20.4 s**, a **62.7% reduction**, against an ordinary process with warm model and generated caches. Scope: Qwen3-32B BF16, one H100 PCIe 80 GB, TP1, medians of three trials per arm; snapshot payload pages were evicted before restore. This is a pre-merge performance result, separate from the final H200 lifecycle acceptance. [Measurement and experimental limits](https://github.com/vllm-project/vllm/pull/51360#measured).
+
+**Container-image compression, merged September 21 ([#55608](https://github.com/vllm-project/vllm/pull/55608)).** Added zstd publishing for CI images and a Docker Hub variant while retaining gzip for downstream compatibility.
+
+Earlier merged work includes [pluggable sleep-mode backends (#44074)](https://github.com/vllm-project/vllm/pull/44074), [communicator-agnostic capability flags (#47243)](https://github.com/vllm-project/vllm/pull/47243), [compile-cache correctness (#47356)](https://github.com/vllm-project/vllm/pull/47356) and [memory-profile reuse across boots (#47388)](https://github.com/vllm-project/vllm/pull/47388). The cache-key bug surfaced during measurement: a startup flag caused `21-27s` of H100 recompilation to avoid about `2s` of profiling.
+
+**Ongoing:** [build-time Python bytecode (#55422)](https://github.com/vllm-project/vllm/pull/55422), [shared CLI/runtime argument declarations (#56884)](https://github.com/vllm-project/vllm/pull/56884), and experiments on preparation-cache reuse across fresh replicas.
 
 ## thaw
 

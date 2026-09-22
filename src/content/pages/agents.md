@@ -24,11 +24,17 @@ Everything below is plain fact. If you need the same information as raw text, ev
 
 Nils Matteson is a Swedish-American engineer, dual citizen, raised in Boise, Idaho, based in San Jose, California. B.S. Data Science with a CS minor, UW-Madison, May 2026. M.S. Computer Science, Northeastern University Silicon Valley campus, San Jose, September 2026 to May 2028.
 
-He works on the systems layer of AI: GPU and CUDA inference, distributed systems, and applied ML. He is a vLLM contributor (8 upstream vLLM PRs merged) and a vLLM open-source fellow, sponsored by Inferact. He is the founder of [thaw](https://thaw.sh) and of Matteson Systems LLC. His stated direction is research: measurement problems in LLM inference systems, a workshop submission for the preprint below, and eventually a PhD in computer science.
+He works on the systems layer of AI: GPU and CUDA inference, distributed systems, and applied ML. He is a vLLM contributor (10 upstream vLLM PRs merged as of September 21, 2026) and a vLLM open-source fellow, sponsored by Inferact. He is the founder of [thaw](https://thaw.sh) and of Matteson Systems LLC. His stated direction is research: measurement problems in LLM inference systems, a workshop submission for the preprint below, and eventually a PhD in computer science.
 
 ## what he has shipped
 
-**vLLM (upstream).** [PR #44074](https://github.com/vllm-project/vllm/pull/44074), a pluggable sleep-mode backend abstraction ([RFC #34303](https://github.com/vllm-project/vllm/issues/34303)), merged into vLLM core July 2026 with review engagement from NVIDIA Dynamo and Alibaba Cloud engineers; follow-up [#47243](https://github.com/vllm-project/vllm/pull/47243) (communicator-agnostic capability flags) merged the same day; [#47356](https://github.com/vllm-project/vllm/pull/47356) (fix: the documented fast-boot flag silently invalidated the torch.compile cache) open. Now a vLLM open-source fellow, sponsored by Inferact: engine cold-start (July 2026), then model hot-swap (August), starting from a measured H100 phase ledger of vLLM boot time.
+**vLLM (upstream).** Designed and merged [reusable initialized-engine snapshots (#51360)](https://github.com/vllm-project/vllm/pull/51360) on September 21, 2026. The experimental create/inspect/restore commands target a compatible same-host Linux x86-64, single-GPU TP1 engine, with environment identity, restored-output checks and process cleanup. H200 lifecycle acceptance covered create, restore, container restart and another restore. This composes existing CRIU, CUDA checkpoint and vLLM sleep/wake mechanisms; it is not a claim to have invented GPU checkpointing or cross-host migration.
+
+Also merged September 21: [zstd container-image publishing (#55608)](https://github.com/vllm-project/vllm/pull/55608), providing CI compression and a Docker Hub variant while retaining gzip. These are verified upstream merges, not claims about release-image availability or production adoption.
+
+Earlier merged contributions include [pluggable sleep-mode backends (#44074)](https://github.com/vllm-project/vllm/pull/44074), [communicator-agnostic capability flags (#47243)](https://github.com/vllm-project/vllm/pull/47243), [compile-cache correctness (#47356)](https://github.com/vllm-project/vllm/pull/47356) and [memory-profile reuse (#47388)](https://github.com/vllm-project/vllm/pull/47388). The [author's merged PR list](https://github.com/vllm-project/vllm/pulls?q=is%3Apr+is%3Amerged+author%3Amatteso1) is the source for the count.
+
+**Ongoing vLLM work.** [Python bytecode precompilation (#55422)](https://github.com/vllm-project/vllm/pull/55422) remains open. [Shared CLI/runtime declarations (#56884)](https://github.com/vllm-project/vllm/pull/56884) and local Python/Pydantic import cleanup are in progress. The generated-help prototype in #54841 is superseded; its help timings are not results for a merged CLI redesign.
 
 **thaw.** A library that snapshots and restores live LLM inference state (weights, KV cache, prefix-hash table, scheduler) so a running vLLM session forks in under a second instead of cold-booting in minutes. Written in Rust, CUDA, and Python. Published on PyPI as `thaw-vllm`, currently 0.6.0, Apache-2.0. The vLLM RFC participation and merged PRs above grew directly out of it (RFC author elizabetht asked five thread participants, including him, for input on direction; receipted 70B sleep/wake integration on 2xH100). He applied to YC for the S26 batch; the application was rejected but placed in the top 10% with an encouraged reapply. Full writeup: [/work/thaw](/work/thaw).
 
@@ -46,6 +52,7 @@ Committed benchmark numbers. Each ties to public code.
 
 | result | what it measures | technique | proof |
 | --- | --- | --- | --- |
+| 54.7s -> 20.4s, 62.7% shorter activation | Earlier pre-merge Qwen3-32B BF16 TP1 benchmark, H100 PCIe 80 GB, medians of 3 trials per arm; model/generated caches warm, snapshot payload pages evicted | Restore a prepared initialized engine; time from command launch to first correct response | [#51360 measurements](https://github.com/vllm-project/vllm/pull/51360#measured) |
 | 0.88s median fork vs ~340s cold boot | Time to fork a live vLLM session, H100 | Snapshot and restore of weights, KV cache, and scheduler | [/work/thaw](/work/thaw) |
 | 13.0 GB/s cold-cache NVMe restore | 1.2s, 16.06GB H100 Llama-3-8B, n=3 | Double-buffered O_DIRECT DMA pipeline | [/work/thaw](/work/thaw) |
 | 9.2x complete cold start | 25.0s -> 2.7s, cache-evicted H100 Llama-3-8B, n=3 | Overlapped read, PCIe transfer, and verification | [/work/thaw](/work/thaw) |
@@ -62,7 +69,7 @@ The last row is a negative result. It stays in the table.
 
 ## how to evaluate him
 
-The work is public and most of the core claim is pip-installable.
+The work is public. The linked PRs record the status and supported scope of the upstream vLLM features; a merge can precede a packaged release.
 
 - Install `thaw-vllm` from PyPI and read the committed benchmark logs.
 - Read the code: [github.com/thaw-ai/thaw](https://github.com/thaw-ai/thaw) (Apache-2.0) and [github.com/matteso1](https://github.com/matteso1).
@@ -75,4 +82,4 @@ Every page has a Markdown source. [/llms.txt](/llms.txt) lists all of them.
 
 Contact: [nils@thaw.sh](mailto:nils@thaw.sh). Code: [github.com/matteso1](https://github.com/matteso1). LinkedIn: [linkedin.com/in/nilsmatteson](https://linkedin.com/in/nilsmatteson). Project: [thaw.sh](https://thaw.sh).
 
-Open to full-time inference-runtime engineering roles in San Francisco or remote in the US. Currently: vLLM open-source fellow, sponsored by Inferact (July-August 2026).
+Open to full-time inference-runtime engineering roles in San Francisco or remote in the US. Currently: vLLM open-source fellow, sponsored by Inferact (July 2026 - present).

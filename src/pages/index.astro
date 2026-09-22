@@ -40,8 +40,9 @@ const entry = await getEntry('pages', 'index');
       <div class="window-body doc">
         <h1>Nils Matteson</h1>
         <p>I build systems for LLM inference: GPU and CUDA, distributed systems, applied ML. I like problems where the deliverable is a number someone else can re-run.</p>
-        <p>The thing I keep pulling on: a transformer mid-generation is a multi-gigabyte data structure that the entire ecosystem treats as disposable. Treating it as a first-class artifact instead got me thaw (below), 8 upstream vLLM PRs merged, a vLLM open-source fellowship sponsored by Inferact (engine cold-start, then hot-swap), and a sole-author research preprint measuring what the standard replay shortcut actually does to token-level credit estimates (also below).</p>
-        <p>B.S. Data Science, CS minor, UW-Madison, May 2026. M.S. CS, Northeastern Silicon Valley, San Jose, starting September 2026. The longer plan is research: measurement problems in ML systems, then a PhD.</p>
+        <p>I'm a vLLM open-source fellow sponsored by Inferact, working with Simon Mo on cold start and reusable engine state. I have <a href="https://github.com/vllm-project/vllm/pulls?q=is%3Apr+is%3Amerged+author%3Amatteso1">10 upstream vLLM PRs merged</a>, and I built thaw (below) to snapshot and fork live LLM sessions.</p>
+        <p><strong>Just merged, September 21:</strong> <a href="https://github.com/vllm-project/vllm/pull/51360">reusable initialized-engine snapshots</a> and <a href="https://github.com/vllm-project/vllm/pull/55608">zstd container-image delivery</a>. The snapshot feature lets a compatible host restore a prepared engine after its process has exited. I took it through design, implementation, failure handling and H200 end-to-end validation. <a href="/work#vllm-upstream--fellowship">More on the work and measurements.</a></p>
+        <p>B.S. Data Science, CS minor, UW-Madison, May 2026. Currently pursuing an M.S. CS at Northeastern Silicon Valley in San Jose. The longer plan is research: measurement problems in ML systems, then a PhD.</p>
         <p>Open to full-time inference-runtime engineering roles in San Francisco or remote in the US.</p>
         <p>
           mail <a href="mailto:nils@thaw.sh">nils@thaw.sh</a> &nbsp;&middot;&nbsp;
@@ -292,8 +293,8 @@ const entry = await getEntry('pages', 'index');
           <div class="field sysprop-field">
             <p><strong>System:</strong> B.S. Data Science, UW-Madison (May 2026)</p>
             <p><strong>System:</strong> M.S. CS, Northeastern Silicon Valley (Sep 2026 - May 2028)</p>
-            <p><strong>Registered to:</strong> Nils Matteson, Madison WI -&gt; San Jose CA</p>
-            <p><strong>Running:</strong> vLLM open-source fellowship, sponsored by Inferact (Jul-Aug 2026): engine cold-start, then hot-swap</p>
+            <p><strong>Registered to:</strong> Nils Matteson, San Jose CA</p>
+            <p><strong>Running:</strong> vLLM open-source fellowship, sponsored by Inferact (Jul 2026 - present): cold start and reusable engine state</p>
             <p><strong>Status:</strong> open to full-time inference-runtime engineering roles in San Francisco or remote in the US.</p>
             <p><strong>Scheduled upgrade:</strong> Ph.D., Computer Science (pending)</p>
           </div>
@@ -379,7 +380,7 @@ const entry = await getEntry('pages', 'index');
           <i class="logo-ico" style="width:16px;height:16px;--ico:url(/logos/rust.svg)"></i>RUST INSIDE
         </span>
         <span class="badge88" style="background:#0b3d0b;color:#aaffaa;">CUDA 12+</span>
-        <a href="https://github.com/vllm-project/vllm/pull/44074" class="badge88" style="background:#001a4d;color:#9fc3ff;text-decoration:none;" title="PR #44074 + #47243 merged into vLLM core, July 2026">vLLM 2x MERGED</a>
+        <a href="https://github.com/vllm-project/vllm/pulls?q=is%3Apr+is%3Amerged+author%3Amatteso1" class="badge88" style="background:#001a4d;color:#9fc3ff;text-decoration:none;" title="10 upstream vLLM PRs merged as of September 21, 2026">vLLM 10 MERGED</a>
         <a href="https://arxiv.org/abs/2606.15621" class="badge88 badge88-logo" style="background:#fff;text-decoration:none;gap:3px;" title="Re-feeding Is Not Replaying — arXiv:2606.15621 (cs.LG)">
           <img src="/logos/arxiv.svg" alt="arXiv" style="height:13px;" />
           <small style="font-family:'Courier New',monospace;color:#b31b1b;font-size:8px;">.15621</small>

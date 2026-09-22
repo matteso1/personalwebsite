@@ -1,9 +1,15 @@
 ---
 title: Nils Matteson
-description: Systems and ML infrastructure engineer. vLLM contributor (8 upstream vLLM PRs merged) and Inferact-sponsored vLLM fellow. thaw forks a live vLLM session in 0.88s vs ~340s cold boot. Sole-author preprint on replay noise in token-credit estimation.
+description: Inference systems engineer and Inferact-sponsored vLLM fellow. 10 upstream vLLM PRs merged, including reusable initialized-engine snapshots and zstd container-image delivery. Founder of thaw and sole author of an inference-systems preprint.
 ---
 
 I build systems for LLM inference: GPU and CUDA, distributed systems, applied ML. I like problems where the deliverable is a number someone else can re-run. B.S. Data Science, CS minor, UW-Madison (May 2026). M.S. CS, Northeastern Silicon Valley, San Jose (Sep 2026). The longer plan is research: measurement problems in ML systems, then a PhD.
+
+## vLLM
+
+I'm a vLLM open-source fellow sponsored by Inferact, working with Simon Mo on cold start and reusable engine state. [10 upstream vLLM PRs have merged](https://github.com/vllm-project/vllm/pulls?q=is%3Apr+is%3Amerged+author%3Amatteso1).
+
+**Merged September 21:** [reusable initialized-engine snapshots](https://github.com/vllm-project/vllm/pull/51360) and [zstd container-image delivery](https://github.com/vllm-project/vllm/pull/55608). The snapshot feature lets a compatible host restore a prepared engine after its process has exited. I took it through design, implementation, failure handling and H200 end-to-end validation. [More on the work and measurements](/work#vllm-upstream--fellowship).
 
 ## thaw
 

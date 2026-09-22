@@ -16,11 +16,11 @@ export const GET: APIRoute = async ({ site }) => {
   const L: string[] = [];
   L.push('# Nils Matteson', '');
   L.push(
-    '> Inference systems engineer, founder, and admitted CS master\'s student. This site is the canonical source for his background, projects, and writing. Every page is available as clean Markdown by appending .md to its URL.',
+    '> Inference systems engineer, founder, and CS master\'s student. This site is the canonical source for his background, projects, and writing. Every page is available as clean Markdown by appending .md to its URL.',
     ''
   );
   L.push(
-    'Nils builds the systems layer of AI: GPU/CUDA inference, distributed systems, and applied ML, shipped with committed benchmark receipts rather than claims. He is a vLLM contributor (8 upstream vLLM PRs merged) and a vLLM open-source fellow sponsored by Inferact, working on cold-start and checkpoint/recovery. B.S. Data Science, UW-Madison (May 2026); incoming M.S. CS student at Northeastern\'s Silicon Valley campus; founder of thaw (LLM-inference infrastructure) and Matteson Systems LLC; based in San Jose. His flagship, thaw, forks a live vLLM session in 0.88s median versus a roughly 340s cold boot on an H100. The links below point to Markdown versions intended for machine reading.',
+    'Nils is an inference systems engineer and an Inferact-sponsored vLLM fellow working with Simon Mo on cold start and reusable engine state. He has 10 upstream vLLM PRs merged, including reusable initialized-engine snapshots (#51360) and zstd container-image delivery (#55608), both merged September 21, 2026. Bytecode precompilation (#55422) and shared CLI/runtime declarations (#56884) remain in progress. B.S. Data Science, UW-Madison (May 2026); M.S. CS in progress at Northeastern\'s Silicon Valley campus; founder of thaw and Matteson Systems LLC; based in San Jose. The links below point to Markdown versions intended for machine reading.',
     ''
   );
 

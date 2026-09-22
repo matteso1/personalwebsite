@@ -1,9 +1,9 @@
 ---
 title: About
-description: Nils Matteson is a UW-Madison data-science graduate and incoming CS master's student at Northeastern Silicon Valley. Systems and ML infrastructure engineer, Boise to Madison to the Bay.
+description: Nils Matteson is an Inferact-sponsored vLLM fellow and CS master's student at Northeastern Silicon Valley. Systems and ML infrastructure engineer, Boise to Madison to the Bay.
 ---
 
-Swedish-American, dual citizen, raised in Boise. Madison now. San Jose in the fall.
+Swedish-American, dual citizen, raised in Boise. Based in San Jose.
 
 ## education
 
@@ -13,7 +13,7 @@ B.S. Data Science, CS minor, University of Wisconsin-Madison, May 2026. M.S. Com
 
 My main project is [thaw](/work/thaw), git for live LLM agent sessions, built in Rust, CUDA, and Python. It checkpoints, branches, diffs, and restores live inference state (weights, KV cache, prefix-hash table, scheduler). A running vLLM session forks in 0.88s median on an H100 against a cold boot of roughly 340s. Getting there required a double-buffered O_DIRECT DMA pipeline that overlaps disk reads with PCIe transfer, an 8-shard parallel CRC32C verifier proven to match a serial pass, and coalescing about 16,000 tiny per-block DMAs into one contiguous gather. On H100 with Llama-3-8B, a cache-evicted cold-cache benchmark restored 16.06 GB in 1.2s at 13.0 GB/s over NVMe (n=3), and complete cold start fell from 25.0s to 2.7s (9.2x). 16 releases on PyPI as `thaw-vllm`; the GPU-free Rust and Python test suites run with no CUDA toolchain.
 
-That work went upstream: [PR #44074](https://github.com/vllm-project/vllm/pull/44074) (pluggable sleep-mode backend abstraction, out of [RFC #34303](https://github.com/vllm-project/vllm/issues/34303)) merged into vLLM core in July 2026, follow-up [#47243](https://github.com/vllm-project/vllm/pull/47243) merged the same day. It turned into a vLLM open-source fellowship, sponsored by Inferact: July is engine cold-start, August is model hot-swap, and the first deliverable was a measured H100 phase ledger of where vLLM boot time actually goes (it also surfaced an upstream bug, fixed in [#47356](https://github.com/vllm-project/vllm/pull/47356)).
+That work went upstream, starting with [pluggable sleep-mode backends (#44074)](https://github.com/vllm-project/vllm/pull/44074), and became an Inferact-sponsored vLLM fellowship with Simon Mo. I now have 10 upstream PRs merged. On September 21, [reusable initialized-engine snapshots (#51360)](https://github.com/vllm-project/vllm/pull/51360) and [zstd image delivery (#55608)](https://github.com/vllm-project/vllm/pull/55608) landed. The work spans profiling, lifecycle design, compatibility, failure handling and hardware validation. [Details and measurements](/work#vllm-upstream--fellowship).
 
 ## research
 
