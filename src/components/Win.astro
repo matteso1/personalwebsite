@@ -1,0 +1,33 @@
+---
+interface Props {
+  title: string;
+  icon?: string;
+  menubar?: boolean;
+  doc?: boolean;
+  narrow?: boolean;
+  id?: string;
+}
+const { title, menubar = false, doc = false, narrow = false, id } = Astro.props;
+---
+
+<div class:list={['window', 'bevel-out', narrow ? 'window-narrow' : '']} {id}>
+  <div class="titlebar">
+    <span class="titlebar-title">{title}</span>
+    <div class="titlebar-btns">
+      <span class="tbtn" aria-hidden="true">_</span>
+      <span class="tbtn" aria-hidden="true" style="font-size:8px;">&#9633;</span>
+      <a href="/" class="tbtn" title="close (go home)" aria-label="Close window, go home">&#x2715;</a>
+    </div>
+  </div>
+  {menubar && (
+    <div class="menubar" aria-hidden="true">
+      <span class="menubar-item">File</span>
+      <span class="menubar-item">Edit</span>
+      <span class="menubar-item">View</span>
+      <span class="menubar-item">Help</span>
+    </div>
+  )}
+  <div class:list={['window-body', doc ? 'doc' : '']}>
+    <slot />
+  </div>
+</div>

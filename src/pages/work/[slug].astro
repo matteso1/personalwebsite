@@ -18,13 +18,12 @@ const meta = [d.role, d.year].filter(Boolean).join('  ·  ');
   description={d.description}
   mdPath={`/work/${entry.id}.md`}
   ogType="article"
+  winTitle={`${entry.id}.md - Notepad`}
+  winDoc={true}
 >
   <article class="prose">
     <h1>{d.title}</h1>
     {meta && <p class="post-meta">{meta}</p>}
-    {d.status === 'Historical project' && (
-      <p class="archive-note">An older project writeup. My current inference work is on the <a href="/work">work page</a>.</p>
-    )}
     <Content />
     {d.links && (
       <div class="post-links">
@@ -33,6 +32,6 @@ const meta = [d.role, d.year].filter(Boolean).join('  ·  ');
         ))}
       </div>
     )}
-    <p class="back-link"><a href="/work">&larr; Back to work</a></p>
+    <p style="margin-top:12px;"><a href="/work">&larr; Back to work</a></p>
   </article>
 </BaseLayout>

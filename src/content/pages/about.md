@@ -9,6 +9,6 @@ I'm interested in inference engineering: what happens between starting a model s
 
 Currently, I work with Simon Mo as an Inferact-sponsored vLLM open-source fellow. I've been working on startup performance and reusable engine preparation, and lately on kernel tuning in FlashInfer. I like following a slow startup through the stack until I can explain what changed. A faster run is useful; understanding why it got faster is the part that keeps me interested. Some of that work is linked on the [work page](/work).
 
-Outside of that, I make music in Ableton, play guitar, run, and ski when I can.
+Outside of that, I make music in Ableton, play guitar, run, and ski when I can. The site looks like Windows 98 on purpose; desktop computing peaked then and I see no reason to pretend otherwise.
 
 You can reach me at [nilsmatteson@icloud.com](mailto:nilsmatteson@icloud.com), or find my code on [GitHub](https://github.com/matteso1).

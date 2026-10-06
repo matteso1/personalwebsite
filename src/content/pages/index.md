@@ -1,7 +1,7 @@
 ---
 title: Nils Matteson
 description: Nils Matteson, an engineer interested in inference systems, startup performance, and understanding where the time goes.
-intro: I work on inference systems. I like making models faster to start and understanding where the time goes.
+intro: I'm into inference engineering. I like making models faster to start and understanding where the time goes.
 ---
 
 ## Lately
@@ -17,6 +17,12 @@ I'm interested in GPU memory, caching, and the less obvious reasons a system is 
 - [MoE kernel tuning](https://github.com/flashinfer-ai/flashinfer/pull/6032). Exploring a smaller search space in FlashInfer, and checking the choices it makes.
 
 [More about the work](/work) and the details behind it.
+
+## A paper
+
+[Re-feeding Is Not Replaying: Measuring Replay Noise in Counterfactual Token-Credit Estimation](https://arxiv.org/abs/2606.15621), a sole-author preprint from June 2026. I looked at whether resuming a model's saved decoder state produces the same measurements as feeding the text back in. The experiments compare both against repeated runs, separating replay differences from run-to-run noise. The writeup includes the setup, results, and cases where the distinction disappears.
+
+[PDF](/refeed-drift.pdf) and [experiment logs and analysis code](https://github.com/thaw-ai/thaw/tree/main/paper/refeed-drift).
 
 ## Off the clock
 
