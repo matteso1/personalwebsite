@@ -9,7 +9,7 @@ export const GET: APIRoute = async () => {
       title: e.data.title,
       description: e.data.description,
       canonicalPath: '/',
-      body: e.body ?? '',
+      body: `${e.data.intro}\n\n${e.body ?? ''}`,
     }),
     { headers: MD_HEADERS }
   );

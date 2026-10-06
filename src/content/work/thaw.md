@@ -2,11 +2,12 @@
 title: thaw
 description: Git for live LLM agent sessions. Checkpoint, branch, diff, and restore live vLLM/SGLang inference state. A session forks in 0.88s median vs ~340s cold boot on H100.
 year: 2026
-role: Founder and Lead Engineer
+role: Independent project
+status: Historical project
 stack: [Rust, CUDA, Python, PyO3, vLLM, SGLang]
 receipt: 0.88s median fork vs ~340s cold boot on H100
-order: 1
-featured: true
+order: 99
+featured: false
 links:
   site: https://thaw.sh
   repo: https://github.com/thaw-ai/thaw

@@ -4,6 +4,20 @@ import sitemap from '@astrojs/sitemap';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 
+// Wide Markdown tables scroll on phones; keep them reachable by keyboard,
+// including when the reader has JavaScript disabled.
+function focusableTables() {
+  return (tree: { children?: unknown[] }) => {
+    const visit = (node: any) => {
+      if (node.tagName === 'table') {
+        node.properties = { ...node.properties, tabIndex: 0 };
+      }
+      node.children?.forEach(visit);
+    };
+    visit(tree);
+  };
+}
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://nilsmatteson.com',
@@ -11,7 +25,7 @@ export default defineConfig({
   build: { format: 'file' },
   markdown: {
     remarkPlugins: [remarkMath],
-    rehypePlugins: [rehypeKatex],
+    rehypePlugins: [rehypeKatex, focusableTables],
     shikiConfig: {
       theme: 'css-variables',
       wrap: false,

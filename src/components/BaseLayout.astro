@@ -3,7 +3,6 @@ import '../styles/global.css';
 import BaseHead from './BaseHead.astro';
 import SiteHeader from './SiteHeader.astro';
 import SiteFooter from './SiteFooter.astro';
-import Marquee from './Marquee.astro';
 
 interface Props {
   title: string;
@@ -11,65 +10,31 @@ interface Props {
   mdPath?: string;
   ogType?: 'website' | 'article' | 'profile';
   isHome?: boolean;
-  showHeader?: boolean;
   article?: { date?: string; modified?: string; tags?: string[] };
-  /** Window title for the wrapping chrome (subpages only) */
-  winTitle?: string;
-  /** If true, renders a doc (.doc white) window body */
-  winDoc?: boolean;
-  /** If true, page manages its own window(s) - no auto-wrap */
-  noWrap?: boolean;
-  /** Optional menubar label set override */
-  menubarItems?: string;
 }
 
-const {
-  showHeader = true,
-  isHome = false,
-  winTitle,
-  winDoc = true,
-  noWrap = false,
-  ...rest
-} = Astro.props;
+const { isHome = false, ...rest } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
     <BaseHead isHome={isHome} {...rest} />
+    <script is:inline>
+      try {
+        const theme = localStorage.getItem('theme');
+        if (theme === 'light' || theme === 'dark') {
+          document.documentElement.dataset.theme = theme;
+        }
+      } catch {}
+    </script>
   </head>
   <body>
     <a href="#main" class="skip">Skip to content</a>
-    <main id="main">
-      {isHome || noWrap ? (
-        <slot />
-      ) : (
-        <div class="page-window">
-          <Marquee />
-          <div style="height:18px;"></div>
-          <div class="window bevel-out">
-            <div class="titlebar">
-              <span class="titlebar-title">{winTitle ?? rest.title ?? 'Notepad'}</span>
-              <div class="titlebar-btns">
-                <span class="tbtn" aria-hidden="true">_</span>
-                <span class="tbtn" aria-hidden="true" style="font-size:8px;">&#9633;</span>
-                <a href="/" class="tbtn" title="close (go home)" aria-label="Close window, go home">&#x2715;</a>
-              </div>
-            </div>
-            <div class="menubar" aria-hidden="true">
-              <span class="menubar-item">File</span>
-              <span class="menubar-item">Edit</span>
-              <span class="menubar-item">View</span>
-              <span class="menubar-item">Help</span>
-            </div>
-            <div class:list={['window-body', winDoc ? 'doc' : '']}>
-              <slot />
-            </div>
-          </div>
-        </div>
-      )}
+    <SiteHeader />
+    <main id="main" class:list={['page-main', { 'home-page': isHome }]} tabindex="-1">
+      <slot />
     </main>
     <SiteFooter />
-    <SiteHeader />
   </body>
 </html>

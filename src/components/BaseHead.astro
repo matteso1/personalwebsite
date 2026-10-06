@@ -4,7 +4,7 @@ import { SITE, personJsonLd, PERSON_ID } from '../lib/site';
 interface Props {
   title: string;
   description?: string;
-  /** path to the raw markdown twin, e.g. "/work/thaw.md" */
+  /** Path to the raw markdown twin, e.g. "/work.md". */
   mdPath?: string;
   ogType?: 'website' | 'article' | 'profile';
   image?: string;
@@ -22,10 +22,11 @@ const {
   article,
 } = Astro.props;
 
-const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const pagePath = Astro.url.pathname.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
+const canonical = new URL(pagePath, Astro.site).href;
 const ogImage = new URL(image, Astro.site).href;
 const fullTitle = isHome
-  ? `${SITE.title}, Systems and ML Infrastructure Engineer`
+  ? `${SITE.title} · Inference engineering`
   : `${title} · ${SITE.name}`;
 
 // Build the JSON-LD @graph: Person sitewide, WebSite on home, Article on posts.

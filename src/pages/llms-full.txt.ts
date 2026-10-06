@@ -11,7 +11,7 @@ export const GET: APIRoute = async ({ site }) => {
   out.push('# Nils Matteson');
   out.push('');
   out.push(
-    '> Full-text bundle of nilsmatteson.com. Every page on the site, inlined as Markdown for one-shot machine reading. Canonical and current as of build time.'
+    '> Full-text bundle of nilsmatteson.com. Overview pages describe current work; older project notes and dated essays describe their original context.'
   );
   out.push('');
 
@@ -28,7 +28,7 @@ export const GET: APIRoute = async ({ site }) => {
 
   // Singleton prose pages
   const home = (await getEntry('pages', 'index'))!;
-  section(home.data.title, `${base}/`, home.body ?? '');
+  section(home.data.title, `${base}/`, `${home.data.intro}\n\n${home.body ?? ''}`);
   const about = (await getEntry('pages', 'about'))!;
   section(about.data.title, `${base}/about`, about.body ?? '');
   const workIndex = (await getEntry('pages', 'work'))!;
@@ -39,7 +39,8 @@ export const GET: APIRoute = async ({ site }) => {
     (a, b) => (a.data.order ?? 99) - (b.data.order ?? 99)
   );
   for (const w of work) {
-    section(`${w.data.title} (project)`, `${base}/work/${w.id}`, w.body ?? '');
+    const status = w.data.status === 'Historical project' ? 'Historical project note. See /work for current work.\n\n' : '';
+    section(`${w.data.title} (project)`, `${base}/work/${w.id}`, status + (w.body ?? ''));
   }
 
   // Writing, newest first

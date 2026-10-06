@@ -1,3 +1,14 @@
 ---
+import ThemeToggle from './ThemeToggle.astro';
+import { LINKS, SITE } from '../lib/site';
 ---
-<!-- footer intentionally empty; taskbar serves as site navigation -->
+
+<footer class="site-footer">
+  <span class="footer-name">{SITE.name}</span>
+  <nav class="footer-links" aria-label="More links">
+    <a href={LINKS.resume}>Resume</a>
+    <a href={LINKS.rss}>RSS</a>
+    <a href="/agents">Agents</a>
+    <ThemeToggle />
+  </nav>
+</footer>

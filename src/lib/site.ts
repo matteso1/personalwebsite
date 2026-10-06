@@ -6,10 +6,10 @@ export const SITE = {
   name: 'Nils Matteson',
   url: 'https://nilsmatteson.com',
   title: 'Nils Matteson',
-  tagline: 'Systems and ML infrastructure engineer. Builds GPU inference tooling.',
+  tagline: 'Inference engineering, and understanding where the time goes.',
   description:
-    'Nils Matteson is an inference systems engineer and Inferact-sponsored vLLM fellow. 10 upstream vLLM PRs merged, including reusable initialized-engine snapshots and zstd container-image delivery. Founder of thaw.',
-  email: 'nils@thaw.sh',
+    'Nils Matteson is an engineer interested in inference systems, startup performance, model loading, and reusable state. An Inferact-sponsored vLLM open-source fellow based in San Jose.',
+  email: 'nilsmatteson@icloud.com',
   ogImage: '/og.png',
 } as const;
 
@@ -17,15 +17,13 @@ export const NAV = [
   { label: 'Work', href: '/work' },
   { label: 'Writing', href: '/writing' },
   { label: 'About', href: '/about' },
-  { label: 'Agents', href: '/agents' },
 ] as const;
 
 export const LINKS = {
   github: 'https://github.com/matteso1',
   linkedin: 'https://www.linkedin.com/in/nilsmatteson',
-  email: 'mailto:nils@thaw.sh',
+  email: `mailto:${SITE.email}`,
   resume: '/resume.pdf',
-  thaw: 'https://thaw.sh',
   rss: '/rss.xml',
 } as const;
 
@@ -43,34 +41,31 @@ export function personJsonLd() {
     url: `${SITE.url}/`,
     image: `${SITE.url}${SITE.ogImage}`,
     email: `mailto:${SITE.email}`,
-    jobTitle: ['Systems & ML Infrastructure Engineer'],
+    jobTitle: 'Inference systems engineer',
     description: SITE.tagline,
-    worksFor: [
-      { '@type': 'Organization', name: 'thaw', url: 'https://thaw.sh' },
-      { '@type': 'Organization', name: 'Matteson Systems LLC' },
-    ],
     alumniOf: [
       {
         '@type': 'CollegeOrUniversity',
         name: 'University of Wisconsin-Madison',
         sameAs: 'https://www.wisc.edu/',
       },
-      {
-        '@type': 'CollegeOrUniversity',
-        name: 'Northeastern University',
-        sameAs: 'https://www.northeastern.edu/',
-      },
     ],
+    affiliation: {
+      '@type': 'CollegeOrUniversity',
+      name: 'Northeastern University',
+      sameAs: 'https://www.northeastern.edu/',
+    },
     knowsAbout: [
       'LLM inference infrastructure',
       'GPU / CUDA programming',
       'Distributed systems',
       'Machine learning infrastructure',
       'Rust',
-      'Raft consensus',
-      'LSM-trees',
-      'Conformal prediction',
+      'Model loading',
+      'Inference startup performance',
+      'GPU memory and caching',
       'vLLM',
+      'FlashInfer',
     ],
     address: {
       '@type': 'PostalAddress',
@@ -81,8 +76,6 @@ export function personJsonLd() {
     sameAs: [
       'https://github.com/matteso1',
       'https://www.linkedin.com/in/nilsmatteson',
-      'https://thaw.sh',
-      'https://pypi.org/project/thaw-vllm/',
     ],
   };
 }

@@ -5,41 +5,23 @@ import BaseLayout from '../../components/BaseLayout.astro';
 const posts = (await getCollection('writing', ({ data }) => !data.draft)).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
 );
-const fmt = (d: Date) => d.toISOString().slice(0, 10);
+const fmt = (date: Date) => date.toLocaleDateString('en-US', {
+  month: 'short', year: 'numeric', timeZone: 'UTC',
+});
 ---
 
-<BaseLayout
-  title="Writing"
-  description="Engineering notes: a speculative-decoding engine from scratch, conformal prediction for transit ETAs, and benchmarking 9 LLMs on AWS Bedrock."
-  winTitle="writing - Notepad"
-  winDoc={true}
->
-  <article>
-    <h1>Writing</h1>
-    <p>
-      Engineering notes, mostly about systems and applied ML. I try to name what broke,
-      not only what worked.
-    </p>
-    <table style="width:100%;border-collapse:collapse;">
-      <thead>
-        <tr>
-          <th style="text-align:left;padding:3px 8px;border:1px solid #808080;background:#c0c0c0;">Title</th>
-          <th style="text-align:left;padding:3px 8px;border:1px solid #808080;background:#c0c0c0;white-space:nowrap;">Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        {posts.map((p) => (
-          <tr>
-            <td style="padding:3px 8px;border:1px solid #808080;vertical-align:top;">
-              <a href={`/writing/${p.id}`}>{p.data.title}</a>
-              {p.data.description && <span style="display:block;font-size:12px;color:#808080;margin-top:2px;">{p.data.description}</span>}
-            </td>
-            <td style="padding:3px 8px;border:1px solid #808080;white-space:nowrap;font-size:12px;color:#808080;">
-              <time datetime={fmt(p.data.date)}>{fmt(p.data.date)}</time>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </article>
+<BaseLayout title="Writing" description="Notes by Nils Matteson on inference systems, experiments, and things that did or didn't work.">
+  <h1>Writing</h1>
+  <p class="writing-intro">Notes on things I've built, experiments I've run, and what I learned along the way.</p>
+  <ul class="writing-list">
+    {posts.map((post) => (
+      <li>
+        <a href={'/writing/' + post.id}>
+          <h2>{post.data.title}</h2>
+          {post.data.description && <p>{post.data.description}</p>}
+          <time datetime={post.data.date.toISOString().slice(0, 10)}>{fmt(post.data.date)}</time>
+        </a>
+      </li>
+    ))}
+  </ul>
 </BaseLayout>

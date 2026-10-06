@@ -1,37 +1,15 @@
 ---
-const path = Astro.url.pathname;
-const is = (p: string) => {
-  if (p === '/') return path === '/';
-  return path === p || path.startsWith(p + '/') || path.startsWith(p + '.');
-};
+import { NAV, SITE } from '../lib/site';
 
-// Stamped at build time (Pacific), so it tracks the last deploy instead of
-// going stale — and stays correct regardless of the build server's timezone.
-const buildDate = new Intl.DateTimeFormat('en-CA', {
-  timeZone: 'America/Los_Angeles',
-}).format(new Date());
+const path = Astro.url.pathname.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
+const isCurrent = (href: string) => path === href || path.startsWith(href + '/');
 ---
 
-<nav class="taskbar" aria-label="Site navigation">
-  <a href="/" class="taskbar-start" aria-label="Home">
-    <span class="win-flag" aria-hidden="true">
-      <span></span><span></span><span></span><span></span>
-    </span>
-    Start
-  </a>
-  <div class="taskbar-divider" aria-hidden="true"></div>
-  <div class="taskbar-tasks">
-    <a href="/" class:list={['task-btn', is('/') ? 'active' : '']}>README.txt</a>
-    <a href="/work" class:list={['task-btn', is('/work') ? 'active' : '']}>work</a>
-    <a href="/writing" class:list={['task-btn', is('/writing') ? 'active' : '']}>writing</a>
-    <a href="/about" class:list={['task-btn', is('/about') ? 'active' : '']}>about</a>
-    <a href="/agents" class:list={['task-btn', is('/agents') ? 'active' : '']}>agents</a>
-    <a href="/resume.pdf" class:list={['task-btn', path === '/resume.pdf' ? 'active' : '']}>resume.pdf</a>
-  </div>
-  <div class="taskbar-divider" aria-hidden="true"></div>
-  <div class="tray" aria-label="System tray">
-    <span>no JS</span>
-    <span aria-hidden="true">&#8201;</span>
-    <time datetime={buildDate}>{buildDate}</time>
-  </div>
-</nav>
+<header class="site-header">
+  <a class="site-name" href="/" aria-current={path === '/' ? 'page' : undefined}>{SITE.name}</a>
+  <nav class="site-nav" aria-label="Main navigation">
+    {NAV.map(({ href, label }) => (
+      <a href={href} aria-current={isCurrent(href) ? 'page' : undefined}>{label}</a>
+    ))}
+  </nav>
+</header>
